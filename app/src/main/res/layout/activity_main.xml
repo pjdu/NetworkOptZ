@@ -424,20 +424,10 @@
                             android:text="信号强度" />
                     </RelativeLayout>
 
-                    <tech.linjiang.suitlines.SuitLines xmlns:line="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/suitlines"
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart_MainActivity_lineChart"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        line:Style="solid"
-                        line:colorEdgeEffect="@color/colorPrimaryDark"
-                        line:colorHint="@color/colorPrimary"
-                        line:countOfY="6"
-                        line:lineType="curve"
-                        line:maxOfVisible="7"
-                        line:needClickHint="true"
-                        line:needEdgeEffect="true"
-                        line:xyColor="@color/colorAccent"
-                        line:xySize="8" />
+                        android:layout_height="match_parent" />
 
                 </LinearLayout> <!-- 当前信号强度版块 -->
 
@@ -451,7 +441,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start">
+        android:layout_gravity="start"
+        android:background="#ffffff">
 
 
         <TextView
