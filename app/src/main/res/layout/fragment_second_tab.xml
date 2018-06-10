@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/TextViewCurrentPostionLonLat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="经纬度:"/>
+
+    <TextView
+        android:id="@+id/TextViewCurrentPostionDefinition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="详细地址:"/>
+
+    <TextView
+        android:id="@+id/TextViewCurrentMarkerBaseStationName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="当前未点击小区"/>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+        <com.baidu.mapapi.map.TextureMapView
+            android:id="@+id/bmapView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <Button
+            android:id="@+id/BtnChangeLocationMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="10dip"
+            android:layout_marginStart="25dp"/>
+
+        <Button
+            android:id="@+id/BtnChangeMapType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="10dip"/>
+
+        <CheckBox
+            android:id="@+id/checkBoxTraffice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="60dip"
+            android:checked="false"
+            android:onClick="setTraffic"
+            android:text="路况图"/>
+
+        <CheckBox
+            android:id="@+id/checkboxBaiduHeatMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="90dip"
+            android:checked="false"
+            android:onClick="setBaiduHeatMap"
+            android:text="热力图"/>
+
+        <CheckBox
+            android:id="@+id/checkboxDisplayLteDatabase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="22dp"
+            android:layout_marginTop="120dip"
+            android:checked="false"
+            android:text="4G基站"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>
+
