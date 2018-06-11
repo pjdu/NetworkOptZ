@@ -1,6 +1,5 @@
 package com.hbmcc.shilinlin.networkoptz.ui.fragment.second;
 
-import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -23,7 +23,7 @@ import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.TextureMapView;
+import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.hbmcc.shilinlin.networkoptz.R;
@@ -46,11 +46,13 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     public static final float MARKER_ALPHA = 0.7f;
     private LocationClient mLocationClient = null;
     private boolean isFirstLoc = true; // 是否首次定位
-    private TextureMapView mMapView;
+    private MapView mMapView;
     private BaiduMap mBaiduMap;
     // UI相关
     private Button btnChangeMapType;
     private Button btnLocation;
+    private CheckBox checkBoxTraffic;
+    private CheckBox checkBoxBaiduHeatMap;
     private MyLocationListener myListener = new MyLocationListener();
     private TextView textViewCurrentPositionLonLat;
     private TextView textViewCurrentPositionDefinition;
@@ -63,6 +65,7 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     private double mCurrentLon = 0.0;
     private float mCurrentAccracy;
     private MyLocationData locData;
+
 
     public static SecondTabFragment newInstance() {
         Bundle args = new Bundle();
@@ -131,10 +134,13 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
 
         EventBusActivityScope.getDefault(_mActivity).register(this);
 
-        textViewCurrentPositionLonLat = view.findViewById(R.id.TextViewCurrentPostionLonLat);
+        textViewCurrentPositionLonLat = view.findViewById(R.id.textView_fragment_second_tab_current_position_lon_lat);
         textViewCurrentPositionDefinition = view.findViewById(R.id
-                .TextViewCurrentPostionDefinition);
-        btnChangeMapType = view.findViewById(R.id.BtnChangeMapType);
+                .textView_fragment_second_tab_current_position_definition);
+        btnChangeMapType = view.findViewById(R.id.btn_fragment_second_tab_change_map_type);
+        btnLocation=view.findViewById(R.id.btn_fragment_second_tab_location);
+        checkBoxTraffic = view.findViewById(R.id.checkBox_fragment_second_tab_traffic);
+        checkBoxBaiduHeatMap = view.findViewById(R.id.checkbox_fragment_second_tab_baidu_heat_map);
         mSensorManager = (SensorManager) _mActivity.getSystemService(SENSOR_SERVICE);//获取传感器管理服务
 
         // 定位初始化
@@ -143,7 +149,7 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         requestLocation();
 
         // 地图初始化
-        mMapView = view.findViewById(R.id.bmapView);
+        mMapView = view.findViewById(R.id.bmapView_fragment_second_tab_bmapview);
         mBaiduMap = mMapView.getMap();
         initMap();
 
@@ -189,7 +195,21 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         btnLocation.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                goToCurrentLocation();
+            }
+        });
 
+        checkBoxBaiduHeatMap.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mBaiduMap.setBaiduHeatMapEnabled(isChecked);
+            }
+        });
+
+        checkBoxTraffic.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mBaiduMap.setTrafficEnabled(isChecked);
             }
         });
     }
@@ -223,85 +243,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         //设置初步地图类型为二维地图（二维、卫星）
         mMapType = BaiduMap.MAP_TYPE_NORMAL;
         btnChangeMapType.setText("二维");
-    }
-
-
-    /**
-     * 清除所有Overlay
-     *
-     * @param view
-     */
-    public void clearOverlay(View view) {
-        mBaiduMap.clear();
-    }
-
-
-//    public void disPlayMyOverlay(LatLng latLng) {
-//        lteDatabaseList = DataSupport.where("enbCellLng<? and " +
-//                "enbCellLng>? and enbCellLat<? and enbCellLat >?", latLng.longitude + DISTANCE_OFFSET + "", latLng
-//                .longitude - DISTANCE_OFFSET + "", latLng.latitude + DISTANCE_OFFSET + "", latLng
-//                .latitude - DISTANCE_OFFSET + "").find(LteDatabase.class);
-//        // add marker overlay
-//        if (lteDatabaseList.size() > 0) {
-//            for (int i = 0; i < lteDatabaseList.size(); i++) {
-//                lteDatabase = lteDatabaseList.get(i);
-//                //这里需要添加wgs84 to bd09的变换
-//                LocatonConverter.LatLng latLngll = new LocatonConverter.LatLng(lteDatabase
-//                        .getEnbCellLat(), lteDatabase
-//                        .getEnbCellLng());
-//                latLngll = LocatonConverter.wgs84ToBd09(latLngll);
-//                LatLng ll = new LatLng(latLngll.getLatitude(), latLngll.getLongitude());
-//                llList.add(ll);
-//                if (lteDatabase.getEnbCellCoverageType() == LteDatabase.COVERAGE_OUTSIDE) {
-//                    if (lteDatabase.getLteEarFcn() > 10000) {
-//                        markerOptions = new MarkerOptions().position(ll).icon(markerLteTDDOutside)
-//                                .zIndex(i)
-//                                .draggable(false).alpha(MARKER_ALPHA).rotate(360 - lteDatabase.getEnbCellAzimuth());
-//                        markerOptionList.add(markerOptions);
-//                    } else {
-//                        markerOptions = new MarkerOptions().position(ll).icon(markerLteFDDOutside)
-//                                .zIndex(i)
-//                                .draggable(false).alpha(MARKER_ALPHA).rotate(360 - lteDatabase.getEnbCellAzimuth());
-//                        markerOptionList.add(markerOptions);
-//                    }
-//                } else if (lteDatabase.getEnbCellCoverageType() == LteDatabase.COVERAGE_INDOOR) {
-//                    if (lteDatabase.getLteEarFcn() > 10000) {
-//                        markerOptions = new MarkerOptions().position(ll).icon
-//                                (markerLteTDDIndoor)
-//                                .zIndex(i)
-//                                .draggable(false).alpha(MARKER_ALPHA);
-//                        markerOptionList.add(markerOptions);
-//                    } else {
-//                        markerOptions = new MarkerOptions().position(ll).icon
-//                                (markerLteFDDIndoor)
-//                                .zIndex(i)
-//                                .draggable(false).alpha(MARKER_ALPHA);
-//                        markerOptionList.add(markerOptions);
-//                    }
-//                }
-//                marker = (Marker) (mBaiduMap.addOverlay(markerOptions));
-//                markerList.add(marker);
-//            }
-//        }
-//
-//    }
-
-    /**
-     * 设置是否显示交通图
-     *
-     * @param view
-     */
-    public void setTraffic(View view) {
-        mBaiduMap.setTrafficEnabled(((CheckBox) view).isChecked());
-    }
-
-    /**
-     * 设置是否显示百度热力图
-     *
-     * @param view
-     */
-    public void setBaiduHeatMap(View view) {
-        mBaiduMap.setBaiduHeatMapEnabled(((CheckBox) view).isChecked());
     }
 
     @Override
@@ -410,16 +351,19 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
             mBaiduMap.setMyLocationData(locData);
             if (isFirstLoc) {
                 isFirstLoc = false;
-                LatLng ll = new LatLng(mCurrentLat,
-                        mCurrentLon);
-                MapStatus.Builder builder = new MapStatus.Builder();
-                builder.target(ll).zoom(18.0f);
-                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+                goToCurrentLocation();
             }
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
         }
+    }
 
+    private void goToCurrentLocation(){
+        LatLng ll = new LatLng(mCurrentLat,
+                mCurrentLon);
+        MapStatus.Builder builder = new MapStatus.Builder();
+        builder.target(ll).zoom(18.0f);
+        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
     }
 }
