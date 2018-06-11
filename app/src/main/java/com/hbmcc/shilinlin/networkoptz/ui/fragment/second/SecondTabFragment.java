@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -20,18 +19,15 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.hbmcc.shilinlin.networkoptz.R;
-import com.hbmcc.shilinlin.networkoptz.Util.LocatonConverter;
+import com.hbmcc.shilinlin.networkoptz.util.LocatonConverter;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
@@ -39,8 +35,6 @@ import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import me.yokeyword.eventbusactivityscope.EventBusActivityScope;
 
@@ -52,15 +46,13 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     public static final float MARKER_ALPHA = 0.7f;
     private LocationClient mLocationClient = null;
     private boolean isFirstLoc = true; // 是否首次定位
-    private BitmapDescriptor mCurrentMarker;
     private TextureMapView mMapView;
     private BaiduMap mBaiduMap;
     // UI相关
-    private Button btnChangeLocationMode;
     private Button btnChangeMapType;
+    private Button btnLocation;
     private MyLocationListener myListener = new MyLocationListener();
     private TextView textViewCurrentPositionLonLat;
-    private TextView textViewCurrentMarkerBaseStationName;
     private TextView textViewCurrentPositionDefinition;
     private MyLocationConfiguration.LocationMode mCurrentLocationMode;
     private int mMapType;
@@ -71,15 +63,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     private double mCurrentLon = 0.0;
     private float mCurrentAccracy;
     private MyLocationData locData;
-    //    private List<LteDatabase> lteDatabaseList = new ArrayList<>();
-    private List<LatLng> llList = new ArrayList<>();
-    private List<MarkerOptions> markerOptionList = new ArrayList<>();
-    //    private LteDatabase lteDatabase = new LteDatabase();
-    private MarkerOptions markerOptions = new MarkerOptions();
-    private Marker marker;
-    private Marker lastMarker;
-    private List<Marker> markerList = new ArrayList<>();
-    private CheckBox checkBoxDisplayLteDatabase;
 
     public static SecondTabFragment newInstance() {
         Bundle args = new Bundle();
@@ -97,6 +80,53 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         return view;
     }
 
+    /**
+     * Reselected Tab
+     */
+    @Subscribe
+    public void onTabSelectedEvent(TabSelectedEvent event) {
+        if (event.position != MainFragment.SECOND) return;
+
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBusActivityScope.getDefault(_mActivity).unregister(this);
+    }
+
+    @Override
+    public void onPause() {
+        mMapView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        mMapView.onResume();
+        super.onResume();
+        //为系统的方向传感器注册监听器
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mLocationClient.stop();
+        mBaiduMap.setMyLocationEnabled(false);
+        mMapView.onDestroy();
+        mMapView = null;
+    }
+
+    @Override
+    public void onStop() {
+        //取消注册传感器监听
+        mSensorManager.unregisterListener(this);
+        super.onStop();
+    }
+
     private void initView(View view) {
 
         EventBusActivityScope.getDefault(_mActivity).register(this);
@@ -104,9 +134,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         textViewCurrentPositionLonLat = view.findViewById(R.id.TextViewCurrentPostionLonLat);
         textViewCurrentPositionDefinition = view.findViewById(R.id
                 .TextViewCurrentPostionDefinition);
-        textViewCurrentMarkerBaseStationName = view.findViewById(R.id
-                .TextViewCurrentMarkerBaseStationName);
-        btnChangeLocationMode = view.findViewById(R.id.BtnChangeLocationMode);
         btnChangeMapType = view.findViewById(R.id.BtnChangeMapType);
         mSensorManager = (SensorManager) _mActivity.getSystemService(SENSOR_SERVICE);//获取传感器管理服务
 
@@ -121,84 +148,27 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         initMap();
 
         mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
-            @Override
-            public void onMapStatusChangeStart(MapStatus mapStatus) {
-            }
+                                                   @Override
+                                                   public void onMapStatusChangeStart(MapStatus mapStatus) {
+                                                   }
 
-            @Override
-            public void onMapStatusChangeStart(MapStatus mapStatus, int i) {
-            }
+                                                   @Override
+                                                   public void onMapStatusChangeStart(MapStatus mapStatus, int i) {
+                                                   }
 
-            @Override
-            public void onMapStatusChange(MapStatus mapStatus) {
-            }
+                                                   @Override
+                                                   public void onMapStatusChange(MapStatus mapStatus) {
+                                                   }
 
-            @Override
-            public void onMapStatusChangeFinish(MapStatus mapStatus) {
-                LatLng latLng = mapStatus.target;
-                LocatonConverter.LatLng latLngll = new LocatonConverter.LatLng(latLng.latitude,
-                        latLng.longitude);
-                latLngll = LocatonConverter.bd09ToWgs84(latLngll);
-                final LatLng ll = new LatLng(latLngll.getLatitude(), latLngll.getLongitude());
+                                                   @Override
+                                                   public void onMapStatusChangeFinish(MapStatus mapStatus) {
 
-                checkBoxDisplayLteDatabase = (CheckBox) view.findViewById(R.id
-                        .checkboxDisplayLteDatabase);
-                if (checkBoxDisplayLteDatabase.isChecked()) {
-                    clearOverlay(null);
-                    disPlayMyOverlay(ll);
-                } else {
-                    clearOverlay(null);
-                }
-                checkBoxDisplayLteDatabase.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (checkBoxDisplayLteDatabase.isChecked()) {
-                            clearOverlay(null);
-                            disPlayMyOverlay(ll);
-                        } else {
-                            clearOverlay(null);
-                        }
-                    }
-                });
+                                                   }
+                                               }
+        );
 
-            }
-        });
 
-        btnChangeLocationMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (mCurrentLocationMode) {
-                    case NORMAL:
-                        btnChangeLocationMode.setText("跟随");
-                        mCurrentLocationMode = MyLocationConfiguration.LocationMode.FOLLOWING;
-                        mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
-                                mCurrentLocationMode, true, mCurrentMarker));
-                        MapStatus.Builder builder = new MapStatus.Builder();
-                        builder.overlook(0).rotate(0);
-                        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-                        break;
-                    case COMPASS:
-                        btnChangeLocationMode.setText("普通");
-                        mCurrentLocationMode = MyLocationConfiguration.LocationMode.NORMAL;
-                        mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
-                                mCurrentLocationMode, true, mCurrentMarker));
-                        MapStatus.Builder builder1 = new MapStatus.Builder();
-                        builder1.overlook(0).rotate(0);
-                        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder1.build()));
-                        break;
-                    case FOLLOWING:
-                        btnChangeLocationMode.setText("罗盘");
-                        mCurrentLocationMode = MyLocationConfiguration.LocationMode.COMPASS;
-                        mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
-                                mCurrentLocationMode, true, mCurrentMarker));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-
-        btnChangeMapType.setOnClickListener(new View.OnClickListener() {
+        btnChangeMapType.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 switch (mMapType) {
@@ -216,21 +186,12 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
             }
         });
 
-//        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
-//            public boolean onMarkerClick(final Marker marker) {
-//                textViewCurrentMarkerBaseStationName.setText(lteDatabaseList.get(marker
-//                        .getZIndex())
-//                        .getEnbCellName());
-//                if(lastMarker!=null){
-//                    lastMarker.setAlpha(MARKER_ALPHA);
-//                }
-//                marker.setToTop();
-//                marker.setAlpha(1.0f);
-//                lastMarker = marker;
-//                return true;
-//            }
-//        });
+        btnLocation.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
     }
 
     @Override
@@ -245,9 +206,8 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
 
         //显示方向，初始化为普通地图模式（普通、跟随、导航）
         mCurrentLocationMode = MyLocationConfiguration.LocationMode.NORMAL;
-        btnChangeLocationMode.setText("普通");
         mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
-                mCurrentLocationMode, true, mCurrentMarker));
+                mCurrentLocationMode, true, null));
         final MapStatus.Builder builder = new MapStatus.Builder();
         builder.overlook(0);
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
@@ -258,7 +218,7 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
 
         mUiSettings.setCompassEnabled(true);
 
-        mBaiduMap.setCompassPosition(new Point((int) mMapView.getX() + 80, (int) mMapView.getY() + 80));
+//        mBaiduMap.setCompassPosition(new Point((int) mMapView.getX() + 80, (int) mMapView.getY() + 80));
 
         //设置初步地图类型为二维地图（二维、卫星）
         mMapType = BaiduMap.MAP_TYPE_NORMAL;
@@ -273,12 +233,10 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
      */
     public void clearOverlay(View view) {
         mBaiduMap.clear();
-        markerList.clear();
-        textViewCurrentMarkerBaseStationName.setText("当前未点击小区");
     }
 
 
-    public void disPlayMyOverlay(LatLng latLng) {
+//    public void disPlayMyOverlay(LatLng latLng) {
 //        lteDatabaseList = DataSupport.where("enbCellLng<? and " +
 //                "enbCellLng>? and enbCellLat<? and enbCellLat >?", latLng.longitude + DISTANCE_OFFSET + "", latLng
 //                .longitude - DISTANCE_OFFSET + "", latLng.latitude + DISTANCE_OFFSET + "", latLng
@@ -325,8 +283,8 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
 //                markerList.add(marker);
 //            }
 //        }
-
-    }
+//
+//    }
 
     /**
      * 设置是否显示交通图
@@ -366,36 +324,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
 
     }
 
-    @Override
-    protected void onPause() {
-        mMapView.onPause();
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        mMapView.onResume();
-        super.onResume();
-        //为系统的方向传感器注册监听器
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
-                SensorManager.SENSOR_DELAY_UI);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mLocationClient.stop();
-        mBaiduMap.setMyLocationEnabled(false);
-        mMapView.onDestroy();
-        mMapView = null;
-    }
-
-    @Override
-    protected void onStop() {
-        //取消注册传感器监听
-        mSensorManager.unregisterListener(this);
-        super.onStop();
-    }
 
     private void requestLocation() {
         initLocation();
@@ -459,21 +387,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         return y;
     }
 
-    /**
-     * Reselected Tab
-     */
-    @Subscribe
-    public void onTabSelectedEvent(TabSelectedEvent event) {
-        if (event.position != MainFragment.SECOND) return;
-
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        EventBusActivityScope.getDefault(_mActivity).unregister(this);
-    }
 
     private class MyLocationListener implements BDLocationListener {
         @Override

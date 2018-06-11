@@ -1,4 +1,4 @@
-package com.hbmcc.shilinlin.networkoptz.Util;
+package com.hbmcc.shilinlin.networkoptz.util;
 
 /**
  * Created by linlinshi on 2017/12/30.

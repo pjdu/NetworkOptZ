@@ -100,7 +100,7 @@ public class MainFragment extends SupportFragment {
         bottomNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
         bottomNavigationBar
                 .addItem(new BottomNavigationItem(R.drawable.ic_home_white_24dp,
-                        "我的").setActiveColorResource(R.color.orange).setBadgeItem
+                        "首页").setActiveColorResource(R.color.orange).setBadgeItem
                         (numberBadgeItem))
                 .addItem(new BottomNavigationItem(R.drawable.ic_location_on_white_24dp,
                         "地图").setActiveColorResource(R.color.orange).setBadgeItem

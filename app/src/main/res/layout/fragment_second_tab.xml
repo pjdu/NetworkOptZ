@@ -38,13 +38,14 @@
             android:focusable="true"/>
 
         <Button
-            android:id="@+id/BtnChangeLocationMode"
+            android:id="@+id/btn_fragment_secondtab_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:icon="@drawable/ic_location"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="10dip"
-            android:layout_marginStart="25dp"/>
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="10dip"/>
 
         <Button
             android:id="@+id/BtnChangeMapType"
@@ -64,7 +65,6 @@
             android:layout_marginEnd="25dp"
             android:layout_marginTop="60dip"
             android:checked="false"
-            android:onClick="setTraffic"
             android:text="路况图"/>
 
         <CheckBox
@@ -76,19 +76,7 @@
             android:layout_marginEnd="25dp"
             android:layout_marginTop="90dip"
             android:checked="false"
-            android:onClick="setBaiduHeatMap"
             android:text="热力图"/>
-
-        <CheckBox
-            android:id="@+id/checkboxDisplayLteDatabase"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="22dp"
-            android:layout_marginTop="120dip"
-            android:checked="false"
-            android:text="4G基站"/>
 
     </RelativeLayout>
 
