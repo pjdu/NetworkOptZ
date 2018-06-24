@@ -3,7 +3,6 @@ package com.hbmcc.shilinlin.networkoptz.ui.fragment.first;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +28,7 @@ public class FirstTabFragment extends BaseMainFragment {
     LineChart mChart;
 
     public static FirstTabFragment newInstance() {
-
         Bundle args = new Bundle();
-
         FirstTabFragment fragment = new FirstTabFragment();
         fragment.setArguments(args);
         return fragment;
@@ -49,8 +46,16 @@ public class FirstTabFragment extends BaseMainFragment {
     private void initView(View view) {
 
         EventBusActivityScope.getDefault(_mActivity).register(this);
-        mChart = view.findViewById(R.id.chart_MainActivity_lineChart);
 
+        /*
+        如果是从xml创建，就直接用以下方法
+        LineChart chart = (LineChart) findViewById(R.id.chart);
+        如果需要动态创建，用以下方法
+        LineChart chart = new LineChart(Context);
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout);
+        rl.add(chart);
+        */
+        mChart = view.findViewById(R.id.chart_MainActivity_lineChart);
         initChart();
     }
 
@@ -74,20 +79,13 @@ public class FirstTabFragment extends BaseMainFragment {
         EventBusActivityScope.getDefault(_mActivity).unregister(this);
     }
 
-    private void initChart(){
-        /*
-        如果是从xml创建，就直接用以下方法
-        LineChart chart = (LineChart) findViewById(R.id.chart);
-        如果需要动态创建，用以下方法
-        LineChart chart = new LineChart(Context);
-        RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout);
-        rl.add(chart);
-        */
+    private void initChart() {
+
         ArrayList<Entry> values = new ArrayList<>();
 
         for (int i = 0; i < 40; i++) {
 
-            float val = (float) (Math.random() * -144);
+            float val = (float) (Math.random() * 50 - 144);
             values.add(new Entry(i, val));
         }
 
