@@ -100,17 +100,13 @@ public class MainFragment extends SupportFragment {
         bottomNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
         bottomNavigationBar
                 .addItem(new BottomNavigationItem(R.drawable.ic_home_white_24dp,
-                        "首页").setActiveColorResource(R.color.orange).setBadgeItem
-                        (numberBadgeItem))
+                        "首页").setActiveColorResource(R.color.orange))
                 .addItem(new BottomNavigationItem(R.drawable.ic_location_on_white_24dp,
-                        "地图").setActiveColorResource(R.color.orange).setBadgeItem
-                        (numberBadgeItem))
+                        "地图").setActiveColorResource(R.color.orange))
                 .addItem(new BottomNavigationItem(R.drawable.ic_find_replace_white_24dp,
-                        "测试").setActiveColorResource(R.color.orange).setBadgeItem
-                        (numberBadgeItem))
+                        "测试").setActiveColorResource(R.color.orange))
                 .addItem(new BottomNavigationItem(R.drawable.ic_avatar,
-                        "我的").setActiveColorResource(R.color.orange).setBadgeItem
-                        (numberBadgeItem))
+                        "我的").setActiveColorResource(R.color.orange))
                 .setFirstSelectedPosition(0)
                 .initialise();
 

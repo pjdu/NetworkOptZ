@@ -14,6 +14,7 @@ import java.util.List;
 
 import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
+import me.yokeyword.fragmentation.anim.DefaultVerticalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 
@@ -52,8 +53,10 @@ public class MainActivity extends SupportActivity {
 
     @Override
     public FragmentAnimator onCreateFragmentAnimator() {
-        // 设置横向(和安卓4.x动画相同)
-        return new DefaultHorizontalAnimator();
+        // 设置纵向(和安卓4.x动画相同)
+        return new DefaultVerticalAnimator();
+//        设置横向
+//        return new DefaultHorizontalAnimator();
     }
 
     @Override

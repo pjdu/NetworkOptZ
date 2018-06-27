@@ -11,6 +11,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.hbmcc.shilinlin.networkoptz.App;
 import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.CellInfo;
 import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.GsmCellInfo;
 import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.LteCellinfo;
@@ -18,7 +19,7 @@ import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.LteCellinfo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetworkInfo {
+public class NetworkStatus {
     private static final String TAG = "NetworkInfo";
     public int networkType;
     public String IMEI;
@@ -30,16 +31,18 @@ public class NetworkInfo {
     public ArrayList<LteCellinfo> lteNeighbourCellTowers;
     public ArrayList<GsmCellInfo> gsmNeighbourCellTowers;
 
-    public NetworkInfo getNetworkInfo(Context context) {
 
-        NetworkInfo networkInfo = new NetworkInfo();
-        TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+    public boolean updateNetworkStatus() {
+
+        NetworkStatus networkStatus = new NetworkStatus();
+        TelephonyManager mTelephonyManager = (TelephonyManager) App.getContext().getSystemService(Context
+                .TELEPHONY_SERVICE);
         if (mTelephonyManager == null) {
-            Toast.makeText(context, "获取手机网络存在问题", Toast.LENGTH_SHORT).show();
-            return null;
+            Toast.makeText(App.getContext(), "获取手机网络存在问题", Toast.LENGTH_SHORT).show();
+            return false;
         }
 
-        networkType = determineNetworkType(context);
+        networkType = determineNetworkType(App.getContext());
 
         if (Build.VERSION.SDK_INT >= 26) {
             IMEI = mTelephonyManager.getImei();
@@ -49,14 +52,14 @@ public class NetworkInfo {
         IMSI = mTelephonyManager.getSubscriberId();
 
 
-        androidVersion = android.os.Build.VERSION.RELEASE;
-        hardwareModel = android.os.Build.MODEL;
+        androidVersion = Build.VERSION.RELEASE;
+        hardwareModel = Build.MODEL;
 
         // 获取基站信息
         //SDK18及之后android系统使用getAllCellInfo方法，并且对基站的类型加以区分
         List<android.telephony.CellInfo> infos = mTelephonyManager.getAllCellInfo();
         if (infos != null) {
-            if (infos.size() == 0) return networkInfo;
+            if (infos.size() == 0) return false;
             lteNeighbourCellTowers = new ArrayList<>();
             gsmNeighbourCellTowers = new ArrayList<>();
             for (android.telephony.CellInfo i : infos) { // 根据邻区总数进行循环
@@ -113,7 +116,7 @@ public class NetworkInfo {
                 }
             }
         }
-        return networkInfo;
+        return true;
     }
 
     public int determineNetworkType(Context context) {
