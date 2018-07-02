@@ -3,10 +3,13 @@ package com.hbmcc.shilinlin.networkoptz.ui.fragment.first;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.baidu.mapapi.map.MyLocationData;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -15,9 +18,12 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
+import com.hbmcc.shilinlin.networkoptz.event.UpdateLocationStatusEvent;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
+import com.hbmcc.shilinlin.networkoptz.util.NumberFormat;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -26,6 +32,29 @@ import me.yokeyword.eventbusactivityscope.EventBusActivityScope;
 public class FirstTabFragment extends BaseMainFragment {
 
     LineChart mChart;
+    private Toolbar toolbarMain;
+    private TextView textViewMainActivityOperator;
+    private TextView textViewMainActivityIMSI;
+    private TextView textViewMainActivityIMEI;
+    private TextView textViewMainActivityUEModel;
+    private TextView textViewMainActivityAndroidVersion;
+    private TextView textViewMainActivityCurrentLocName;
+    private TextView textViewMainActivityLongitude;
+    private TextView textViewMainActivityLatitude;
+    private TextView textViewMainActivityTAC;
+    private TextView textViewMainActivityPCI;
+    private TextView textViewMainActivityCGI;
+    private TextView textViewMainActivityEarFcn;
+    private TextView textViewMainActivityBand;
+    private TextView textViewMainActivityFrequency;
+    private TextView textViewMainActivityRSRP;
+    private TextView textViewMainActivityRSRQ;
+    private TextView textViewMainActivitySINR;
+    private TextView textViewMainActivityAltitude;
+
+
+
+
 
     public static FirstTabFragment newInstance() {
         Bundle args = new Bundle();
@@ -56,6 +85,25 @@ public class FirstTabFragment extends BaseMainFragment {
         rl.add(chart);
         */
         mChart = view.findViewById(R.id.chart_MainActivity_lineChart);
+        toolbarMain = view.findViewById(R.id.toolbar_main);
+        textViewMainActivityOperator = view.findViewById(R.id.textView_MainActivity_Operator);
+        textViewMainActivityIMSI = view.findViewById(R.id.textView_MainActivity_IMSI);
+        textViewMainActivityIMEI = view.findViewById(R.id.textView_MainActivity_IMEI);
+        textViewMainActivityUEModel = view.findViewById(R.id.textView_MainActivity_UEModel);
+        textViewMainActivityAndroidVersion = view.findViewById(R.id.textView_MainActivity_AndroidVersion);
+        textViewMainActivityCurrentLocName = view.findViewById(R.id.textView_MainActivity_CurrentLocName);
+        textViewMainActivityLongitude = view.findViewById(R.id.textView_MainActivity_Longitude);
+        textViewMainActivityLatitude = view.findViewById(R.id.textView_MainActivity_Latitude);
+        textViewMainActivityTAC = view.findViewById(R.id.textView_MainActivity_TAC);
+        textViewMainActivityPCI = view.findViewById(R.id.textView_MainActivity_PCI);
+        textViewMainActivityCGI = view.findViewById(R.id.textView_MainActivity_CGI);
+        textViewMainActivityEarFcn = view.findViewById(R.id.textView_MainActivity_earFcn);
+        textViewMainActivityBand = view.findViewById(R.id.textView_MainActivity_Band);
+        textViewMainActivityFrequency = view.findViewById(R.id.textView_MainActivity_Frequency);
+        textViewMainActivityRSRP = view.findViewById(R.id.textView_MainActivity_RSRP);
+        textViewMainActivityRSRQ = view.findViewById(R.id.textView_MainActivity_RSRQ);
+        textViewMainActivitySINR = view.findViewById(R.id.textView_MainActivity_SINR);
+        textViewMainActivityAltitude = view.findViewById(R.id.textView_MainActivity_Altitude);
         initChart();
     }
 
@@ -77,6 +125,16 @@ public class FirstTabFragment extends BaseMainFragment {
     public void onDestroyView() {
         super.onDestroyView();
         EventBusActivityScope.getDefault(_mActivity).unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateLocation(UpdateLocationStatusEvent updateLocationStatusEvent) {
+        textViewMainActivityLatitude.setText(NumberFormat.doubleFormat(updateLocationStatusEvent.locationStatus
+                .latitudeWgs84,5)+ "");
+        textViewMainActivityLongitude.setText(NumberFormat.doubleFormat(updateLocationStatusEvent.locationStatus
+                .longitudeWgs84,5)+"");
+        textViewMainActivityAltitude.setText(updateLocationStatusEvent.locationStatus.altitude+"米");
+        textViewMainActivityCurrentLocName.setText(updateLocationStatusEvent.locationStatus.addrStr);
     }
 
     private void initChart() {

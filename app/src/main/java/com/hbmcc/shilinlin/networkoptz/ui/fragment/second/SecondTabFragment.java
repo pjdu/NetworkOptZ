@@ -14,10 +14,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -27,14 +23,16 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.hbmcc.shilinlin.networkoptz.R;
-import com.hbmcc.shilinlin.networkoptz.util.LocatonConverter;
+import com.hbmcc.shilinlin.networkoptz.event.UpdateLocationStatusEvent;
+import com.hbmcc.shilinlin.networkoptz.telephony.LocationStatus;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
+import com.hbmcc.shilinlin.networkoptz.util.NumberFormat;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
-import java.math.BigDecimal;
 
 import me.yokeyword.eventbusactivityscope.EventBusActivityScope;
 
@@ -44,7 +42,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
 
     public static final double DISTANCE_OFFSET = 0.01;
     public static final float MARKER_ALPHA = 0.7f;
-    private LocationClient mLocationClient = null;
     private boolean isFirstLoc = true; // 是否首次定位
     private MapView mMapView;
     private BaiduMap mBaiduMap;
@@ -53,7 +50,7 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     private Button btnLocation;
     private CheckBox checkBoxTraffic;
     private CheckBox checkBoxBaiduHeatMap;
-    private MyLocationListener myListener = new MyLocationListener();
+
     private TextView textViewCurrentPositionLonLat;
     private TextView textViewCurrentPositionDefinition;
     private MyLocationConfiguration.LocationMode mCurrentLocationMode;
@@ -117,7 +114,7 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mLocationClient.stop();
+
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
         mMapView = null;
@@ -138,15 +135,11 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         textViewCurrentPositionDefinition = view.findViewById(R.id
                 .textView_fragment_second_tab_current_position_definition);
         btnChangeMapType = view.findViewById(R.id.btn_fragment_second_tab_change_map_type);
-        btnLocation=view.findViewById(R.id.btn_fragment_second_tab_location);
+        btnLocation = view.findViewById(R.id.btn_fragment_second_tab_location);
         checkBoxTraffic = view.findViewById(R.id.checkBox_fragment_second_tab_traffic);
         checkBoxBaiduHeatMap = view.findViewById(R.id.checkbox_fragment_second_tab_baidu_heat_map);
         mSensorManager = (SensorManager) _mActivity.getSystemService(SENSOR_SERVICE);//获取传感器管理服务
 
-        // 定位初始化
-        mLocationClient = new LocationClient(_mActivity);
-        mLocationClient.registerLocationListener(myListener);
-        requestLocation();
 
         // 地图初始化
         mMapView = view.findViewById(R.id.bmapView_fragment_second_tab_bmapview);
@@ -174,7 +167,7 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         );
 
 
-        btnChangeMapType.setOnClickListener(new View.OnClickListener(){
+        btnChangeMapType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (mMapType) {
@@ -192,21 +185,21 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
             }
         });
 
-        btnLocation.setOnClickListener(new View.OnClickListener(){
+        btnLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToCurrentLocation();
             }
         });
 
-        checkBoxBaiduHeatMap.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener(){
+        checkBoxBaiduHeatMap.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mBaiduMap.setBaiduHeatMapEnabled(isChecked);
             }
         });
 
-        checkBoxTraffic.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener(){
+        checkBoxTraffic.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mBaiduMap.setTrafficEnabled(isChecked);
@@ -265,101 +258,52 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateLocation(UpdateLocationStatusEvent updateLocationStatusEvent) {
 
-    private void requestLocation() {
-        initLocation();
-        mLocationClient.start();
+        getCurrentLocation(updateLocationStatusEvent.locationStatus);
+        //在界面上更新当前地点的经纬度、名称等信息
+
+        //更新地图
+        if (updateLocationStatusEvent.locationStatus.bdLocation == null || mMapView == null) {
+            return;
+        }
+
+        mCurrentLat = updateLocationStatusEvent.locationStatus.latitudeBaidu;
+        mCurrentLon = updateLocationStatusEvent.locationStatus.longitudeBaidu;
+        mCurrentAccracy = updateLocationStatusEvent.locationStatus.radius;
+        locData = new MyLocationData.Builder()
+                .accuracy(mCurrentAccracy)
+                // 此处设置开发者获取到的方向信息，顺时针0-360
+                .direction(mCurrentDirection).latitude(mCurrentLat)
+                .longitude(mCurrentLon).build();
+        mBaiduMap.setMyLocationData(locData);
+        if (isFirstLoc) {
+            isFirstLoc = false;
+            goToCurrentLocation();
+        }
+
     }
 
-    private void initLocation() {
-        LocationClientOption option = new LocationClientOption();
-        option.setScanSpan(1000);//设置发起定位请求的间隔，int类型，单位ms。如果设置为0，则代表单次定位，即仅定位一次，默认为0。如果设置非0，需设置1000ms以上才有效
-        option.setCoorType("bd09ll");//设置返回经纬度坐标类型，默认gcj02。gcj02：国测局坐标；/bd09ll：百度经纬度坐标；bd09：百度墨卡托坐标；海外地区定位，无需设置坐标类型，统一返回wgs84类型坐标
-        option.setOpenGps(true);//设置是否当GPS有效时按照1S/1次频率输出GPS结果，默认false
-        option.setWifiCacheTimeOut(5 * 60 * 1000);//7.2版本新增能力，如果设置了该接口，首次启动定位时，会先判断当前WiFi是否超出有效期，若超出有效期，会先重新扫描WiFi，然后定位
-        option.setIsNeedAltitude(true);//获取高度信息，目前只有是GPS定位结果时或者设置LocationClientOption.setIsNeedAltitude(true)时才有效，单位米
-        option.setIsNeedAddress(true);//设置是否需要地址信息，默认为无地址
-        mLocationClient.setLocOption(option);
-    }
 
-    private void getCurrentLocation(BDLocation location) {
+    private void getCurrentLocation(LocationStatus locationStatus) {
         StringBuilder currentPostion = new StringBuilder();
-        //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
-        //以下只列举部分获取经纬度相关（常用）的结果信息
-        //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
-
-        double latitudeBaidu = location.getLatitude();    //获取纬度信息
-        double longitudeBaidu = location.getLongitude();    //获取经度信息
-        LocatonConverter.LatLng latLngBaidu = new LocatonConverter.LatLng(latitudeBaidu,
-                longitudeBaidu);
-        LocatonConverter.LatLng latLngWgs84 = LocatonConverter.bd09ToWgs84(latLngBaidu);
-        double latitudeWgs84 = latLngWgs84.getLatitude();
-        double longitudeWgs84 = latLngWgs84.getLongitude();
-        float radius = location.getRadius();    //获取定位精度，默认值为0.0f
-        double altitude = location.getAltitude();
-
-        String coorType = location.getCoorType();
-        //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
-
-        int errorCode = location.getLocType();
-        //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
-
-        String networkLocationCode = location.getNetworkLocationType();//在网络定位结果的情况下，获取网络定位结果是通过基站定位得到的还是通过wifi定位得到的还是GPS得结果
-        // 返回: String : "wf"： wifi定位结果 “cl“； cell定位结果 “ll”：GPS定位结果 null 没有获取到定位结果采用的类型
-
-        String province = location.getProvince();//省
-        String city = location.getCity();//市
-        String district = location.getDistrict();//区县
-        String street = location.getStreet();//街道
-        String streetNumber = location.getStreetNumber();//街道号码
-        String addrStr = location.getAddrStr();//详细地址
-
-        currentPostion.append("经纬度:").append(doubleFormat(longitudeWgs84, 6)).append(",")
+                currentPostion.append("经纬度:").append(NumberFormat.doubleFormat(locationStatus
+                .longitudeWgs84, 6))
+                .append(",")
                 .append
-                        (doubleFormat(latitudeWgs84, 6)).append(",高度:").append(altitude);
+                        (NumberFormat.doubleFormat(locationStatus.latitudeWgs84, 6)).append("," +
+                "高度:").append
+                (locationStatus.altitude);
 
         textViewCurrentPositionLonLat.setText(currentPostion);
-        textViewCurrentPositionDefinition.setText("详细地址" + addrStr);
-    }
-
-    public double doubleFormat(double x, int decimalPlaces) {
-        BigDecimal b = new BigDecimal(x);//BigDecimal 类使用户能完全控制舍入行为
-        double y = b.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP).doubleValue();
-        return y;
+        textViewCurrentPositionDefinition.setText("详细地址" + locationStatus.addrStr);
     }
 
 
-    private class MyLocationListener implements BDLocationListener {
-        @Override
-        public void onReceiveLocation(BDLocation location) {
 
-            getCurrentLocation(location);//在界面上更新当前地点的经纬度、名称等信息
 
-            //更新地图
-            if (location == null || mMapView == null) {
-                return;
-            }
-
-            mCurrentLat = location.getLatitude();
-            mCurrentLon = location.getLongitude();
-            mCurrentAccracy = location.getRadius();
-            locData = new MyLocationData.Builder()
-                    .accuracy(mCurrentAccracy)
-                    // 此处设置开发者获取到的方向信息，顺时针0-360
-                    .direction(mCurrentDirection).latitude(mCurrentLat)
-                    .longitude(mCurrentLon).build();
-            mBaiduMap.setMyLocationData(locData);
-            if (isFirstLoc) {
-                isFirstLoc = false;
-                goToCurrentLocation();
-            }
-        }
-
-        public void onReceivePoi(BDLocation poiLocation) {
-        }
-    }
-
-    private void goToCurrentLocation(){
+    private void goToCurrentLocation() {
         LatLng ll = new LatLng(mCurrentLat,
                 mCurrentLon);
         MapStatus.Builder builder = new MapStatus.Builder();

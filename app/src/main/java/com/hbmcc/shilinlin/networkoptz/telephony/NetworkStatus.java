@@ -32,14 +32,13 @@ public class NetworkStatus {
     public ArrayList<GsmCellInfo> gsmNeighbourCellTowers;
 
 
-    public boolean updateNetworkStatus() {
-
+    public NetworkStatus getCurrentNetworkStatus() {
         NetworkStatus networkStatus = new NetworkStatus();
         TelephonyManager mTelephonyManager = (TelephonyManager) App.getContext().getSystemService(Context
                 .TELEPHONY_SERVICE);
         if (mTelephonyManager == null) {
             Toast.makeText(App.getContext(), "获取手机网络存在问题", Toast.LENGTH_SHORT).show();
-            return false;
+            return null;
         }
 
         networkType = determineNetworkType(App.getContext());
@@ -59,7 +58,7 @@ public class NetworkStatus {
         //SDK18及之后android系统使用getAllCellInfo方法，并且对基站的类型加以区分
         List<android.telephony.CellInfo> infos = mTelephonyManager.getAllCellInfo();
         if (infos != null) {
-            if (infos.size() == 0) return false;
+            if (infos.size() == 0) return null;
             lteNeighbourCellTowers = new ArrayList<>();
             gsmNeighbourCellTowers = new ArrayList<>();
             for (android.telephony.CellInfo i : infos) { // 根据邻区总数进行循环
@@ -116,10 +115,10 @@ public class NetworkStatus {
                 }
             }
         }
-        return true;
+        return networkStatus;
     }
 
-    public int determineNetworkType(Context context) {
+    private int determineNetworkType(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager == null) return CellInfo.TYPE_UNKNOWN;
         android.net.NetworkInfo network = connectivityManager.getActiveNetworkInfo();
