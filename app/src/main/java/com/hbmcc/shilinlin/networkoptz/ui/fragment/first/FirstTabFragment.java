@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.baidu.mapapi.map.MyLocationData;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -18,7 +17,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
-import com.hbmcc.shilinlin.networkoptz.event.UpdateLocationStatusEvent;
+import com.hbmcc.shilinlin.networkoptz.event.UpdateUEStatusEvent;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
 import com.hbmcc.shilinlin.networkoptz.util.NumberFormat;
 
@@ -51,10 +50,7 @@ public class FirstTabFragment extends BaseMainFragment {
     private TextView textViewMainActivityRSRQ;
     private TextView textViewMainActivitySINR;
     private TextView textViewMainActivityAltitude;
-
-
-
-
+    private TextView textViewMainActivityCellChsName;
 
     public static FirstTabFragment newInstance() {
         Bundle args = new Bundle();
@@ -104,6 +100,7 @@ public class FirstTabFragment extends BaseMainFragment {
         textViewMainActivityRSRQ = view.findViewById(R.id.textView_MainActivity_RSRQ);
         textViewMainActivitySINR = view.findViewById(R.id.textView_MainActivity_SINR);
         textViewMainActivityAltitude = view.findViewById(R.id.textView_MainActivity_Altitude);
+        textViewMainActivityCellChsName = view.findViewById(R.id.textView_MainActivity_CellChsName);
         initChart();
     }
 
@@ -128,13 +125,40 @@ public class FirstTabFragment extends BaseMainFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateLocation(UpdateLocationStatusEvent updateLocationStatusEvent) {
-        textViewMainActivityLatitude.setText(NumberFormat.doubleFormat(updateLocationStatusEvent.locationStatus
-                .latitudeWgs84,5)+ "");
-        textViewMainActivityLongitude.setText(NumberFormat.doubleFormat(updateLocationStatusEvent.locationStatus
+    public void updateLocation(UpdateUEStatusEvent updateUEStatusEvent) {
+        textViewMainActivityOperator.setText(updateUEStatusEvent.ueStatus.networkStatus
+                .lteServingCellTower.mobileCountryCode +""+updateUEStatusEvent.ueStatus
+                .networkStatus.lteServingCellTower.mobileNetworkCode);
+        textViewMainActivityIMSI.setText(updateUEStatusEvent.ueStatus.networkStatus.IMSI+"");
+        textViewMainActivityIMEI.setText(updateUEStatusEvent.ueStatus.networkStatus.IMEI+"");
+        textViewMainActivityUEModel.setText(updateUEStatusEvent.ueStatus.networkStatus.hardwareModel+"");
+        textViewMainActivityAndroidVersion.setText(updateUEStatusEvent.ueStatus.networkStatus.androidVersion+"");
+        textViewMainActivityLongitude.setText(NumberFormat.doubleFormat(updateUEStatusEvent.ueStatus.locationStatus
                 .longitudeWgs84,5)+"");
-        textViewMainActivityAltitude.setText(updateLocationStatusEvent.locationStatus.altitude+"米");
-        textViewMainActivityCurrentLocName.setText(updateLocationStatusEvent.locationStatus.addrStr);
+        textViewMainActivityLatitude.setText(NumberFormat.doubleFormat
+                (updateUEStatusEvent.ueStatus.locationStatus
+                .latitudeWgs84,5)+ "");
+        textViewMainActivityAltitude.setText(updateUEStatusEvent.ueStatus.locationStatus.altitude+"米");
+        textViewMainActivityCurrentLocName.setText(updateUEStatusEvent.ueStatus.locationStatus.addrStr+"");
+
+        textViewMainActivityCellChsName.setText("待开发");
+        textViewMainActivityTAC.setText(updateUEStatusEvent.ueStatus.networkStatus
+                .lteServingCellTower.tac+"");
+        textViewMainActivityPCI.setText(updateUEStatusEvent.ueStatus.networkStatus
+                .lteServingCellTower.pci+"");
+        textViewMainActivityCGI.setText(updateUEStatusEvent.ueStatus.networkStatus
+                .lteServingCellTower.enbId + "-" + updateUEStatusEvent.ueStatus.networkStatus
+                .lteServingCellTower.enbCellId);
+        textViewMainActivityEarFcn.setText(updateUEStatusEvent.ueStatus.networkStatus
+                .lteServingCellTower.lteEarFcn+"");
+        textViewMainActivityBand.setText("待开发");
+        textViewMainActivityFrequency.setText("待开发");
+        textViewMainActivityRSRP.setText(updateUEStatusEvent.ueStatus.networkStatus
+                .lteServingCellTower.signalStrength+"");
+        textViewMainActivityRSRQ.setText(updateUEStatusEvent.ueStatus.networkStatus
+                .lteServingCellTower.rsrq+"");
+        textViewMainActivitySINR.setText(updateUEStatusEvent.ueStatus.networkStatus
+                .lteServingCellTower.sinr+"");
     }
 
     private void initChart() {

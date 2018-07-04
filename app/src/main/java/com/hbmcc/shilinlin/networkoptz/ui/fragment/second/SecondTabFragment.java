@@ -23,7 +23,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.hbmcc.shilinlin.networkoptz.R;
-import com.hbmcc.shilinlin.networkoptz.event.UpdateLocationStatusEvent;
+import com.hbmcc.shilinlin.networkoptz.event.UpdateUEStatusEvent;
 import com.hbmcc.shilinlin.networkoptz.telephony.LocationStatus;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
@@ -259,19 +259,19 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateLocation(UpdateLocationStatusEvent updateLocationStatusEvent) {
+    public void updateLocation(UpdateUEStatusEvent updateUEStatusEvent) {
 
-        getCurrentLocation(updateLocationStatusEvent.locationStatus);
+        getCurrentLocation(updateUEStatusEvent.ueStatus.locationStatus);
         //在界面上更新当前地点的经纬度、名称等信息
 
         //更新地图
-        if (updateLocationStatusEvent.locationStatus.bdLocation == null || mMapView == null) {
+        if (updateUEStatusEvent.ueStatus.locationStatus.bdLocation == null || mMapView == null) {
             return;
         }
 
-        mCurrentLat = updateLocationStatusEvent.locationStatus.latitudeBaidu;
-        mCurrentLon = updateLocationStatusEvent.locationStatus.longitudeBaidu;
-        mCurrentAccracy = updateLocationStatusEvent.locationStatus.radius;
+        mCurrentLat = updateUEStatusEvent.ueStatus.locationStatus.latitudeBaidu;
+        mCurrentLon = updateUEStatusEvent.ueStatus.locationStatus.longitudeBaidu;
+        mCurrentAccracy = updateUEStatusEvent.ueStatus.locationStatus.radius;
         locData = new MyLocationData.Builder()
                 .accuracy(mCurrentAccracy)
                 // 此处设置开发者获取到的方向信息，顺时针0-360

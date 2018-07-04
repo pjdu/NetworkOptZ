@@ -11,7 +11,7 @@ public class LocationStatus {
             addrStr;
     public int errorCode;
 
-    public LocationStatus(BDLocation bdLocation) {
+    public void updateStatus(BDLocation bdLocation) {
         this.bdLocation = bdLocation;
         latitudeBaidu = bdLocation.getLatitude();    //获取纬度信息
         longitudeBaidu = bdLocation.getLongitude();    //获取经度信息

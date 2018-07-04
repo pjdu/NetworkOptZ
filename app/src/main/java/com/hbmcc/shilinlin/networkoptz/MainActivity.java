@@ -5,13 +5,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.hbmcc.shilinlin.networkoptz.event.UpdateLocationStatusEvent;
+import com.hbmcc.shilinlin.networkoptz.event.UpdateUEStatusEvent;
+import com.hbmcc.shilinlin.networkoptz.telephony.DownloadSpeedStatus;
+import com.hbmcc.shilinlin.networkoptz.telephony.LocationStatus;
+import com.hbmcc.shilinlin.networkoptz.telephony.NetworkStatus;
+import com.hbmcc.shilinlin.networkoptz.telephony.UEStatus;
+import com.hbmcc.shilinlin.networkoptz.telephony.UploadSpeedStatus;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
 
 import java.util.ArrayList;
@@ -27,6 +33,11 @@ public class MainActivity extends SupportActivity {
     private static final String TAG = "MainActivity";
     public LocationClient mLocationClient = null;
     private MyLocationListener myListener = new MyLocationListener();
+    private UEStatus ueStatus;
+    private NetworkStatus networkStatus;
+    private UploadSpeedStatus uploadSpeedStatus;
+    private DownloadSpeedStatus downloadSpeedStatus;
+    private LocationStatus locationStatus;
 
     @Override
     protected void onDestroy() {
@@ -41,6 +52,11 @@ public class MainActivity extends SupportActivity {
         if (findFragment(MainFragment.class) == null) {
             loadRootFragment(R.id.fl_container, MainFragment.newInstance());
         }
+
+        networkStatus = new NetworkStatus();
+        uploadSpeedStatus = new UploadSpeedStatus();
+        downloadSpeedStatus = new DownloadSpeedStatus();
+        locationStatus = new LocationStatus();
 
         // 定位初始化
         mLocationClient = new LocationClient(getApplicationContext());
@@ -119,10 +135,14 @@ public class MainActivity extends SupportActivity {
         @Override
         public void onReceiveLocation(BDLocation location) {
             if(location!=null) {
-                UpdateLocationStatusEvent updateLocationStatusEvent =new UpdateLocationStatusEvent
-                        (location);
-//                EventBus.getDefault().post(updateLocationStatusEvent);
-                EventBusActivityScope.getDefault(MainActivity.this).post(updateLocationStatusEvent);
+                networkStatus.updateStatus();
+                locationStatus.updateStatus(location);
+                ueStatus = new UEStatus(networkStatus,locationStatus,downloadSpeedStatus,uploadSpeedStatus);
+//                Log.d(TAG, "onReceiveLocation: "+ueStatus.locationStatus.longitudeBaidu);
+//                Log.d(TAG, "onReceiveLocation: "+ueStatus.networkStatus.lteServingCellTower.tac);
+                UpdateUEStatusEvent updateUEStatusEvent =new UpdateUEStatusEvent(ueStatus);
+                EventBusActivityScope.getDefault(MainActivity.this).post(updateUEStatusEvent);
+
             }
         }
 
