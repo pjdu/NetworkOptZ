@@ -124,23 +124,26 @@ public class MainActivity extends SupportActivity {
         LocationClientOption option = new LocationClientOption();
         option.setScanSpan(1000);//设置发起定位请求的间隔，int类型，单位ms。如果设置为0，则代表单次定位，即仅定位一次，默认为0。如果设置非0，需设置1000ms以上才有效
         option.setCoorType("bd09ll");//设置返回经纬度坐标类型，默认gcj02。gcj02：国测局坐标；/bd09ll：百度经纬度坐标；bd09：百度墨卡托坐标；海外地区定位，无需设置坐标类型，统一返回wgs84类型坐标
-        option.setOpenGps(true);//设置是否当GPS有效时按照1S/1次频率输出GPS结果，默认false
-        option.setWifiCacheTimeOut(5 * 60 * 1000);//7.2版本新增能力，如果设置了该接口，首次启动定位时，会先判断当前WiFi是否超出有效期，若超出有效期，会先重新扫描WiFi，然后定位
+        option.setOpenGps(true);//设置是否打开gps进行定位
+        option.setWifiCacheTimeOut(5 * 60 * 1000);//7.2版本新增能力，设置wifi缓存超时时间阈值，超过该阈值，首次定位将会主动扫描wifi以使得定位精准度提高，定位速度会有所下降，具体延时取决于wifi扫描时间，大约是1-3秒
         option.setIsNeedAltitude(true);//获取高度信息，目前只有是GPS定位结果时或者设置LocationClientOption.setIsNeedAltitude(true)时才有效，单位米
         option.setIsNeedAddress(true);//设置是否需要地址信息，默认为无地址
+        option.setIsNeedLocationDescribe(true);//设置是否需要返回位置语义化信息，可以在BDLocation
+        option.setNeedDeviceDirect(true);//在网络定位时，是否需要设备方向 true:需要 ; false:不需要。
+        option.setIsNeedLocationDescribe(true);// getLocationDescribe()中得到数据，ex:"在天安门附近"， 可以用作地址信息的补充
         mLocationClient.setLocOption(option);
     }
 
     private class MyLocationListener implements BDLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location) {
-            if(location!=null) {
+            if (location != null) {
                 networkStatus.updateStatus();
                 locationStatus.updateStatus(location);
-                ueStatus = new UEStatus(networkStatus,locationStatus,downloadSpeedStatus,uploadSpeedStatus);
+                ueStatus = new UEStatus(networkStatus, locationStatus, downloadSpeedStatus, uploadSpeedStatus);
 //                Log.d(TAG, "onReceiveLocation: "+ueStatus.locationStatus.longitudeBaidu);
 //                Log.d(TAG, "onReceiveLocation: "+ueStatus.networkStatus.lteServingCellTower.tac);
-                UpdateUEStatusEvent updateUEStatusEvent =new UpdateUEStatusEvent(ueStatus);
+                UpdateUEStatusEvent updateUEStatusEvent = new UpdateUEStatusEvent(ueStatus);
                 EventBusActivityScope.getDefault(MainActivity.this).post(updateUEStatusEvent);
 
             }

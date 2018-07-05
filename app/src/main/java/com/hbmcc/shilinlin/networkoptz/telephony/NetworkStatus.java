@@ -16,6 +16,7 @@ import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.CellInfo;
 import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.GsmCellInfo;
 import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.LteCellinfo;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,10 +74,33 @@ public class NetworkStatus {
                     tower.timingAdvance = ((CellInfoLte) i).getCellSignalStrength().getTimingAdvance();
                     if (Build.VERSION.SDK_INT >= 24) {
                         tower.lteEarFcn = cellIdentityLte.getEarfcn();
+                    }else {
+                        try {
+                            Class<?> cellIdentityLteClass = cellIdentityLte.getClass();
+                            Method methodGetEarFcn = cellIdentityLteClass.getDeclaredMethod
+                                    ("getEarfcn");
+                            tower.lteEarFcn = (int) methodGetEarFcn.invoke(cellIdentityLte);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     if (Build.VERSION.SDK_INT >= 26) {
                         tower.rsrq = ((CellInfoLte) i).getCellSignalStrength().getRsrq();
                         tower.sinr = ((CellInfoLte) i).getCellSignalStrength().getRssnr();
+                    } else {
+                        try {
+                            Class<?> cellSignalStrengthLteClass = ((CellInfoLte) i)
+                                    .getCellSignalStrength().getClass();
+                            Method methodGetRsrq = cellSignalStrengthLteClass.getDeclaredMethod
+                                    ("getRsrq");
+                            Method methodGetRssnr = cellSignalStrengthLteClass.getDeclaredMethod
+                                    ("getRssnr");
+                            tower.rsrq = (int) methodGetRsrq.invoke(((CellInfoLte) i)
+                                    .getCellSignalStrength());
+                            tower.sinr = (int) methodGetRssnr.invoke(((CellInfoLte) i).getCellSignalStrength());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     tower.pci = cellIdentityLte.getPci();
                     tower.enbId = (int) Math.floor(tower.cellId / 256);

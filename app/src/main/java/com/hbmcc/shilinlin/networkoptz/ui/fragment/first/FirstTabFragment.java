@@ -1,19 +1,14 @@
 package com.hbmcc.shilinlin.networkoptz.ui.fragment.first;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
@@ -24,13 +19,10 @@ import com.hbmcc.shilinlin.networkoptz.util.NumberFormat;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-
 import me.yokeyword.eventbusactivityscope.EventBusActivityScope;
 
 public class FirstTabFragment extends BaseMainFragment {
 
-    LineChart mChart;
     private Toolbar toolbarMain;
     private TextView textViewMainActivityOperator;
     private TextView textViewMainActivityIMSI;
@@ -51,6 +43,9 @@ public class FirstTabFragment extends BaseMainFragment {
     private TextView textViewMainActivitySINR;
     private TextView textViewMainActivityAltitude;
     private TextView textViewMainActivityCellChsName;
+    private TextView textViewFragmentFirstTabRecentAvgSignalStrength;
+    private RecyclerView recyclerViewFragmentFirstTabRecentRecord;
+    private RecyclerView recyclerViewFragmentFirstTabNeighbourCellInfo;
 
     public static FirstTabFragment newInstance() {
         Bundle args = new Bundle();
@@ -72,36 +67,29 @@ public class FirstTabFragment extends BaseMainFragment {
 
         EventBusActivityScope.getDefault(_mActivity).register(this);
 
-        /*
-        如果是从xml创建，就直接用以下方法
-        LineChart chart = (LineChart) findViewById(R.id.chart);
-        如果需要动态创建，用以下方法
-        LineChart chart = new LineChart(Context);
-        RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout);
-        rl.add(chart);
-        */
-        mChart = view.findViewById(R.id.chart_MainActivity_lineChart);
         toolbarMain = view.findViewById(R.id.toolbar_main);
-        textViewMainActivityOperator = view.findViewById(R.id.textView_MainActivity_Operator);
-        textViewMainActivityIMSI = view.findViewById(R.id.textView_MainActivity_IMSI);
-        textViewMainActivityIMEI = view.findViewById(R.id.textView_MainActivity_IMEI);
-        textViewMainActivityUEModel = view.findViewById(R.id.textView_MainActivity_UEModel);
-        textViewMainActivityAndroidVersion = view.findViewById(R.id.textView_MainActivity_AndroidVersion);
-        textViewMainActivityCurrentLocName = view.findViewById(R.id.textView_MainActivity_CurrentLocName);
-        textViewMainActivityLongitude = view.findViewById(R.id.textView_MainActivity_Longitude);
-        textViewMainActivityLatitude = view.findViewById(R.id.textView_MainActivity_Latitude);
-        textViewMainActivityTAC = view.findViewById(R.id.textView_MainActivity_TAC);
-        textViewMainActivityPCI = view.findViewById(R.id.textView_MainActivity_PCI);
-        textViewMainActivityCGI = view.findViewById(R.id.textView_MainActivity_CGI);
-        textViewMainActivityEarFcn = view.findViewById(R.id.textView_MainActivity_earFcn);
-        textViewMainActivityBand = view.findViewById(R.id.textView_MainActivity_Band);
-        textViewMainActivityFrequency = view.findViewById(R.id.textView_MainActivity_Frequency);
-        textViewMainActivityRSRP = view.findViewById(R.id.textView_MainActivity_RSRP);
-        textViewMainActivityRSRQ = view.findViewById(R.id.textView_MainActivity_RSRQ);
-        textViewMainActivitySINR = view.findViewById(R.id.textView_MainActivity_SINR);
-        textViewMainActivityAltitude = view.findViewById(R.id.textView_MainActivity_Altitude);
-        textViewMainActivityCellChsName = view.findViewById(R.id.textView_MainActivity_CellChsName);
-        initChart();
+        textViewMainActivityOperator = view.findViewById(R.id.textView_fragment_first_tab_operator);
+        textViewMainActivityIMSI = view.findViewById(R.id.textView_fragment_first_tab_IMSI);
+        textViewMainActivityIMEI = view.findViewById(R.id.textView_fragment_first_tab_IMEI);
+        textViewMainActivityUEModel = view.findViewById(R.id.textView_fragment_first_tab_uemodel);
+        textViewMainActivityAndroidVersion = view.findViewById(R.id.textView_fragment_first_tab_androidversion);
+        textViewMainActivityCurrentLocName = view.findViewById(R.id.textView_fragment_first_tab_currentlocname);
+        textViewMainActivityLongitude = view.findViewById(R.id.textView_fragment_first_tab_longitude);
+        textViewMainActivityLatitude = view.findViewById(R.id.textView_fragment_first_tab_latitude);
+        textViewMainActivityTAC = view.findViewById(R.id.textView_fragment_first_tab_tac);
+        textViewMainActivityPCI = view.findViewById(R.id.textView_fragment_first_tab_pci);
+        textViewMainActivityCGI = view.findViewById(R.id.textView_fragment_first_tab_cgi);
+        textViewMainActivityEarFcn = view.findViewById(R.id.textView_fragment_first_tab_earfcn);
+        textViewMainActivityBand = view.findViewById(R.id.textView_fragment_first_tab_band);
+        textViewMainActivityFrequency = view.findViewById(R.id.textView_fragment_first_tab_frequency);
+        textViewMainActivityRSRP = view.findViewById(R.id.textView_fragment_first_tab_RSRP);
+        textViewMainActivityRSRQ = view.findViewById(R.id.textView_fragment_first_tab_RSRQ);
+        textViewMainActivitySINR = view.findViewById(R.id.textView_fragment_first_tab_SINR);
+        textViewMainActivityAltitude = view.findViewById(R.id.textView_fragment_first_tab_altitude);
+        textViewMainActivityCellChsName = view.findViewById(R.id.textView_fragment_first_tab_cellchsname);
+        textViewFragmentFirstTabRecentAvgSignalStrength = view.findViewById(R.id.textView_fragment_first_tab_recent_avg_signal_strength);
+        recyclerViewFragmentFirstTabRecentRecord = view.findViewById(R.id.recyclerView_fragment_first_tab_recent_record);
+        recyclerViewFragmentFirstTabNeighbourCellInfo = view.findViewById(R.id.recyclerView_fragment_first_tab_neighbour_cell_info);
     }
 
     @Override
@@ -125,10 +113,9 @@ public class FirstTabFragment extends BaseMainFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateLocation(UpdateUEStatusEvent updateUEStatusEvent) {
-        textViewMainActivityOperator.setText(updateUEStatusEvent.ueStatus.networkStatus
-                .lteServingCellTower.mobileCountryCode +""+updateUEStatusEvent.ueStatus
-                .networkStatus.lteServingCellTower.mobileNetworkCode);
+    public void updateView(UpdateUEStatusEvent updateUEStatusEvent) {
+        textViewMainActivityOperator.setText(updateUEStatusEvent.ueStatus.locationStatus
+                .operators+"");
         textViewMainActivityIMSI.setText(updateUEStatusEvent.ueStatus.networkStatus.IMSI+"");
         textViewMainActivityIMEI.setText(updateUEStatusEvent.ueStatus.networkStatus.IMEI+"");
         textViewMainActivityUEModel.setText(updateUEStatusEvent.ueStatus.networkStatus.hardwareModel+"");
@@ -139,7 +126,10 @@ public class FirstTabFragment extends BaseMainFragment {
                 (updateUEStatusEvent.ueStatus.locationStatus
                 .latitudeWgs84,5)+ "");
         textViewMainActivityAltitude.setText(updateUEStatusEvent.ueStatus.locationStatus.altitude+"米");
-        textViewMainActivityCurrentLocName.setText(updateUEStatusEvent.ueStatus.locationStatus.addrStr+"");
+        textViewMainActivityCurrentLocName.setText(updateUEStatusEvent.ueStatus.locationStatus
+                .city+updateUEStatusEvent.ueStatus.locationStatus.district+updateUEStatusEvent
+                .ueStatus.locationStatus.street+updateUEStatusEvent.ueStatus.locationStatus
+                .streetNumber);
 
         textViewMainActivityCellChsName.setText("待开发");
         textViewMainActivityTAC.setText(updateUEStatusEvent.ueStatus.networkStatus
@@ -161,46 +151,5 @@ public class FirstTabFragment extends BaseMainFragment {
                 .lteServingCellTower.sinr+"");
     }
 
-    private void initChart() {
 
-        ArrayList<Entry> values = new ArrayList<>();
-
-        for (int i = 0; i < 40; i++) {
-
-            float val = (float) (Math.random() * 50 - 144);
-            values.add(new Entry(i, val));
-        }
-
-        LineDataSet set1;
-
-        if (mChart.getData() != null &&
-                mChart.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) mChart.getData().getDataSetByIndex(0);
-            set1.setValues(values);
-            mChart.getData().notifyDataChanged();
-            mChart.notifyDataSetChanged();
-        } else {
-            // create a dataset and give it a type
-            set1 = new LineDataSet(values, "DataSet 1");
-
-            set1.setDrawIcons(false);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLACK);
-            set1.setLineWidth(1f);
-            set1.setCircleRadius(3f);
-            set1.setDrawCircleHole(false);
-            set1.setValueTextSize(9f);
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set1); // add the datasets
-
-            // create a data object with the datasets
-            LineData data = new LineData(dataSets);
-
-            // set data
-
-            mChart.setData(data);
-
-        }
-    }
 }
