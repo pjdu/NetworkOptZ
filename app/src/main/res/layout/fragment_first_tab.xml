@@ -515,8 +515,7 @@
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recyclerView_fragment_first_tab_recent_record"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:paddingLeft="6dp">
+                            android:layout_height="wrap_content">
 
 
                         </android.support.v7.widget.RecyclerView>
@@ -590,8 +589,7 @@
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recyclerView_fragment_first_tab_neighbour_cell_info"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:paddingLeft="6dp" />
+                            android:layout_height="wrap_content"/>
                     </LinearLayout>
                 </LinearLayout> <!-- 邻区版块 -->
 
@@ -608,8 +606,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            android:text="当前时间"
-                            android:textColor="#91919191" />
+                            android:hint="当前时间"
+                            android:textColor="#91919191"
+                            android:id="@+id/textView_fragment_first_tab_currentDateTime"/>
                     </RelativeLayout>
 
                 </LinearLayout> <!-- 时间版块 -->

@@ -2,50 +2,61 @@ package com.hbmcc.shilinlin.networkoptz.ui.fragment.first;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.hbmcc.shilinlin.networkoptz.Adapter.RecentRecordAdapter;
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
 import com.hbmcc.shilinlin.networkoptz.event.UpdateUEStatusEvent;
+import com.hbmcc.shilinlin.networkoptz.telephony.NetworkStatus;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
 import com.hbmcc.shilinlin.networkoptz.util.NumberFormat;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.yokeyword.eventbusactivityscope.EventBusActivityScope;
 
 public class FirstTabFragment extends BaseMainFragment {
-
+    private static final String TAG = "FirstTabFragment";
     private Toolbar toolbarMain;
-    private TextView textViewMainActivityOperator;
-    private TextView textViewMainActivityIMSI;
-    private TextView textViewMainActivityIMEI;
-    private TextView textViewMainActivityUEModel;
-    private TextView textViewMainActivityAndroidVersion;
-    private TextView textViewMainActivityCurrentLocName;
-    private TextView textViewMainActivityLongitude;
-    private TextView textViewMainActivityLatitude;
-    private TextView textViewMainActivityTAC;
-    private TextView textViewMainActivityPCI;
-    private TextView textViewMainActivityCGI;
-    private TextView textViewMainActivityEarFcn;
-    private TextView textViewMainActivityBand;
-    private TextView textViewMainActivityFrequency;
-    private TextView textViewMainActivityRSRP;
-    private TextView textViewMainActivityRSRQ;
-    private TextView textViewMainActivitySINR;
-    private TextView textViewMainActivityAltitude;
-    private TextView textViewMainActivityCellChsName;
+    private TextView textViewFragmentFirstTabOperator;
+    private TextView textViewFragmentFirstTabIMSI;
+    private TextView textViewFragmentFirstTabIMEI;
+    private TextView textViewFragmentFirstTabUEModel;
+    private TextView textViewFragmentFirstTabAndroidVersion;
+    private TextView textViewFragmentFirstTabCurrentLocName;
+    private TextView textViewFragmentFirstTabLongitude;
+    private TextView textViewFragmentFirstTabLatitude;
+    private TextView textViewFragmentFirstTabTAC;
+    private TextView textViewFragmentFirstTabPCI;
+    private TextView textViewFragmentFirstTabCGI;
+    private TextView textViewFragmentFirstTabEarFcn;
+    private TextView textViewFragmentFirstTabBand;
+    private TextView textViewFragmentFirstTabFrequency;
+    private TextView textViewFragmentFirstTabRSRP;
+    private TextView textViewFragmentFirstTabRSRQ;
+    private TextView textViewFragmentFirstTabSINR;
+    private TextView textViewFragmentFirstTabAltitude;
+    private TextView textViewFragmentFirstTabCellChsName;
     private TextView textViewFragmentFirstTabRecentAvgSignalStrength;
     private RecyclerView recyclerViewFragmentFirstTabRecentRecord;
     private RecyclerView recyclerViewFragmentFirstTabNeighbourCellInfo;
+    private TextView textViewFragmentFirstTabCurrentDateTime;
+    private List<NetworkStatus> recentNetworkStatusRecordList;
+    RecentRecordAdapter recentRecordAdapter;
+    NetworkStatus mNewNetworkStatus;
 
     public static FirstTabFragment newInstance() {
         Bundle args = new Bundle();
@@ -68,28 +79,32 @@ public class FirstTabFragment extends BaseMainFragment {
         EventBusActivityScope.getDefault(_mActivity).register(this);
 
         toolbarMain = view.findViewById(R.id.toolbar_main);
-        textViewMainActivityOperator = view.findViewById(R.id.textView_fragment_first_tab_operator);
-        textViewMainActivityIMSI = view.findViewById(R.id.textView_fragment_first_tab_IMSI);
-        textViewMainActivityIMEI = view.findViewById(R.id.textView_fragment_first_tab_IMEI);
-        textViewMainActivityUEModel = view.findViewById(R.id.textView_fragment_first_tab_uemodel);
-        textViewMainActivityAndroidVersion = view.findViewById(R.id.textView_fragment_first_tab_androidversion);
-        textViewMainActivityCurrentLocName = view.findViewById(R.id.textView_fragment_first_tab_currentlocname);
-        textViewMainActivityLongitude = view.findViewById(R.id.textView_fragment_first_tab_longitude);
-        textViewMainActivityLatitude = view.findViewById(R.id.textView_fragment_first_tab_latitude);
-        textViewMainActivityTAC = view.findViewById(R.id.textView_fragment_first_tab_tac);
-        textViewMainActivityPCI = view.findViewById(R.id.textView_fragment_first_tab_pci);
-        textViewMainActivityCGI = view.findViewById(R.id.textView_fragment_first_tab_cgi);
-        textViewMainActivityEarFcn = view.findViewById(R.id.textView_fragment_first_tab_earfcn);
-        textViewMainActivityBand = view.findViewById(R.id.textView_fragment_first_tab_band);
-        textViewMainActivityFrequency = view.findViewById(R.id.textView_fragment_first_tab_frequency);
-        textViewMainActivityRSRP = view.findViewById(R.id.textView_fragment_first_tab_RSRP);
-        textViewMainActivityRSRQ = view.findViewById(R.id.textView_fragment_first_tab_RSRQ);
-        textViewMainActivitySINR = view.findViewById(R.id.textView_fragment_first_tab_SINR);
-        textViewMainActivityAltitude = view.findViewById(R.id.textView_fragment_first_tab_altitude);
-        textViewMainActivityCellChsName = view.findViewById(R.id.textView_fragment_first_tab_cellchsname);
+        textViewFragmentFirstTabOperator = view.findViewById(R.id.textView_fragment_first_tab_operator);
+        textViewFragmentFirstTabIMSI = view.findViewById(R.id.textView_fragment_first_tab_IMSI);
+        textViewFragmentFirstTabIMEI = view.findViewById(R.id.textView_fragment_first_tab_IMEI);
+        textViewFragmentFirstTabUEModel = view.findViewById(R.id.textView_fragment_first_tab_uemodel);
+        textViewFragmentFirstTabAndroidVersion = view.findViewById(R.id.textView_fragment_first_tab_androidversion);
+        textViewFragmentFirstTabCurrentLocName = view.findViewById(R.id.textView_fragment_first_tab_currentlocname);
+        textViewFragmentFirstTabLongitude = view.findViewById(R.id.textView_fragment_first_tab_longitude);
+        textViewFragmentFirstTabLatitude = view.findViewById(R.id.textView_fragment_first_tab_latitude);
+        textViewFragmentFirstTabTAC = view.findViewById(R.id.textView_fragment_first_tab_tac);
+        textViewFragmentFirstTabPCI = view.findViewById(R.id.textView_fragment_first_tab_pci);
+        textViewFragmentFirstTabCGI = view.findViewById(R.id.textView_fragment_first_tab_cgi);
+        textViewFragmentFirstTabEarFcn = view.findViewById(R.id.textView_fragment_first_tab_earfcn);
+        textViewFragmentFirstTabBand = view.findViewById(R.id.textView_fragment_first_tab_band);
+        textViewFragmentFirstTabFrequency = view.findViewById(R.id.textView_fragment_first_tab_frequency);
+        textViewFragmentFirstTabRSRP = view.findViewById(R.id.textView_fragment_first_tab_RSRP);
+        textViewFragmentFirstTabRSRQ = view.findViewById(R.id.textView_fragment_first_tab_RSRQ);
+        textViewFragmentFirstTabSINR = view.findViewById(R.id.textView_fragment_first_tab_SINR);
+        textViewFragmentFirstTabAltitude = view.findViewById(R.id.textView_fragment_first_tab_altitude);
+        textViewFragmentFirstTabCellChsName = view.findViewById(R.id.textView_fragment_first_tab_cellchsname);
         textViewFragmentFirstTabRecentAvgSignalStrength = view.findViewById(R.id.textView_fragment_first_tab_recent_avg_signal_strength);
+        textViewFragmentFirstTabCurrentDateTime = view.findViewById(R.id
+                .textView_fragment_first_tab_currentDateTime);
         recyclerViewFragmentFirstTabRecentRecord = view.findViewById(R.id.recyclerView_fragment_first_tab_recent_record);
         recyclerViewFragmentFirstTabNeighbourCellInfo = view.findViewById(R.id.recyclerView_fragment_first_tab_neighbour_cell_info);
+        recentNetworkStatusRecordList = new ArrayList<>();
+        initRecyclerViewRecentRecord();
     }
 
     @Override
@@ -114,42 +129,58 @@ public class FirstTabFragment extends BaseMainFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateView(UpdateUEStatusEvent updateUEStatusEvent) {
-        textViewMainActivityOperator.setText(updateUEStatusEvent.ueStatus.locationStatus
+        textViewFragmentFirstTabOperator.setText(updateUEStatusEvent.ueStatus.locationStatus
                 .operators+"");
-        textViewMainActivityIMSI.setText(updateUEStatusEvent.ueStatus.networkStatus.IMSI+"");
-        textViewMainActivityIMEI.setText(updateUEStatusEvent.ueStatus.networkStatus.IMEI+"");
-        textViewMainActivityUEModel.setText(updateUEStatusEvent.ueStatus.networkStatus.hardwareModel+"");
-        textViewMainActivityAndroidVersion.setText(updateUEStatusEvent.ueStatus.networkStatus.androidVersion+"");
-        textViewMainActivityLongitude.setText(NumberFormat.doubleFormat(updateUEStatusEvent.ueStatus.locationStatus
+        textViewFragmentFirstTabIMSI.setText(updateUEStatusEvent.ueStatus.networkStatus.IMSI+"");
+        textViewFragmentFirstTabIMEI.setText(updateUEStatusEvent.ueStatus.networkStatus.IMEI+"");
+        textViewFragmentFirstTabUEModel.setText(updateUEStatusEvent.ueStatus.networkStatus.hardwareModel+"");
+        textViewFragmentFirstTabAndroidVersion.setText(updateUEStatusEvent.ueStatus.networkStatus.androidVersion+"");
+        textViewFragmentFirstTabLongitude.setText(NumberFormat.doubleFormat(updateUEStatusEvent.ueStatus.locationStatus
                 .longitudeWgs84,5)+"");
-        textViewMainActivityLatitude.setText(NumberFormat.doubleFormat
+        textViewFragmentFirstTabLatitude.setText(NumberFormat.doubleFormat
                 (updateUEStatusEvent.ueStatus.locationStatus
                 .latitudeWgs84,5)+ "");
-        textViewMainActivityAltitude.setText(updateUEStatusEvent.ueStatus.locationStatus.altitude+"米");
-        textViewMainActivityCurrentLocName.setText(updateUEStatusEvent.ueStatus.locationStatus
+        textViewFragmentFirstTabAltitude.setText(updateUEStatusEvent.ueStatus.locationStatus.altitude+"米");
+        textViewFragmentFirstTabCurrentLocName.setText(updateUEStatusEvent.ueStatus.locationStatus
                 .city+updateUEStatusEvent.ueStatus.locationStatus.district+updateUEStatusEvent
                 .ueStatus.locationStatus.street+updateUEStatusEvent.ueStatus.locationStatus
                 .streetNumber);
 
-        textViewMainActivityCellChsName.setText("待开发");
-        textViewMainActivityTAC.setText(updateUEStatusEvent.ueStatus.networkStatus
+        textViewFragmentFirstTabCellChsName.setText("待开发");
+        textViewFragmentFirstTabTAC.setText(updateUEStatusEvent.ueStatus.networkStatus
                 .lteServingCellTower.tac+"");
-        textViewMainActivityPCI.setText(updateUEStatusEvent.ueStatus.networkStatus
+        textViewFragmentFirstTabPCI.setText(updateUEStatusEvent.ueStatus.networkStatus
                 .lteServingCellTower.pci+"");
-        textViewMainActivityCGI.setText(updateUEStatusEvent.ueStatus.networkStatus
+        textViewFragmentFirstTabCGI.setText(updateUEStatusEvent.ueStatus.networkStatus
                 .lteServingCellTower.enbId + "-" + updateUEStatusEvent.ueStatus.networkStatus
                 .lteServingCellTower.enbCellId);
-        textViewMainActivityEarFcn.setText(updateUEStatusEvent.ueStatus.networkStatus
+        textViewFragmentFirstTabEarFcn.setText(updateUEStatusEvent.ueStatus.networkStatus
                 .lteServingCellTower.lteEarFcn+"");
-        textViewMainActivityBand.setText("待开发");
-        textViewMainActivityFrequency.setText("待开发");
-        textViewMainActivityRSRP.setText(updateUEStatusEvent.ueStatus.networkStatus
+        textViewFragmentFirstTabBand.setText("待开发");
+        textViewFragmentFirstTabFrequency.setText("待开发");
+        textViewFragmentFirstTabRSRP.setText(updateUEStatusEvent.ueStatus.networkStatus
                 .lteServingCellTower.signalStrength+"");
-        textViewMainActivityRSRQ.setText(updateUEStatusEvent.ueStatus.networkStatus
+        textViewFragmentFirstTabRSRQ.setText(updateUEStatusEvent.ueStatus.networkStatus
                 .lteServingCellTower.rsrq+"");
-        textViewMainActivitySINR.setText(updateUEStatusEvent.ueStatus.networkStatus
+        textViewFragmentFirstTabSINR.setText(updateUEStatusEvent.ueStatus.networkStatus
                 .lteServingCellTower.sinr+"");
+        textViewFragmentFirstTabCurrentDateTime.setText(updateUEStatusEvent.ueStatus
+                .networkStatus.time);
+        mNewNetworkStatus = new NetworkStatus();
+        mNewNetworkStatus = updateUEStatusEvent.ueStatus.networkStatus;
+        recentNetworkStatusRecordList.add(mNewNetworkStatus);
+
+//        for(NetworkStatus kk:recentNetworkStatusRecordList) {
+//            Log.d(TAG, "updateView: time" + kk.time);
+//        }
+        recentRecordAdapter.notifyDataSetChanged();
     }
 
+    private void initRecyclerViewRecentRecord(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerViewFragmentFirstTabRecentRecord.setLayoutManager(layoutManager);
+        recentRecordAdapter = new RecentRecordAdapter(recentNetworkStatusRecordList);
+        recyclerViewFragmentFirstTabRecentRecord.setAdapter(recentRecordAdapter);
 
+    }
 }

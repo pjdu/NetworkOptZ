@@ -8,7 +8,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:id="@+id/recyclerview_item_neighbourcellinfo_type"
+        android:id="@+id/textview_recyclerview_item_neighbourcellinfo_type"
         android:gravity="center"
         android:background="@drawable/recangle"/>
 
@@ -16,7 +16,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:id="@+id/recyclerview_item_neighbourcellinfo_tac"
+        android:id="@+id/textview_recyclerview_item_neighbourcellinfo_tac"
         android:gravity="center"
         android:background="@drawable/recangle"/>
 
@@ -24,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:id="@+id/recyclerview_item_neighbourcellinfo_pci"
+        android:id="@+id/textview_recyclerview_item_neighbourcellinfo_pci"
         android:gravity="center"
         android:background="@drawable/recangle"/>
 
@@ -32,7 +32,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:id="@+id/recyclerview_item_neighbourcellinfo_rsrp"
+        android:id="@+id/textview_recyclerview_item_neighbourcellinfo_rsrp"
         android:gravity="center"
         android:background="@drawable/recangle"/>
 

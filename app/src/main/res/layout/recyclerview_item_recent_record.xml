@@ -8,49 +8,49 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
-        android:id="@+id/recyclerview_item_recent_record_time"
+        android:id="@+id/textview_recyclerview_item_recent_record_time"
         android:gravity="center"
         android:background="@drawable/recangle"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:id="@+id/recyclerview_item_recent_record_tac"
+        android:id="@+id/textview_recyclerview_item_recent_record_tac"
         android:gravity="center"
         android:background="@drawable/recangle"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:id="@+id/recyclerview_item_recent_record_pci"
+        android:id="@+id/textview_recyclerview_item_recent_record_pci"
         android:gravity="center"
         android:background="@drawable/recangle"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
-        android:id="@+id/recyclerview_item_recent_record_enbid"
+        android:id="@+id/textview_recyclerview_item_recent_record_enbid"
         android:gravity="center"
         android:background="@drawable/recangle"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:id="@+id/recyclerview_item_recent_record_enbcellid"
+        android:id="@+id/textview_recyclerview_item_recent_record_enbcellid"
         android:gravity="center"
         android:background="@drawable/recangle"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:id="@+id/recyclerview_item_recent_record_rsrp"
+        android:id="@+id/textview_recyclerview_item_recent_record_rsrp"
         android:gravity="center"
         android:background="@drawable/recangle"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:id="@+id/recyclerview_item_recent_record_sinr"
+        android:id="@+id/textview_recyclerview_item_recent_record_sinr"
         android:gravity="center"
         android:background="@drawable/recangle"/>
 

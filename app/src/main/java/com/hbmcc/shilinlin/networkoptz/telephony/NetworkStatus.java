@@ -17,11 +17,13 @@ import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.GsmCellInfo;
 import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.LteCellinfo;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NetworkStatus {
     private static final String TAG = "NetworkInfo";
+    public String time;
     public int networkType;
     public String IMEI;
     public String IMSI;
@@ -39,7 +41,8 @@ public class NetworkStatus {
             Toast.makeText(App.getContext(), "获取手机网络存在问题", Toast.LENGTH_SHORT).show();
             return false;
         }
-
+        SimpleDateFormat sDateFormat  = new SimpleDateFormat("HH:mm:ss ");
+        time = sDateFormat.format(new java.util.Date());
         networkType = determineNetworkType(App.getContext());
 
         if (Build.VERSION.SDK_INT >= 26) {
@@ -87,6 +90,9 @@ public class NetworkStatus {
                     if (Build.VERSION.SDK_INT >= 26) {
                         tower.rsrq = ((CellInfoLte) i).getCellSignalStrength().getRsrq();
                         tower.sinr = ((CellInfoLte) i).getCellSignalStrength().getRssnr();
+                        if(tower.sinr == Integer.MAX_VALUE){
+                            tower.sinr = -99;
+                        }
                     } else {
                         try {
                             Class<?> cellSignalStrengthLteClass = ((CellInfoLte) i)
