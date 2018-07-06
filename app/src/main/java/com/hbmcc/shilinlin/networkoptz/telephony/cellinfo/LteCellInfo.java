@@ -1,6 +1,6 @@
 package com.hbmcc.shilinlin.networkoptz.telephony.cellinfo;
 
-public class LteCellinfo extends CellInfo{
+public class LteCellInfo extends CellInfo{
     public int pci;
     public int tac;
     public int lteEarFcn;

@@ -12,7 +12,7 @@ public class LocationStatus {
     public int errorCode, satelliteNumber, gpsAccuracyStatus, indoorLocationSource,
             indoorLocationSurpport;
 
-    public void updateStatus(BDLocation bdLocation) {
+    public LocationStatus(BDLocation bdLocation) {
         this.bdLocation = bdLocation;
 
         //状态部分
@@ -69,4 +69,5 @@ public class LocationStatus {
                 return "未知运营商";
         }
     }
+
 }

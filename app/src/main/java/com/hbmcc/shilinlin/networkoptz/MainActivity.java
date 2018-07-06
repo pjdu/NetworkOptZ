@@ -38,6 +38,7 @@ public class MainActivity extends SupportActivity {
     private UploadSpeedStatus uploadSpeedStatus;
     private DownloadSpeedStatus downloadSpeedStatus;
     private LocationStatus locationStatus;
+    private String mTime;
 
     @Override
     protected void onDestroy() {
@@ -49,14 +50,10 @@ public class MainActivity extends SupportActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mTime = "";
         if (findFragment(MainFragment.class) == null) {
             loadRootFragment(R.id.fl_container, MainFragment.newInstance());
         }
-
-        networkStatus = new NetworkStatus();
-        uploadSpeedStatus = new UploadSpeedStatus();
-        downloadSpeedStatus = new DownloadSpeedStatus();
-        locationStatus = new LocationStatus();
 
         // 定位初始化
         mLocationClient = new LocationClient(getApplicationContext());
@@ -138,15 +135,25 @@ public class MainActivity extends SupportActivity {
 
     private class MyLocationListener implements BDLocationListener {
         @Override
-        public void onReceiveLocation(BDLocation location) {
+        public void onReceiveLocation(final BDLocation location) {
+
             if (location != null) {
-                networkStatus.updateStatus();
-                locationStatus.updateStatus(location);
-                ueStatus = new UEStatus(networkStatus, locationStatus, downloadSpeedStatus, uploadSpeedStatus);
-//                Log.d(TAG, "onReceiveLocation: "+ueStatus.locationStatus.longitudeBaidu);
-//                Log.d(TAG, "onReceiveLocation: "+ueStatus.networkStatus.lteServingCellTower.tac);
-                UpdateUEStatusEvent updateUEStatusEvent = new UpdateUEStatusEvent(ueStatus);
-                EventBusActivityScope.getDefault(MainActivity.this).post(updateUEStatusEvent);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        networkStatus = new NetworkStatus();
+                        if(!mTime.equals(networkStatus.time)){
+                            uploadSpeedStatus = new UploadSpeedStatus();
+                            downloadSpeedStatus = new DownloadSpeedStatus();
+                            locationStatus = new LocationStatus(location);
+                            ueStatus = new UEStatus(networkStatus, locationStatus, downloadSpeedStatus, uploadSpeedStatus);
+                            UpdateUEStatusEvent updateUEStatusEvent = new UpdateUEStatusEvent(ueStatus);
+                            EventBusActivityScope.getDefault(MainActivity.this).post(updateUEStatusEvent);
+                            mTime = networkStatus.time;
+                        }
+                    }
+                }).start();
+
 
             }
         }

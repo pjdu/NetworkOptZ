@@ -11,7 +11,7 @@ public class CellInfo {
     public static final String STRING_TYPE_CDMA = "CDMA";
     public static final String STRING_TYPE_WCDMA = "WCDMA";
 
-    public int cellType;
+    public String cellType;
     public int cellId;
     public int locationAreaCode;//（必填）：GSM 和 WCDMA 网络的位置区域代码 (LAC)。CDMA 网络的网络 ID (NID)。
     public int mobileCountryCode;//（必填）：移动电话基站的移动国家代码 (MCC)。

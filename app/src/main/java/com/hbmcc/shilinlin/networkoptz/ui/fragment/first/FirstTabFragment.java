@@ -5,18 +5,21 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hbmcc.shilinlin.networkoptz.Adapter.NeighbourCellAdapter;
 import com.hbmcc.shilinlin.networkoptz.Adapter.RecentRecordAdapter;
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
 import com.hbmcc.shilinlin.networkoptz.event.UpdateUEStatusEvent;
 import com.hbmcc.shilinlin.networkoptz.telephony.NetworkStatus;
+import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.LteCellInfo;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
 import com.hbmcc.shilinlin.networkoptz.util.NumberFormat;
 
@@ -30,6 +33,11 @@ import me.yokeyword.eventbusactivityscope.EventBusActivityScope;
 
 public class FirstTabFragment extends BaseMainFragment {
     private static final String TAG = "FirstTabFragment";
+    RecentRecordAdapter recentRecordAdapter;
+    NeighbourCellAdapter neighbourCellAdapter;
+    long recentNetworkStatusCnt;
+    long recentSumSignalStrength;
+    double recentAvgSignalStrength;
     private Toolbar toolbarMain;
     private TextView textViewFragmentFirstTabOperator;
     private TextView textViewFragmentFirstTabIMSI;
@@ -51,12 +59,16 @@ public class FirstTabFragment extends BaseMainFragment {
     private TextView textViewFragmentFirstTabAltitude;
     private TextView textViewFragmentFirstTabCellChsName;
     private TextView textViewFragmentFirstTabRecentAvgSignalStrength;
+    private TextView textViewFragmentFirstTabNeighbourCell;
     private RecyclerView recyclerViewFragmentFirstTabRecentRecord;
     private RecyclerView recyclerViewFragmentFirstTabNeighbourCellInfo;
     private TextView textViewFragmentFirstTabCurrentDateTime;
     private List<NetworkStatus> recentNetworkStatusRecordList;
-    RecentRecordAdapter recentRecordAdapter;
-    NetworkStatus mNewNetworkStatus;
+    private List<LteCellInfo> neighbourCellList;
+    private Button btnFragmentFirstTabConvert;
+    private LinearLayout linearlayoutFragmentFirstTabRecentRecord;
+    private LinearLayout linearlayoutFragmentFirstTabNeighbourCell;
+
 
     public static FirstTabFragment newInstance() {
         Bundle args = new Bundle();
@@ -98,13 +110,40 @@ public class FirstTabFragment extends BaseMainFragment {
         textViewFragmentFirstTabSINR = view.findViewById(R.id.textView_fragment_first_tab_SINR);
         textViewFragmentFirstTabAltitude = view.findViewById(R.id.textView_fragment_first_tab_altitude);
         textViewFragmentFirstTabCellChsName = view.findViewById(R.id.textView_fragment_first_tab_cellchsname);
+        btnFragmentFirstTabConvert = view.findViewById(R.id.btn_fragment_first_tab_convert);
+        linearlayoutFragmentFirstTabRecentRecord = view.findViewById(R.id
+                .linearlayout_fragment_first_tab_recent_record);
+        linearlayoutFragmentFirstTabNeighbourCell = view.findViewById(R.id
+                .linearlayout_fragment_first_tab_neighbour_cell);
         textViewFragmentFirstTabRecentAvgSignalStrength = view.findViewById(R.id.textView_fragment_first_tab_recent_avg_signal_strength);
+        textViewFragmentFirstTabNeighbourCell = view.findViewById(R.id
+                .textView_fragment_first_tab_neighbour_cell);
         textViewFragmentFirstTabCurrentDateTime = view.findViewById(R.id
                 .textView_fragment_first_tab_currentDateTime);
         recyclerViewFragmentFirstTabRecentRecord = view.findViewById(R.id.recyclerView_fragment_first_tab_recent_record);
         recyclerViewFragmentFirstTabNeighbourCellInfo = view.findViewById(R.id.recyclerView_fragment_first_tab_neighbour_cell_info);
         recentNetworkStatusRecordList = new ArrayList<>();
-        initRecyclerViewRecentRecord();
+        neighbourCellList = new ArrayList<>();
+        initRecyclerView();
+        recentNetworkStatusCnt = 0;
+        recentAvgSignalStrength = 0;
+
+        btnFragmentFirstTabConvert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (linearlayoutFragmentFirstTabRecentRecord.getVisibility() == View.VISIBLE) {
+                    linearlayoutFragmentFirstTabRecentRecord.setVisibility(View.GONE);
+                    linearlayoutFragmentFirstTabNeighbourCell.setVisibility(View.VISIBLE);
+                    textViewFragmentFirstTabRecentAvgSignalStrength.setVisibility(View.GONE);
+                    textViewFragmentFirstTabNeighbourCell.setVisibility(View.VISIBLE);
+                } else {
+                    linearlayoutFragmentFirstTabRecentRecord.setVisibility(View.VISIBLE);
+                    linearlayoutFragmentFirstTabNeighbourCell.setVisibility(View.GONE);
+                    textViewFragmentFirstTabRecentAvgSignalStrength.setVisibility(View.VISIBLE);
+                    textViewFragmentFirstTabNeighbourCell.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override
@@ -128,59 +167,74 @@ public class FirstTabFragment extends BaseMainFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateView(UpdateUEStatusEvent updateUEStatusEvent) {
+    public void updateView(final UpdateUEStatusEvent updateUEStatusEvent) {
         textViewFragmentFirstTabOperator.setText(updateUEStatusEvent.ueStatus.locationStatus
-                .operators+"");
-        textViewFragmentFirstTabIMSI.setText(updateUEStatusEvent.ueStatus.networkStatus.IMSI+"");
-        textViewFragmentFirstTabIMEI.setText(updateUEStatusEvent.ueStatus.networkStatus.IMEI+"");
-        textViewFragmentFirstTabUEModel.setText(updateUEStatusEvent.ueStatus.networkStatus.hardwareModel+"");
-        textViewFragmentFirstTabAndroidVersion.setText(updateUEStatusEvent.ueStatus.networkStatus.androidVersion+"");
+                .operators + "");
+        textViewFragmentFirstTabIMSI.setText(updateUEStatusEvent.ueStatus.networkStatus.IMSI + "");
+        textViewFragmentFirstTabIMEI.setText(updateUEStatusEvent.ueStatus.networkStatus.IMEI + "");
+        textViewFragmentFirstTabUEModel.setText(updateUEStatusEvent.ueStatus.networkStatus.hardwareModel + "");
+        textViewFragmentFirstTabAndroidVersion.setText(updateUEStatusEvent.ueStatus.networkStatus.androidVersion + "");
         textViewFragmentFirstTabLongitude.setText(NumberFormat.doubleFormat(updateUEStatusEvent.ueStatus.locationStatus
-                .longitudeWgs84,5)+"");
+                .longitudeWgs84, 5) + "");
         textViewFragmentFirstTabLatitude.setText(NumberFormat.doubleFormat
                 (updateUEStatusEvent.ueStatus.locationStatus
-                .latitudeWgs84,5)+ "");
-        textViewFragmentFirstTabAltitude.setText(updateUEStatusEvent.ueStatus.locationStatus.altitude+"米");
+                        .latitudeWgs84, 5) + "");
+        textViewFragmentFirstTabAltitude.setText(updateUEStatusEvent.ueStatus.locationStatus.altitude + "米");
         textViewFragmentFirstTabCurrentLocName.setText(updateUEStatusEvent.ueStatus.locationStatus
-                .city+updateUEStatusEvent.ueStatus.locationStatus.district+updateUEStatusEvent
-                .ueStatus.locationStatus.street+updateUEStatusEvent.ueStatus.locationStatus
+                .city + updateUEStatusEvent.ueStatus.locationStatus.district + updateUEStatusEvent
+                .ueStatus.locationStatus.street + updateUEStatusEvent.ueStatus.locationStatus
                 .streetNumber);
 
         textViewFragmentFirstTabCellChsName.setText("待开发");
         textViewFragmentFirstTabTAC.setText(updateUEStatusEvent.ueStatus.networkStatus
-                .lteServingCellTower.tac+"");
+                .lteServingCellTower.tac + "");
         textViewFragmentFirstTabPCI.setText(updateUEStatusEvent.ueStatus.networkStatus
-                .lteServingCellTower.pci+"");
+                .lteServingCellTower.pci + "");
         textViewFragmentFirstTabCGI.setText(updateUEStatusEvent.ueStatus.networkStatus
                 .lteServingCellTower.enbId + "-" + updateUEStatusEvent.ueStatus.networkStatus
                 .lteServingCellTower.enbCellId);
         textViewFragmentFirstTabEarFcn.setText(updateUEStatusEvent.ueStatus.networkStatus
-                .lteServingCellTower.lteEarFcn+"");
+                .lteServingCellTower.lteEarFcn + "");
         textViewFragmentFirstTabBand.setText("待开发");
         textViewFragmentFirstTabFrequency.setText("待开发");
         textViewFragmentFirstTabRSRP.setText(updateUEStatusEvent.ueStatus.networkStatus
-                .lteServingCellTower.signalStrength+"");
+                .lteServingCellTower.signalStrength + "");
         textViewFragmentFirstTabRSRQ.setText(updateUEStatusEvent.ueStatus.networkStatus
-                .lteServingCellTower.rsrq+"");
+                .lteServingCellTower.rsrq + "");
         textViewFragmentFirstTabSINR.setText(updateUEStatusEvent.ueStatus.networkStatus
-                .lteServingCellTower.sinr+"");
+                .lteServingCellTower.sinr + "");
+        recentNetworkStatusCnt = recentNetworkStatusCnt + 1;
+        recentSumSignalStrength = recentSumSignalStrength + updateUEStatusEvent.ueStatus
+                .networkStatus
+                .lteServingCellTower.signalStrength;
+        recentAvgSignalStrength = recentSumSignalStrength / recentNetworkStatusCnt;
+        textViewFragmentFirstTabRecentAvgSignalStrength.setText
+                ("最近" + recentNetworkStatusCnt + "条记录，平均信号强度" + recentAvgSignalStrength + "dbm");
         textViewFragmentFirstTabCurrentDateTime.setText(updateUEStatusEvent.ueStatus
                 .networkStatus.time);
-        mNewNetworkStatus = new NetworkStatus();
-        mNewNetworkStatus = updateUEStatusEvent.ueStatus.networkStatus;
-        recentNetworkStatusRecordList.add(mNewNetworkStatus);
-
-//        for(NetworkStatus kk:recentNetworkStatusRecordList) {
-//            Log.d(TAG, "updateView: time" + kk.time);
-//        }
         recentRecordAdapter.notifyDataSetChanged();
+        neighbourCellAdapter.notifyDataSetChanged();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                recentNetworkStatusRecordList.add(0, updateUEStatusEvent.ueStatus.networkStatus);
+                neighbourCellList.clear();
+                neighbourCellList.addAll(updateUEStatusEvent.ueStatus.networkStatus
+                        .lteNeighbourCellTowers) ;
+            }
+        }).start();
     }
 
-    private void initRecyclerViewRecentRecord(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerViewFragmentFirstTabRecentRecord.setLayoutManager(layoutManager);
+    private void initRecyclerView() {
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(getContext());
+        recyclerViewFragmentFirstTabRecentRecord.setLayoutManager(layoutManager1);
         recentRecordAdapter = new RecentRecordAdapter(recentNetworkStatusRecordList);
         recyclerViewFragmentFirstTabRecentRecord.setAdapter(recentRecordAdapter);
 
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getContext());
+        recyclerViewFragmentFirstTabNeighbourCellInfo.setLayoutManager(layoutManager2);
+        neighbourCellAdapter = new NeighbourCellAdapter(neighbourCellList);
+        recyclerViewFragmentFirstTabNeighbourCellInfo.setAdapter(neighbourCellAdapter);
     }
 }

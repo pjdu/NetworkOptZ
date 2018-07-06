@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.hbmcc.shilinlin.networkoptz.App;
 import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.CellInfo;
 import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.GsmCellInfo;
-import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.LteCellinfo;
+import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.LteCellInfo;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -23,25 +23,26 @@ import java.util.List;
 
 public class NetworkStatus {
     private static final String TAG = "NetworkInfo";
+    public static final int NETWORK_STATUS_ERROR = 9999;
+
     public String time;
     public int networkType;
     public String IMEI;
     public String IMSI;
     public String androidVersion;
     public String hardwareModel;
-    public LteCellinfo lteServingCellTower;
+    public LteCellInfo lteServingCellTower;
     public GsmCellInfo gsmServingCellTower;
-    public ArrayList<LteCellinfo> lteNeighbourCellTowers;
+    public ArrayList<LteCellInfo> lteNeighbourCellTowers;
     public ArrayList<GsmCellInfo> gsmNeighbourCellTowers;
 
-    public boolean updateStatus() {
+    public NetworkStatus() {
         TelephonyManager mTelephonyManager = (TelephonyManager) App.getContext().getSystemService(Context
                 .TELEPHONY_SERVICE);
         if (mTelephonyManager == null) {
             Toast.makeText(App.getContext(), "获取手机网络存在问题", Toast.LENGTH_SHORT).show();
-            return false;
         }
-        SimpleDateFormat sDateFormat  = new SimpleDateFormat("HH:mm:ss ");
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("HH:mm:ss ");
         time = sDateFormat.format(new java.util.Date());
         networkType = determineNetworkType(App.getContext());
 
@@ -59,15 +60,14 @@ public class NetworkStatus {
         // 获取基站信息
         //SDK18及之后android系统使用getAllCellInfo方法，并且对基站的类型加以区分
         List<android.telephony.CellInfo> infos = mTelephonyManager.getAllCellInfo();
-        if (infos != null) {
-            if (infos.size() == 0) return false;
+        if (infos != null && infos.size() != 0) {
             lteNeighbourCellTowers = new ArrayList<>();
             gsmNeighbourCellTowers = new ArrayList<>();
             for (android.telephony.CellInfo i : infos) { // 根据邻区总数进行循环
                 if (i instanceof CellInfoLte) {
-                    LteCellinfo tower = new LteCellinfo();
+                    LteCellInfo tower = new LteCellInfo();
                     CellIdentityLte cellIdentityLte = ((CellInfoLte) i).getCellIdentity();
-                    tower.cellType = CellInfo.TYPE_LTE;
+                    tower.cellType = CellInfo.STRING_TYPE_LTE;
                     tower.isRegitered = i.isRegistered();
                     tower.tac = cellIdentityLte.getTac();
                     tower.mobileCountryCode = cellIdentityLte.getMcc();
@@ -77,7 +77,7 @@ public class NetworkStatus {
                     tower.timingAdvance = ((CellInfoLte) i).getCellSignalStrength().getTimingAdvance();
                     if (Build.VERSION.SDK_INT >= 24) {
                         tower.lteEarFcn = cellIdentityLte.getEarfcn();
-                    }else {
+                    } else {
                         try {
                             Class<?> cellIdentityLteClass = cellIdentityLte.getClass();
                             Method methodGetEarFcn = cellIdentityLteClass.getDeclaredMethod
@@ -90,9 +90,6 @@ public class NetworkStatus {
                     if (Build.VERSION.SDK_INT >= 26) {
                         tower.rsrq = ((CellInfoLte) i).getCellSignalStrength().getRsrq();
                         tower.sinr = ((CellInfoLte) i).getCellSignalStrength().getRssnr();
-                        if(tower.sinr == Integer.MAX_VALUE){
-                            tower.sinr = -99;
-                        }
                     } else {
                         try {
                             Class<?> cellSignalStrengthLteClass = ((CellInfoLte) i)
@@ -108,6 +105,15 @@ public class NetworkStatus {
                             e.printStackTrace();
                         }
                     }
+                    if (tower.sinr == Integer.MAX_VALUE) {
+                        tower.sinr = NetworkStatus.NETWORK_STATUS_ERROR;
+                    }
+                    if(tower.rsrq == Integer.MAX_VALUE){
+                        tower.rsrq = NetworkStatus.NETWORK_STATUS_ERROR;
+                    }
+                    if(tower.tac == Integer.MAX_VALUE){
+                        tower.tac = NetworkStatus.NETWORK_STATUS_ERROR;
+                    }
                     tower.pci = cellIdentityLte.getPci();
                     tower.enbId = (int) Math.floor(tower.cellId / 256);
                     tower.enbCellId = tower.cellId % 256;
@@ -120,7 +126,7 @@ public class NetworkStatus {
                     GsmCellInfo tower = new GsmCellInfo();
                     CellIdentityGsm cellIdentityGsm = ((CellInfoGsm) i).getCellIdentity();//从这个类里面可以取出好多有用的东西
                     if (cellIdentityGsm == null) continue;
-                    tower.cellType = CellInfo.TYPE_GSM;
+                    tower.cellType = CellInfo.STRING_TYPE_GSM;
                     tower.isRegitered = i.isRegistered();
                     tower.locationAreaCode = cellIdentityGsm.getLac();
                     tower.mobileCountryCode = cellIdentityGsm.getMcc();
@@ -143,7 +149,6 @@ public class NetworkStatus {
                 }
             }
         }
-        return true;
     }
 
     private int determineNetworkType(Context context) {

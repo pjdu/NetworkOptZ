@@ -15,26 +15,26 @@ public class RecentRecordAdapter extends RecyclerView.Adapter<RecentRecordAdapte
 
     private List<NetworkStatus> recentNetworkStatusRecordList;
 
+    public RecentRecordAdapter(List<NetworkStatus> recentNetworkStatusRecordList) {
+        this.recentNetworkStatusRecordList = recentNetworkStatusRecordList;
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         NetworkStatus networkStatus = recentNetworkStatusRecordList.get(position);
-        holder.textViewTime.setText(networkStatus.time+"");
-        holder.textViewTAC.setText(networkStatus.lteServingCellTower.tac+"");
-        holder.textViewPCI.setText(networkStatus.lteServingCellTower.pci+"");
-        holder.textViewEnb.setText(networkStatus.lteServingCellTower.enbId+"");
-        holder.textViewEnbCellId.setText(networkStatus.lteServingCellTower.enbCellId+"");
-        holder.textViewRSRP.setText(networkStatus.lteServingCellTower.signalStrength+"");
-        holder.textViewSINR.setText(networkStatus.lteServingCellTower.sinr+"");
-    }
-
-    public RecentRecordAdapter(List<NetworkStatus> recentNetworkStatusRecordList){
-        this.recentNetworkStatusRecordList = recentNetworkStatusRecordList;
+        holder.textViewTime.setText(networkStatus.time + "");
+        holder.textViewTAC.setText(networkStatus.lteServingCellTower.tac + "");
+        holder.textViewPCI.setText(networkStatus.lteServingCellTower.pci + "");
+        holder.textViewEnb.setText(networkStatus.lteServingCellTower.enbId + "");
+        holder.textViewEnbCellId.setText(networkStatus.lteServingCellTower.enbCellId + "");
+        holder.textViewRSRP.setText(networkStatus.lteServingCellTower.signalStrength + "");
+        holder.textViewSINR.setText(networkStatus.lteServingCellTower.sinr + "");
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout
-                .recyclerview_item_recent_record,parent,false);
+                .recyclerview_item_recent_record, parent, false);
         return new ViewHolder(view);
     }
 
