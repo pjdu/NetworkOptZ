@@ -31,13 +31,19 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public class MainActivity extends SupportActivity {
     private static final String TAG = "MainActivity";
+
+    //百度地图LocationClient和回调Listener
     public LocationClient mLocationClient = null;
     private MyLocationListener myListener = new MyLocationListener();
+
+    //获取UEStatus并通过UpdateUEStatusEvent进行广播
     private UEStatus ueStatus;
     private NetworkStatus networkStatus;
     private UploadSpeedStatus uploadSpeedStatus;
     private DownloadSpeedStatus downloadSpeedStatus;
     private LocationStatus locationStatus;
+
+    //只有Event中前后两条记录的time不一致，才进行广播
     private String mTime;
 
     @Override
@@ -141,7 +147,11 @@ public class MainActivity extends SupportActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+
+                        //
                         networkStatus = new NetworkStatus();
+
+                        //只有Event中前后两条记录的time不一致，才进行广播
                         if(!mTime.equals(networkStatus.time)){
                             uploadSpeedStatus = new UploadSpeedStatus();
                             downloadSpeedStatus = new DownloadSpeedStatus();

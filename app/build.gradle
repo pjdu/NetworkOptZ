@@ -39,4 +39,6 @@ dependencies {
     implementation 'me.yokeyword:eventbus-activity-scope:1.1.0'
 // Your EventBus's version
     implementation 'org.greenrobot:eventbus:3.0.0'
+//使用Litepal作为数据库管理
+    implementation 'org.litepal.android:core:2.0.0'
 }
