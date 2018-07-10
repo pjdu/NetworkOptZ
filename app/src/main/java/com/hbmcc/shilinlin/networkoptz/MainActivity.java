@@ -148,7 +148,7 @@ public class MainActivity extends SupportActivity {
                     @Override
                     public void run() {
 
-                        //
+                        //收到百度定位的回调后，开始获取NetworkStatus并在EventBus中广播
                         networkStatus = new NetworkStatus();
 
                         //只有Event中前后两条记录的time不一致，才进行广播

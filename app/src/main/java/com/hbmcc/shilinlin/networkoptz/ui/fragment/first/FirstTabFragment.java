@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hbmcc.shilinlin.networkoptz.Adapter.NeighbourCellAdapter;
-import com.hbmcc.shilinlin.networkoptz.Adapter.RecentRecordAdapter;
+import com.hbmcc.shilinlin.networkoptz.adapter.NeighbourCellAdapter;
+import com.hbmcc.shilinlin.networkoptz.adapter.RecentRecordAdapter;
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
