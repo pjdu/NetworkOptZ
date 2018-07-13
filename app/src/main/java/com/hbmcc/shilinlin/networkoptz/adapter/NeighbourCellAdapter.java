@@ -23,7 +23,7 @@ public class NeighbourCellAdapter extends RecyclerView.Adapter<NeighbourCellAdap
         LteCellInfo neighbourCell = neighbourCellList.get(position);
         holder.textViewType.setText(neighbourCell.cellType + "");
         holder.textViewEarfcn.setText(neighbourCell.lteEarFcn + "");
-        holder.textViewTAC.setText(neighbourCell.tac + "");
+        holder.textViewTAC.setText("-");
         holder.textViewPCI.setText(neighbourCell.pci + "");
         holder.textViewRSRP.setText(neighbourCell.signalStrength + "");
         holder.textViewSINR.setText(neighbourCell.sinr + "");

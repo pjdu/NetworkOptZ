@@ -51,7 +51,9 @@ public class ForthTabFragment extends BaseMainFragment {
      */
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
-        if (event.position != MainFragment.FORTH) return;
+        if (event.position != MainFragment.FORTH) {
+            return;
+        }
 
     }
 

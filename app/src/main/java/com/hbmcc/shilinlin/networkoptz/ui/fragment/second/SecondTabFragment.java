@@ -23,7 +23,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.hbmcc.shilinlin.networkoptz.R;
-import com.hbmcc.shilinlin.networkoptz.event.UpdateUEStatusEvent;
+import com.hbmcc.shilinlin.networkoptz.event.UpdateUeStatusEvent;
 import com.hbmcc.shilinlin.networkoptz.telephony.LocationStatus;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
@@ -42,9 +42,13 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
 
     public static final double DISTANCE_OFFSET = 0.01;
     public static final float MARKER_ALPHA = 0.7f;
-    private boolean isFirstLoc = true; // 是否首次定位
+
+    // 是否首次定位
+    private boolean isFirstLoc = true;
+
     private MapView mMapView;
     private BaiduMap mBaiduMap;
+
     // UI相关
     private Button btnChangeMapType;
     private Button btnLocation;
@@ -62,7 +66,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     private double mCurrentLon = 0.0;
     private float mCurrentAccracy;
     private MyLocationData locData;
-
 
     public static SecondTabFragment newInstance() {
         Bundle args = new Bundle();
@@ -85,7 +88,9 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
      */
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
-        if (event.position != MainFragment.SECOND) return;
+        if (event.position != MainFragment.SECOND) {
+            return;
+        }
 
     }
 
@@ -128,7 +133,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     }
 
     private void initView(View view) {
-
         EventBusActivityScope.getDefault(_mActivity).register(this);
 
         textViewCurrentPositionLonLat = view.findViewById(R.id.textView_fragment_second_tab_current_position_lon_lat);
@@ -138,35 +142,14 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         btnLocation = view.findViewById(R.id.btn_fragment_second_tab_location);
         checkBoxTraffic = view.findViewById(R.id.checkBox_fragment_second_tab_traffic);
         checkBoxBaiduHeatMap = view.findViewById(R.id.checkbox_fragment_second_tab_baidu_heat_map);
-        mSensorManager = (SensorManager) _mActivity.getSystemService(SENSOR_SERVICE);//获取传感器管理服务
 
+        //获取传感器管理服务
+        mSensorManager = (SensorManager) _mActivity.getSystemService(SENSOR_SERVICE);
 
         // 地图初始化
         mMapView = view.findViewById(R.id.bmapView_fragment_second_tab_bmapview);
         mBaiduMap = mMapView.getMap();
         initMap();
-
-        mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
-                                                   @Override
-                                                   public void onMapStatusChangeStart(MapStatus mapStatus) {
-                                                   }
-
-                                                   @Override
-                                                   public void onMapStatusChangeStart(MapStatus mapStatus, int i) {
-                                                   }
-
-                                                   @Override
-                                                   public void onMapStatusChange(MapStatus mapStatus) {
-                                                   }
-
-                                                   @Override
-                                                   public void onMapStatusChangeFinish(MapStatus mapStatus) {
-
-                                                   }
-                                               }
-        );
-
-
         btnChangeMapType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,6 +164,7 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
                         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
                         mMapType = BaiduMap.MAP_TYPE_NORMAL;
                         break;
+                    default:
                 }
             }
         });
@@ -210,7 +194,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-
     }
 
     private void initMap() {
@@ -227,15 +210,16 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
 
         //显示指南针
         UiSettings mUiSettings = mBaiduMap.getUiSettings();
+
         //实例化UiSettings类对象
-
         mUiSettings.setCompassEnabled(true);
-
-//        mBaiduMap.setCompassPosition(new Point((int) mMapView.getX() + 80, (int) mMapView.getY() + 80));
 
         //设置初步地图类型为二维地图（二维、卫星）
         mMapType = BaiduMap.MAP_TYPE_NORMAL;
         btnChangeMapType.setText("二维");
+
+        //设置地图各组件的位置
+        mBaiduMap.setViewPadding(0, 0, 0, 0);
     }
 
     @Override
@@ -259,36 +243,36 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateLocation(UpdateUEStatusEvent updateUEStatusEvent) {
+    public void updateLocation(UpdateUeStatusEvent updateUEStatusEvent) {
+        if (SecondTabFragment.this.isVisible()) {
+            getCurrentLocation(updateUEStatusEvent.ueStatus.locationStatus);
+            //在界面上更新当前地点的经纬度、名称等信息
 
-        getCurrentLocation(updateUEStatusEvent.ueStatus.locationStatus);
-        //在界面上更新当前地点的经纬度、名称等信息
+            //更新地图
+            if (updateUEStatusEvent.ueStatus.locationStatus.bdLocation == null || mMapView == null) {
+                return;
+            }
 
-        //更新地图
-        if (updateUEStatusEvent.ueStatus.locationStatus.bdLocation == null || mMapView == null) {
-            return;
+            mCurrentLat = updateUEStatusEvent.ueStatus.locationStatus.latitudeBaidu;
+            mCurrentLon = updateUEStatusEvent.ueStatus.locationStatus.longitudeBaidu;
+            mCurrentAccracy = updateUEStatusEvent.ueStatus.locationStatus.radius;
+            locData = new MyLocationData.Builder()
+                    .accuracy(mCurrentAccracy)
+                    // 此处设置开发者获取到的方向信息，顺时针0-360
+                    .direction(mCurrentDirection).latitude(mCurrentLat)
+                    .longitude(mCurrentLon).build();
+            mBaiduMap.setMyLocationData(locData);
+            if (isFirstLoc) {
+                isFirstLoc = false;
+                goToCurrentLocation();
+            }
         }
-
-        mCurrentLat = updateUEStatusEvent.ueStatus.locationStatus.latitudeBaidu;
-        mCurrentLon = updateUEStatusEvent.ueStatus.locationStatus.longitudeBaidu;
-        mCurrentAccracy = updateUEStatusEvent.ueStatus.locationStatus.radius;
-        locData = new MyLocationData.Builder()
-                .accuracy(mCurrentAccracy)
-                // 此处设置开发者获取到的方向信息，顺时针0-360
-                .direction(mCurrentDirection).latitude(mCurrentLat)
-                .longitude(mCurrentLon).build();
-        mBaiduMap.setMyLocationData(locData);
-        if (isFirstLoc) {
-            isFirstLoc = false;
-            goToCurrentLocation();
-        }
-
     }
 
 
     private void getCurrentLocation(LocationStatus locationStatus) {
         StringBuilder currentPostion = new StringBuilder();
-                currentPostion.append("经纬度:").append(NumberFormat.doubleFormat(locationStatus
+        currentPostion.append("经纬度:").append(NumberFormat.doubleFormat(locationStatus
                 .longitudeWgs84, 6))
                 .append(",")
                 .append
@@ -299,8 +283,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         textViewCurrentPositionLonLat.setText(currentPostion);
         textViewCurrentPositionDefinition.setText("详细地址" + locationStatus.addrStr);
     }
-
-
 
 
     private void goToCurrentLocation() {

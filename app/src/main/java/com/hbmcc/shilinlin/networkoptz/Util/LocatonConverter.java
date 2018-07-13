@@ -61,10 +61,12 @@ public class LocatonConverter {
     }
 
     public static boolean outOfChina(double lat, double lon) {
-        if (lon < RANGE_LON_MIN || lon > RANGE_LON_MAX)
+        if (lon < RANGE_LON_MIN || lon > RANGE_LON_MAX) {
             return true;
-        if (lat < RANGE_LAT_MIN || lat > RANGE_LAT_MAX)
+        }
+        if (lat < RANGE_LAT_MIN || lat > RANGE_LAT_MAX) {
             return true;
+        }
         return false;
     }
 

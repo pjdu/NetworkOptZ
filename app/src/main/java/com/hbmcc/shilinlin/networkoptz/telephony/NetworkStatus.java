@@ -27,8 +27,8 @@ public class NetworkStatus {
 
     public String time;
     public int networkType;
-    public String IMEI;
-    public String IMSI;
+    public String imei;
+    public String imsi;
     public String androidVersion;
     public String hardwareModel;
     public LteCellInfo lteServingCellTower;
@@ -46,12 +46,12 @@ public class NetworkStatus {
         time = sDateFormat.format(new java.util.Date());
         networkType = determineNetworkType(App.getContext());
 
-        if (Build.VERSION.SDK_INT >= 26) {
-            IMEI = mTelephonyManager.getImei();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            imei = mTelephonyManager.getImei();
         } else {
-            IMEI = mTelephonyManager.getDeviceId();
+            imei = mTelephonyManager.getDeviceId();
         }
-        IMSI = mTelephonyManager.getSubscriberId();
+        imsi = mTelephonyManager.getSubscriberId();
 
 
         androidVersion = Build.VERSION.RELEASE;
@@ -108,10 +108,10 @@ public class NetworkStatus {
                     if (tower.sinr == Integer.MAX_VALUE) {
                         tower.sinr = NetworkStatus.NETWORK_STATUS_ERROR;
                     }
-                    if(tower.rsrq == Integer.MAX_VALUE){
+                    if (tower.rsrq == Integer.MAX_VALUE) {
                         tower.rsrq = NetworkStatus.NETWORK_STATUS_ERROR;
                     }
-                    if(tower.tac == Integer.MAX_VALUE){
+                    if (tower.tac == Integer.MAX_VALUE) {
                         tower.tac = NetworkStatus.NETWORK_STATUS_ERROR;
                     }
                     tower.pci = cellIdentityLte.getPci();
@@ -125,7 +125,9 @@ public class NetworkStatus {
                 } else if (i instanceof CellInfoGsm) {
                     GsmCellInfo tower = new GsmCellInfo();
                     CellIdentityGsm cellIdentityGsm = ((CellInfoGsm) i).getCellIdentity();//从这个类里面可以取出好多有用的东西
-                    if (cellIdentityGsm == null) continue;
+                    if (cellIdentityGsm == null) {
+                        continue;
+                    }
                     tower.cellType = CellInfo.STRING_TYPE_GSM;
                     tower.isRegitered = i.isRegistered();
                     tower.locationAreaCode = cellIdentityGsm.getLac();
@@ -153,9 +155,13 @@ public class NetworkStatus {
 
     private int determineNetworkType(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager == null) return CellInfo.TYPE_UNKNOWN;
+        if (connectivityManager == null) {
+            return CellInfo.TYPE_UNKNOWN;
+        }
         android.net.NetworkInfo network = connectivityManager.getActiveNetworkInfo();
-        if (network == null) return CellInfo.TYPE_UNKNOWN;
+        if (network == null) {
+            return CellInfo.TYPE_UNKNOWN;
+        }
         switch (network.getSubtype()) {
             case TelephonyManager.NETWORK_TYPE_LTE:
                 return CellInfo.TYPE_LTE;

@@ -13,13 +13,26 @@ public class CellInfo {
 
     public String cellType;
     public int cellId;
-    public int locationAreaCode;//（必填）：GSM 和 WCDMA 网络的位置区域代码 (LAC)。CDMA 网络的网络 ID (NID)。
-    public int mobileCountryCode;//（必填）：移动电话基站的移动国家代码 (MCC)。
-    public int mobileNetworkCode;//（必填）：移动电话基站的移动网络代码。对于 GSM \ WCDMA\LTE，这就是 MNC；CDMA 使用的是系统 ID
-    // (SID)。
-    public int signalStrength;//测量到的无线信号强度（以 dBm 为单位）。
-    public int age;//自从此小区成为主小区后经过的毫秒数。如果 age 为 0，cellId 就表示当前的测量值。
-    public int timingAdvance;//时间提前值。
+
+    //（必填）：GSM 和 WCDMA 网络的位置区域代码 (LAC)。CDMA 网络的网络 ID (NID)。
+    public int locationAreaCode;
+
+    //（必填）：移动电话基站的移动国家代码 (MCC)。
+    public int mobileCountryCode;
+
+    //（必填）：移动电话基站的移动网络代码。对于 GSM \ WCDMA\LTE，这就是 MNC；CDMA 使用的是系统 ID(SID)。
+    public int mobileNetworkCode;
+
+    //测量到的无线信号强度（以 dBm 为单位）。
+    public int signalStrength;
+
+    //自从此小区成为主小区后经过的毫秒数。如果 age 为 0，cellId 就表示当前的测量值。
+    public int age;
+
+    //时间提前值。
+    public int timingAdvance;
+
+    //是否是服务小区
     public Boolean isRegitered;
 
 }
