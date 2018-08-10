@@ -93,7 +93,8 @@ public class FirstTabFragment extends BaseMainFragment {
 
         EventBusActivityScope.getDefault(_mActivity).register(this);
 
-        toolbarMain = view.findViewById(R.id.toolbar_main);
+        toolbarMain = view.findViewById(R.id.toolbar);
+        toolbarMain.setTitle(getString(R.string.app_name));
         textViewFragmentFirstTabOperator = view.findViewById(R.id.textView_fragment_first_tab_operator);
         textViewFragmentFirstTabIMSI = view.findViewById(R.id.textView_fragment_first_tab_IMSI);
         textViewFragmentFirstTabIMEI = view.findViewById(R.id.textView_fragment_first_tab_IMEI);
@@ -125,6 +126,11 @@ public class FirstTabFragment extends BaseMainFragment {
                 .textView_fragment_first_tab_currentDateTime);
         recyclerViewFragmentFirstTabRecentRecord = view.findViewById(R.id.recyclerView_fragment_first_tab_recent_record);
         recyclerViewFragmentFirstTabNeighbourCellInfo = view.findViewById(R.id.recyclerView_fragment_first_tab_neighbour_cell_info);
+    }
+
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         recentNetworkStatusRecordList = new ArrayList<>();
         neighbourCellList = new ArrayList<>();
         initRecyclerView();
@@ -147,11 +153,6 @@ public class FirstTabFragment extends BaseMainFragment {
                 }
             }
         });
-    }
-
-    @Override
-    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
-        super.onLazyInitView(savedInstanceState);
     }
 
     /**

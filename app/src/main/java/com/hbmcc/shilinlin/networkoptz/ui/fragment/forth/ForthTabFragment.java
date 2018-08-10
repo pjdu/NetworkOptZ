@@ -5,18 +5,23 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.first.FirstTabFragment;
+import com.hbmcc.shilinlin.networkoptz.ui.fragment.forth.basestationdatabase.BasestationDatabaseFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import me.yokeyword.eventbusactivityscope.EventBusActivityScope;
 
 public class ForthTabFragment extends BaseMainFragment {
+    private Button btnFragmentForthTabBasestationDatabase;
+
+
     public static ForthTabFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -38,12 +43,20 @@ public class ForthTabFragment extends BaseMainFragment {
     private void initView(View view) {
 
         EventBusActivityScope.getDefault(_mActivity).register(this);
+        btnFragmentForthTabBasestationDatabase = view.findViewById(R.id.btn_fragment_forth_tab_basestation_database);
 
     }
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
+        btnFragmentForthTabBasestationDatabase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainFragment) getParentFragment()).startBrotherFragment
+                        (BasestationDatabaseFragment.newInstance("基站数据库"));
+            }
+        });
     }
 
     /**

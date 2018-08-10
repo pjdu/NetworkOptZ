@@ -4,54 +4,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView_fragment_basestation_lteDatabaseNum"
+    <include layout="@layout/toolbar" />
+
+    <android.support.design.widget.TabLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/tab_fragment_basestastion_database"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/editText_fragment_basestation_search_basestation_database"
-            android:inputType="text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="输入Tac\\Pci\\小区名\\enbid" />
-
-        <Button
-            android:id="@+id/BtnSearchLteDatabase"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="查询" />
-
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_lte_base_station_database"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_fragment_basestastion_database"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btn_fragment_basestion_database_import_database"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:text="导入基站数据库" />
 
-        <Button
-            android:id="@+id/BtnImportLteDatabase"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="导入4G基站数据库" />
-
-    </LinearLayout>
 
 </LinearLayout>
-
-

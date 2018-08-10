@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                     android:layout_width="match_parent"
-                                                     android:layout_height="match_parent"
-                                                     android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
-                                               android:id="@+id/toolbar_main"
-                                               android:layout_width="match_parent"
-                                               android:layout_height="?android:attr/actionBarSize"
-                                               android:background="?android:attr/colorPrimary"
-                                               android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                                               app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                                               app:title="优易"/>
+            <include layout="@layout/toolbar"/>
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -47,7 +40,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:text="中国移动"
-                            android:textColor="#00ff00"/>
+                            android:textColor="#00ff00" />
 
                     </RelativeLayout>  <!-- 运营商版块1 -->
 
@@ -64,13 +57,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="8dp"
-                                android:text="IMSI:"/>
+                                android:text="IMSI:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_IMSI"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="123456789012345"/>
+                                android:hint="123456789012345" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -81,13 +74,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="IMEI:"/>
+                                android:text="IMEI:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_IMEI"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="123456789012345"/>
+                                android:hint="123456789012345" />
 
                         </LinearLayout>
 
@@ -106,13 +99,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="8dp"
-                                android:text="手机型号:"/>
+                                android:text="手机型号:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_uemodel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="Mi-MIX2s"/>
+                                android:hint="Mi-MIX2s" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -123,13 +116,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="安卓版本:"/>
+                                android:text="安卓版本:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_androidversion"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="8.1.0"/>
+                                android:hint="8.1.0" />
 
                         </LinearLayout>
                     </LinearLayout>  <!-- 运营商版块3 -->
@@ -155,7 +148,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:text="湖北省武汉市东西湖区123路456号"
-                            android:textColor="#00ff00"/>
+                            android:textColor="#00ff00" />
                     </RelativeLayout>
 
                     <LinearLayout
@@ -171,13 +164,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="8dp"
-                                android:text="经度:"/>
+                                android:text="经度:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_longitude"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="123.45678"/>
+                                android:hint="123.45678" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -188,13 +181,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="纬度:"/>
+                                android:text="纬度:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_latitude"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="12.34567"/>
+                                android:hint="12.34567" />
 
                         </LinearLayout>
 
@@ -206,13 +199,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="高度:"/>
+                                android:text="高度:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_altitude"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="18"/>
+                                android:hint="18" />
 
                         </LinearLayout>
 
@@ -239,7 +232,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:text="东西湖区XXX大楼-HLH-1"
-                            android:textColor="#00ff00"/>
+                            android:textColor="#00ff00" />
                     </RelativeLayout>
 
                     <LinearLayout
@@ -255,13 +248,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="8dp"
-                                android:text="TAC:"/>
+                                android:text="TAC:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_tac"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="12345"/>
+                                android:hint="12345" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -272,13 +265,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="PCI:"/>
+                                android:text="PCI:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_pci"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="129"/>
+                                android:hint="129" />
 
                         </LinearLayout>
 
@@ -290,13 +283,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="CGI:"/>
+                                android:text="CGI:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_cgi"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="1234567-129"/>
+                                android:hint="1234567-129" />
 
                         </LinearLayout>
 
@@ -315,13 +308,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="8dp"
-                                android:text="频点:"/>
+                                android:text="频点:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_earfcn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="38950"/>
+                                android:hint="38950" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -332,13 +325,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Band:"/>
+                                android:text="Band:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_band"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="40(TDD)"/>
+                                android:hint="40(TDD)" />
 
                         </LinearLayout>
 
@@ -350,13 +343,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="频率:"/>
+                                android:text="频率:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_frequency"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="2330"/>
+                                android:hint="2330" />
 
                         </LinearLayout>
 
@@ -375,13 +368,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="8dp"
-                                android:text="RSRP:"/>
+                                android:text="RSRP:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_RSRP"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="-73"/>
+                                android:hint="-73" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -392,13 +385,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="RSRQ:"/>
+                                android:text="RSRQ:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_RSRQ"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="-4"/>
+                                android:hint="-4" />
 
                         </LinearLayout>
 
@@ -410,13 +403,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="SINR:"/>
+                                android:text="SINR:" />
 
                             <TextView
                                 android:id="@+id/textView_fragment_first_tab_SINR"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="9.0"/>
+                                android:hint="9.0" />
 
                         </LinearLayout>
 
@@ -443,7 +436,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:text="最近0条记录，平均信号强度 0 dbm"
-                            android:textColor="#00ff00"/>
+                            android:textColor="#00ff00" />
 
                         <TextView
                             android:id="@+id/textView_fragment_first_tab_neighbour_cell"
@@ -452,7 +445,7 @@
                             android:layout_centerHorizontal="true"
                             android:text="邻区"
                             android:textColor="#00ff00"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
 
                         <Button
                             android:id="@+id/btn_fragment_first_tab_convert"
@@ -461,7 +454,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="8dp"
-                            android:background="@drawable/ic_convert"/>
+                            android:background="@drawable/ic_convert" />
                     </RelativeLayout>
 
 
@@ -483,7 +476,7 @@
                                 android:layout_weight="3"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="时间"/>
+                                android:text="时间" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -491,7 +484,7 @@
                                 android:layout_weight="2"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="TAC"/>
+                                android:text="TAC" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -499,7 +492,7 @@
                                 android:layout_weight="2"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="PCI"/>
+                                android:text="PCI" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -507,7 +500,7 @@
                                 android:layout_weight="3"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="eNB"/>
+                                android:text="eNB" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -515,7 +508,7 @@
                                 android:layout_weight="2"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="cellid"/>
+                                android:text="cellid" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -523,7 +516,7 @@
                                 android:layout_weight="2"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="RSRP"/>
+                                android:text="RSRP" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -531,14 +524,13 @@
                                 android:layout_weight="2"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="SINR"/>
+                                android:text="SINR" />
                         </LinearLayout>
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recyclerView_fragment_first_tab_recent_record"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                        </android.support.v7.widget.RecyclerView>
+                            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
                     </LinearLayout>  <!-- 历史信号强度版块 -->
 
 
@@ -560,7 +552,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="Type"/>
+                                android:text="Type" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -568,7 +560,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="Earfcn"/>
+                                android:text="Earfcn" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -576,7 +568,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="TAC"/>
+                                android:text="TAC" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -584,7 +576,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="PCI"/>
+                                android:text="PCI" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -592,7 +584,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="RSRP"/>
+                                android:text="RSRP" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -600,13 +592,13 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/recangle"
                                 android:gravity="center"
-                                android:text="SINR"/>
+                                android:text="SINR" />
                         </LinearLayout>
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recyclerView_fragment_first_tab_neighbour_cell_info"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
                     </LinearLayout> <!-- 邻区版块 -->
                 </LinearLayout> <!-- 历史信号强度/邻区版块-->
 
@@ -626,7 +618,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:hint="当前时间"
-                            android:textColor="#91919191"/>
+                            android:textColor="#91919191" />
                     </RelativeLayout>
 
                 </LinearLayout> <!-- 时间版块 -->

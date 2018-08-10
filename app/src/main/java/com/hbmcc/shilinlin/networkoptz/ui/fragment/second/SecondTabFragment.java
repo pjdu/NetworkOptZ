@@ -149,6 +149,11 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         // 地图初始化
         mMapView = view.findViewById(R.id.bmapView_fragment_second_tab_bmapview);
         mBaiduMap = mMapView.getMap();
+    }
+
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         initMap();
         btnChangeMapType.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,7 +173,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
                 }
             }
         });
-
         btnLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,11 +193,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
                 mBaiduMap.setTrafficEnabled(isChecked);
             }
         });
-    }
-
-    @Override
-    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
-        super.onLazyInitView(savedInstanceState);
     }
 
     private void initMap() {

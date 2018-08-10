@@ -61,7 +61,7 @@ public class MainActivity extends SupportActivity {
         setContentView(R.layout.activity_main);
         mTime = "";
         if (findFragment(MainFragment.class) == null) {
-            loadRootFragment(R.id.fl_container, MainFragment.newInstance());
+            loadRootFragment(R.id.framelayout_mainactivity_container, MainFragment.newInstance());
         }
 
         // 定位初始化

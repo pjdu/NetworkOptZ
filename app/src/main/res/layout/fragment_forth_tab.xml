@@ -4,9 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Forth Tab"/>
+        android:id="@+id/btn_fragment_forth_tab_basestation_database"
+        android:text="基站数据库"/>
 
 </android.support.constraint.ConstraintLayout>
