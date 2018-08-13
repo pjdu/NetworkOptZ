@@ -251,4 +251,8 @@ public class LteBasestationCell extends LitePalSupport {
         this.enbCellId = (int) eci % 256;
     }
 
+    public LteBasestationCell(){
+
+    }
+
 }

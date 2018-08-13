@@ -91,8 +91,8 @@ public class FileUtils {
     }
 
     public static int initialStorage() {
-        if (!FileUtils.isFileExist(FileUtils.getAppPath() + "请把工参文件放在这里/")) {
-            FileUtils.createSDDirs(FileUtils.getAppPath() + "请把工参文件放在这里/");
+        if (!FileUtils.isFileExist(FileUtils.getAppPath() )) {
+            FileUtils.createSDDirs(FileUtils.getAppPath() );
         }
 
         if (!FileUtils.isFileExist(FileUtils.getAppPath() + "Database/")) {
@@ -101,8 +101,7 @@ public class FileUtils {
         return 0;
     }
 
-    public static String getLteinputFile(){
-        return FileUtils.getAppPath() + "请把工参文件放在这里/4G工参(模板).csv";
+    public static String getLteInputFile(){
+        return FileUtils.getAppPath() + "4G工参(模板).csv";
     }
-
 }
