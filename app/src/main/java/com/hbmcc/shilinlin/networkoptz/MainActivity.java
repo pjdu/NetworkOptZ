@@ -18,6 +18,7 @@ import com.hbmcc.shilinlin.networkoptz.telephony.NetworkStatus;
 import com.hbmcc.shilinlin.networkoptz.telephony.UeStatus;
 import com.hbmcc.shilinlin.networkoptz.telephony.UploadSpeedStatus;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
+import com.hbmcc.shilinlin.networkoptz.util.FileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,9 @@ public class MainActivity extends SupportActivity {
         mLocationClient = new LocationClient(getApplicationContext());
         mLocationClient.registerLocationListener(myListener);
         requestLocation();
+
+        //SD卡初始化
+        FileUtils.initialStorage();
 
         List<String> permissionList = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
