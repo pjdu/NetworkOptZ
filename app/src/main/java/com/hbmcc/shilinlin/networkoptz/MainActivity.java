@@ -60,18 +60,11 @@ public class MainActivity extends SupportActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mTime = "";
         if (findFragment(MainFragment.class) == null) {
             loadRootFragment(R.id.framelayout_mainactivity_container, MainFragment.newInstance());
         }
-
-        // 定位初始化
-        mLocationClient = new LocationClient(getApplicationContext());
-        mLocationClient.registerLocationListener(myListener);
-        requestLocation();
-
-        //SD卡初始化
-        FileUtils.initialStorage();
 
         List<String> permissionList = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -87,6 +80,7 @@ public class MainActivity extends SupportActivity {
             String[] permissions = permissionList.toArray(new String[permissionList.size()]);
             ActivityCompat.requestPermissions(MainActivity.this, permissions, 1);
         }
+
     }
 
     @Override
@@ -119,6 +113,15 @@ public class MainActivity extends SupportActivity {
                     Toast.makeText(MainActivity.this, "发生未知错误", Toast.LENGTH_LONG).show();
                     finish();
                 }
+
+                // 定位初始化
+                mLocationClient = new LocationClient(getApplicationContext());
+                mLocationClient.registerLocationListener(myListener);
+                requestLocation();
+
+                //SD卡初始化
+                FileUtils.initialStorage();
+
                 break;
             default:
         }

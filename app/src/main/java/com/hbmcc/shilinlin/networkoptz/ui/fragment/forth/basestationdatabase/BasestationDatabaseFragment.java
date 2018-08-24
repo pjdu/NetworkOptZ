@@ -139,9 +139,8 @@ public class BasestationDatabaseFragment extends BaseBackFragment {
                     List<LteBasestationCell> lteBasestationCellList = new ArrayList<>();
                     String inString;
                     int i = 0;
-                    LitePal.deleteAll(LteBasestationCell.class);
                     try {
-
+                        LitePal.deleteAll(LteBasestationCell.class);
                         BufferedReader reader =
                                 new BufferedReader(new InputStreamReader(new FileInputStream(lteDatabaseFile), "GBK"));
                         while ((inString = reader.readLine()) != null) {
