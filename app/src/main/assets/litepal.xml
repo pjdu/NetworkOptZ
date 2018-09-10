@@ -46,6 +46,6 @@
         <storage value="external" />
     -->
 
-    <storage value="/NetworkOptZ/Database" />
+    <storage value="internal" />
 
 </litepal>

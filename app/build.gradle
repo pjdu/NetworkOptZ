@@ -47,6 +47,7 @@ dependencies {
     // debug address url from your code by calling the method od DebugDB.getAddressLogsLog();
     // 在usb下 If you are using it over usb, run adb forward tcp:8080 tcp:8080
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
+    //百度地图相关jar包
     implementation files('libs/BaiduLBS_Android.jar')
     implementation files('libs/IndoorscapeAlbumPlugin.jar')
 }

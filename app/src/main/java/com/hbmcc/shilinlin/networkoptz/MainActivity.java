@@ -80,6 +80,9 @@ public class MainActivity extends SupportActivity {
             String[] permissions = permissionList.toArray(new String[permissionList.size()]);
             ActivityCompat.requestPermissions(MainActivity.this, permissions, 1);
         }
+        else{
+            startWork();
+        }
 
     }
 
@@ -114,17 +117,21 @@ public class MainActivity extends SupportActivity {
                     finish();
                 }
 
-                // 定位初始化
-                mLocationClient = new LocationClient(getApplicationContext());
-                mLocationClient.registerLocationListener(myListener);
-                requestLocation();
-
-                //SD卡初始化
-                FileUtils.initialStorage();
+                startWork();
 
                 break;
             default:
         }
+    }
+
+    private void startWork(){
+        // 定位初始化
+        mLocationClient = new LocationClient(getApplicationContext());
+        mLocationClient.registerLocationListener(myListener);
+        requestLocation();
+
+        //SD卡初始化
+        FileUtils.initialStorage();
     }
 
 

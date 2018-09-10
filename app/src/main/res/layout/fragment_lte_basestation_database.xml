@@ -17,7 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="输入Tac\\Pci\\小区名\\enbid"
+            android:hint="输入Tac\\Pci\\小区名\\cgi"
             android:inputType="text" />
 
         <Button

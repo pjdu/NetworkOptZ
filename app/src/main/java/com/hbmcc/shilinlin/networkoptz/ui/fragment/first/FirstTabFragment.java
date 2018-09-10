@@ -12,10 +12,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.adapter.NeighbourCellAdapter;
 import com.hbmcc.shilinlin.networkoptz.adapter.RecentRecordAdapter;
-import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
+import com.hbmcc.shilinlin.networkoptz.database.LteBasestationCell;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
 import com.hbmcc.shilinlin.networkoptz.event.UpdateUeStatusEvent;
 import com.hbmcc.shilinlin.networkoptz.telephony.NetworkStatus;
@@ -25,6 +26,7 @@ import com.hbmcc.shilinlin.networkoptz.util.NumberFormat;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +73,7 @@ public class FirstTabFragment extends BaseMainFragment {
     private Button btnFragmentFirstTabConvert;
     private LinearLayout linearlayoutFragmentFirstTabRecentRecord;
     private LinearLayout linearlayoutFragmentFirstTabNeighbourCell;
+    private List<LteBasestationCell> litepalLteBasestationCellList;
 
 
     public static FirstTabFragment newInstance() {
@@ -181,6 +184,67 @@ public class FirstTabFragment extends BaseMainFragment {
                 neighbourCellList.clear();
                 neighbourCellList.addAll(updateUEStatusEvent.ueStatus.networkStatus
                         .lteNeighbourCellTowers);
+                litepalLteBasestationCellList = LitePal.where("eci = ?", updateUEStatusEvent.ueStatus
+                        .networkStatus
+                        .lteServingCellTower.cellId + "").find
+                        (LteBasestationCell
+                                .class);
+                _mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (FirstTabFragment.this.isVisible()) {
+                            textViewFragmentFirstTabOperator.setText(updateUEStatusEvent.ueStatus.locationStatus
+                                    .operators + "");
+                            textViewFragmentFirstTabIMSI.setText(updateUEStatusEvent.ueStatus.networkStatus.imsi + "");
+                            textViewFragmentFirstTabIMEI.setText(updateUEStatusEvent.ueStatus.networkStatus.imei + "");
+                            textViewFragmentFirstTabUEModel.setText(updateUEStatusEvent.ueStatus.networkStatus.hardwareModel + "");
+                            textViewFragmentFirstTabAndroidVersion.setText(updateUEStatusEvent.ueStatus.networkStatus.androidVersion + "");
+                            textViewFragmentFirstTabLongitude.setText(NumberFormat.doubleFormat(updateUEStatusEvent.ueStatus.locationStatus
+                                    .longitudeWgs84, 5) + "");
+                            textViewFragmentFirstTabLatitude.setText(NumberFormat.doubleFormat
+                                    (updateUEStatusEvent.ueStatus.locationStatus
+                                            .latitudeWgs84, 5) + "");
+                            textViewFragmentFirstTabAltitude.setText(updateUEStatusEvent.ueStatus.locationStatus.altitude + "米");
+                            textViewFragmentFirstTabCurrentLocName.setText(updateUEStatusEvent.ueStatus.locationStatus
+                                    .city + updateUEStatusEvent.ueStatus.locationStatus.district + updateUEStatusEvent
+                                    .ueStatus.locationStatus.street + updateUEStatusEvent.ueStatus.locationStatus
+                                    .streetNumber);
+
+                            textViewFragmentFirstTabTAC.setText(updateUEStatusEvent.ueStatus.networkStatus
+                                    .lteServingCellTower.tac + "");
+                            textViewFragmentFirstTabPCI.setText(updateUEStatusEvent.ueStatus.networkStatus
+                                    .lteServingCellTower.pci + "");
+                            textViewFragmentFirstTabCGI.setText(updateUEStatusEvent.ueStatus.networkStatus
+                                    .lteServingCellTower.enbId + "-" + updateUEStatusEvent.ueStatus.networkStatus
+                                    .lteServingCellTower.enbCellId);
+                            textViewFragmentFirstTabEarFcn.setText(updateUEStatusEvent.ueStatus.networkStatus
+                                    .lteServingCellTower.lteEarFcn + "");
+                            textViewFragmentFirstTabRSRP.setText(updateUEStatusEvent.ueStatus.networkStatus
+                                    .lteServingCellTower.signalStrength + "");
+                            textViewFragmentFirstTabRSRQ.setText(updateUEStatusEvent.ueStatus.networkStatus
+                                    .lteServingCellTower.rsrq + "");
+                            textViewFragmentFirstTabSINR.setText(updateUEStatusEvent.ueStatus.networkStatus
+                                    .lteServingCellTower.sinr + "");
+                            textViewFragmentFirstTabBand.setText("待开发");
+                            textViewFragmentFirstTabFrequency.setText("待开发");
+                            if(litepalLteBasestationCellList.isEmpty()) {
+                                textViewFragmentFirstTabCellChsName.setText("基站数据库无此小区");
+                            }else {
+                                textViewFragmentFirstTabCellChsName.setText(litepalLteBasestationCellList.get(0)
+                                        .getName()+"");
+                            }
+                            recentAvgSignalStrength = NumberFormat.doubleFormat((double) recentSumSignalStrength /
+                                    (double)
+                                            recentNetworkStatusCnt, 1);
+                            textViewFragmentFirstTabRecentAvgSignalStrength.setText
+                                    ("最近" + recentNetworkStatusCnt + "条记录，平均信号强度" + recentAvgSignalStrength + "dbm");
+                            textViewFragmentFirstTabCurrentDateTime.setText(updateUEStatusEvent.ueStatus
+                                    .networkStatus.time);
+                            recentRecordAdapter.notifyDataSetChanged();
+                            neighbourCellAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
             }
         });
 
@@ -189,51 +253,7 @@ public class FirstTabFragment extends BaseMainFragment {
                 .networkStatus
                 .lteServingCellTower.signalStrength;
 
-        if (FirstTabFragment.this.isVisible()) {
-            textViewFragmentFirstTabOperator.setText(updateUEStatusEvent.ueStatus.locationStatus
-                    .operators + "");
-            textViewFragmentFirstTabIMSI.setText(updateUEStatusEvent.ueStatus.networkStatus.imsi + "");
-            textViewFragmentFirstTabIMEI.setText(updateUEStatusEvent.ueStatus.networkStatus.imei + "");
-            textViewFragmentFirstTabUEModel.setText(updateUEStatusEvent.ueStatus.networkStatus.hardwareModel + "");
-            textViewFragmentFirstTabAndroidVersion.setText(updateUEStatusEvent.ueStatus.networkStatus.androidVersion + "");
-            textViewFragmentFirstTabLongitude.setText(NumberFormat.doubleFormat(updateUEStatusEvent.ueStatus.locationStatus
-                    .longitudeWgs84, 5) + "");
-            textViewFragmentFirstTabLatitude.setText(NumberFormat.doubleFormat
-                    (updateUEStatusEvent.ueStatus.locationStatus
-                            .latitudeWgs84, 5) + "");
-            textViewFragmentFirstTabAltitude.setText(updateUEStatusEvent.ueStatus.locationStatus.altitude + "米");
-            textViewFragmentFirstTabCurrentLocName.setText(updateUEStatusEvent.ueStatus.locationStatus
-                    .city + updateUEStatusEvent.ueStatus.locationStatus.district + updateUEStatusEvent
-                    .ueStatus.locationStatus.street + updateUEStatusEvent.ueStatus.locationStatus
-                    .streetNumber);
-            textViewFragmentFirstTabCellChsName.setText("待开发");
-            textViewFragmentFirstTabTAC.setText(updateUEStatusEvent.ueStatus.networkStatus
-                    .lteServingCellTower.tac + "");
-            textViewFragmentFirstTabPCI.setText(updateUEStatusEvent.ueStatus.networkStatus
-                    .lteServingCellTower.pci + "");
-            textViewFragmentFirstTabCGI.setText(updateUEStatusEvent.ueStatus.networkStatus
-                    .lteServingCellTower.enbId + "-" + updateUEStatusEvent.ueStatus.networkStatus
-                    .lteServingCellTower.enbCellId);
-            textViewFragmentFirstTabEarFcn.setText(updateUEStatusEvent.ueStatus.networkStatus
-                    .lteServingCellTower.lteEarFcn + "");
-            textViewFragmentFirstTabBand.setText("待开发");
-            textViewFragmentFirstTabFrequency.setText("待开发");
-            textViewFragmentFirstTabRSRP.setText(updateUEStatusEvent.ueStatus.networkStatus
-                    .lteServingCellTower.signalStrength + "");
-            textViewFragmentFirstTabRSRQ.setText(updateUEStatusEvent.ueStatus.networkStatus
-                    .lteServingCellTower.rsrq + "");
-            textViewFragmentFirstTabSINR.setText(updateUEStatusEvent.ueStatus.networkStatus
-                    .lteServingCellTower.sinr + "");
-            recentAvgSignalStrength = NumberFormat.doubleFormat((double)recentSumSignalStrength /
-                    (double)
-                    recentNetworkStatusCnt,1);
-            textViewFragmentFirstTabRecentAvgSignalStrength.setText
-                    ("最近" + recentNetworkStatusCnt + "条记录，平均信号强度" + recentAvgSignalStrength + "dbm");
-            textViewFragmentFirstTabCurrentDateTime.setText(updateUEStatusEvent.ueStatus
-                    .networkStatus.time);
-            recentRecordAdapter.notifyDataSetChanged();
-            neighbourCellAdapter.notifyDataSetChanged();
-        }
+
 
 
     }

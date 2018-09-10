@@ -53,9 +53,9 @@ public class NeighbourCellAdapter extends RecyclerView.Adapter<NeighbourCellAdap
             super(itemView);
             textViewType = itemView.findViewById(R.id.textview_recyclerview_item_neighbourcellinfo_type);
             textViewEarfcn = itemView.findViewById(R.id
-                    .textview_recyclerview_item_neighbourcellinfo_earfcn);
-            textViewTAC = itemView.findViewById(R.id.textview_recyclerview_item_neighbourcellinfo_tac);
-            textViewPCI = itemView.findViewById(R.id.textview_recyclerview_item_neighbourcellinfo_pci);
+                    .textview_recyclerview_item_ltebasestationcell_earfcn);
+            textViewTAC = itemView.findViewById(R.id.textview_recyclerview_item_ltebasestationcell_tac);
+            textViewPCI = itemView.findViewById(R.id.textview_recyclerview_item_ltebasestationcell_pci);
             textViewRSRP = itemView.findViewById(R.id.textview_recyclerview_item_neighbourcellinfo_rsrp);
             textViewSINR = itemView.findViewById(R.id
                     .textview_recyclerview_item_neighbourcellinfo_sinr);

@@ -2,6 +2,7 @@ package com.hbmcc.shilinlin.networkoptz.ui.fragment.forth.basestationdatabase;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.hbmcc.shilinlin.networkoptz.R;
+import com.hbmcc.shilinlin.networkoptz.adapter.LteBasestationDatabaseAdapter;
+import com.hbmcc.shilinlin.networkoptz.database.LteBasestationCell;
+
+import org.litepal.LitePal;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import me.yokeyword.fragmentation.SupportFragment;
 
@@ -19,6 +27,8 @@ public class LteBasestationDatabaseFragment extends SupportFragment {
     private EditText editTextFragmentLteBasestionDatabaseSearch;
     private Button btnFragmentLteBasestionDatabaseSearch;
     private RecyclerView recyclerviewFragmentLteBasestationDatabase;
+    private List<LteBasestationCell> lteBasestationCellList;
+    private LteBasestationDatabaseAdapter lteBasestationDatabaseAdapter;
 
 
     public static LteBasestationDatabaseFragment newInstance() {
@@ -46,6 +56,22 @@ public class LteBasestationDatabaseFragment extends SupportFragment {
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
+        lteBasestationCellList = new ArrayList<>();
+        initRecyclerView();
+        btnFragmentLteBasestionDatabaseSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String input = editTextFragmentLteBasestionDatabaseSearch.getText().toString();
+                if (!input.trim().isEmpty()) {
+                    lteBasestationCellList.clear();
+                    lteBasestationCellList.addAll(LitePal.where("enbId = ? or tac = ? or name like ?", input, input, "%" + input + "%")
+                            .order("enbId").find
+                                    (LteBasestationCell
+                                            .class));
+                    lteBasestationDatabaseAdapter.notifyDataSetChanged();
+                }
+            }
+        });
 
     }
 
@@ -54,5 +80,12 @@ public class LteBasestationDatabaseFragment extends SupportFragment {
         super.onDestroyView();
     }
 
+    private void initRecyclerView() {
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(getContext());
+        recyclerviewFragmentLteBasestationDatabase.setLayoutManager(layoutManager1);
+        lteBasestationDatabaseAdapter = new LteBasestationDatabaseAdapter
+                (lteBasestationCellList);
+        recyclerviewFragmentLteBasestationDatabase.setAdapter(lteBasestationDatabaseAdapter);
+    }
 
 }

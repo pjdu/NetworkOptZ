@@ -97,9 +97,6 @@ public class FileUtils {
             FileUtils.createSDDirs(FileUtils.getAppPath());
         }
 
-        if (!FileUtils.isFileExist(FileUtils.getAppPath() + "Database/")) {
-            FileUtils.createSDDirs(FileUtils.getAppPath() + "Database/");
-        }
         if (!FileUtils.isFileExist(FileUtils.getAppPath() + lteBasestationDatabaseTemplate)) {
             initFile(App.getContext().getResources().openRawResource(R.raw.lte_database_template),
                     FileUtils.getAppPath() + lteBasestationDatabaseTemplate);
