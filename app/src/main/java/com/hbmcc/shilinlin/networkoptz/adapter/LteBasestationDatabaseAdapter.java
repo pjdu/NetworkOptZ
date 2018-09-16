@@ -4,15 +4,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.database.LteBasestationCell;
+import com.hbmcc.shilinlin.networkoptz.listener.OnItemClickListener;
 
 import java.util.List;
 
 public class LteBasestationDatabaseAdapter extends RecyclerView.Adapter<LteBasestationDatabaseAdapter.ViewHolder> {
     private List<LteBasestationCell> lteBasestationCellList;
+    private OnItemClickListener mClickListener;
 
     public LteBasestationDatabaseAdapter(List<LteBasestationCell> lteBasestationCellList) {
         this.lteBasestationCellList = lteBasestationCellList;
@@ -32,14 +35,22 @@ public class LteBasestationDatabaseAdapter extends RecyclerView.Adapter<LteBases
                 "");
         holder.textviewRecyclerviewItemLtebasestationcellEarfcn.setText(lteBasestationCell
                 .getLteEarFcn() + "");
-
     }
 
     @Override
     public LteBasestationDatabaseAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout
                 .recyclerview_item_ltebasestationcell, parent, false);
-        return new LteBasestationDatabaseAdapter.ViewHolder(view);
+        final LteBasestationDatabaseAdapter.ViewHolder holder = new LteBasestationDatabaseAdapter.ViewHolder(view);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mClickListener != null) {
+                    mClickListener.onItemClick(holder.getAdapterPosition(), v, holder);
+                }
+            }
+        });
+        return holder;
     }
 
     @Override
@@ -65,5 +76,13 @@ public class LteBasestationDatabaseAdapter extends RecyclerView.Adapter<LteBases
             textviewRecyclerviewItemLtebasestationcellPci = itemView.findViewById(R.id.textview_recyclerview_item_ltebasestationcell_pci);
             textviewRecyclerviewItemLtebasestationcellEarfcn = itemView.findViewById(R.id.textview_recyclerview_item_ltebasestationcell_earfcn);
         }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mClickListener = listener;
+    }
+
+    public LteBasestationCell getCell(int position) {
+        return lteBasestationCellList.get(position);
     }
 }

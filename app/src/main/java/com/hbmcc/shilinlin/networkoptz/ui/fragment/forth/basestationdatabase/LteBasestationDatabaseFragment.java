@@ -9,10 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.hbmcc.shilinlin.networkoptz.App;
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.adapter.LteBasestationDatabaseAdapter;
 import com.hbmcc.shilinlin.networkoptz.database.LteBasestationCell;
+import com.hbmcc.shilinlin.networkoptz.listener.OnItemClickListener;
+import com.hbmcc.shilinlin.networkoptz.ui.fragment.other.LteBasestationcellDetailInfoFragment;
 
 import org.litepal.LitePal;
 
@@ -85,6 +89,16 @@ public class LteBasestationDatabaseFragment extends SupportFragment {
         recyclerviewFragmentLteBasestationDatabase.setLayoutManager(layoutManager1);
         lteBasestationDatabaseAdapter = new LteBasestationDatabaseAdapter
                 (lteBasestationCellList);
+        lteBasestationDatabaseAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, View view, RecyclerView.ViewHolder vh) {
+                extraTransaction()
+                        .setCustomAnimations(R.anim.v_fragment_enter, 0, 0, R.anim.v_fragment_exit)
+                        .startDontHideSelf(LteBasestationcellDetailInfoFragment.newInstance
+                                (lteBasestationDatabaseAdapter.getCell(position)));
+                Toast.makeText(App.getContext(),"clicked",Toast.LENGTH_SHORT).show();
+            }
+        });
         recyclerviewFragmentLteBasestationDatabase.setAdapter(lteBasestationDatabaseAdapter);
     }
 

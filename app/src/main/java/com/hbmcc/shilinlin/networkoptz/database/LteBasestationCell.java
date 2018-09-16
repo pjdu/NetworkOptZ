@@ -1,12 +1,82 @@
 package com.hbmcc.shilinlin.networkoptz.database;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
-public class LteBasestationCell extends LitePalSupport {
+public class LteBasestationCell extends LitePalSupport implements Parcelable {
 
     public static final int COVERAGE_OUTSIDE = 0;
     public static final int COVERAGE_INDOOR = 1;
+    @Column(unique = true, defaultValue = "0")
+    private long eci;
+    @Column(defaultValue = "基站数据库未定义")
+    private String name;
+    @Column(defaultValue = "基站数据库未定义")
+    private String city;
+    @Column(defaultValue = "9999")
+    private float lng;
+    @Column(defaultValue = "9999")
+    private float lat;
+    @Column(defaultValue = "9999")
+    private float antennaHeight;
+    @Column(defaultValue = "9999")
+    private float altitude;
+    @Column(defaultValue = "9999")
+    private int indoorOrOutdoor;
+    @Column(defaultValue = "9999")
+    private int coverageType;
+    @Column(defaultValue = "9999")
+    private int coverageScene;
+    @Column(defaultValue = "9999")
+    private float enbCellAzimuth;
+    @Column(defaultValue = "9999")
+    private float mechanicalDipAngle;
+    @Column(defaultValue = "9999")
+    private float electronicDipAngle;
+    @Column(defaultValue = "基站数据库未定义")
+    private String county;
+    @Column(defaultValue = "基站数据库未定义")
+    private String manufactoryName;
+    @Column(defaultValue = "9999")
+    private int tac;
+    @Column(defaultValue = "9999")
+    private int pci;
+    @Column(defaultValue = "9999")
+    private int lteEarFcn;
+    @Column(defaultValue = "9999")
+    private int enbId;
+    @Column(defaultValue = "9999")
+    private int enbCellId;
+
+    public LteBasestationCell(long eci, String name, String city, float lng, float lat, float antennaHeight, float altitude, int indoorOrOutdoor, int coverageType, int coverageScene, float enbCellAzimuth, float mechanicalDipAngle, float electronicDipAngle, String county, String manufactoryName, int tac, int pci, int lteEarFcn) {
+        this.eci = eci;
+        this.name = name;
+        this.city = city;
+        this.lng = lng;
+        this.lat = lat;
+        this.antennaHeight = antennaHeight;
+        this.altitude = altitude;
+        this.indoorOrOutdoor = indoorOrOutdoor;
+        this.coverageType = coverageType;
+        this.coverageScene = coverageScene;
+        this.enbCellAzimuth = enbCellAzimuth;
+        this.mechanicalDipAngle = mechanicalDipAngle;
+        this.electronicDipAngle = electronicDipAngle;
+        this.county = county;
+        this.manufactoryName = manufactoryName;
+        this.tac = tac;
+        this.pci = pci;
+        this.lteEarFcn = lteEarFcn;
+        this.enbId = (int) eci / 256;
+        this.enbCellId = (int) eci % 256;
+    }
+
+    public LteBasestationCell() {
+
+    }
 
     public long getEci() {
         return eci;
@@ -168,91 +238,66 @@ public class LteBasestationCell extends LitePalSupport {
         this.enbCellId = enbCellId;
     }
 
-    @Column(unique = true, defaultValue = "0")
-    private long eci;
-
-    @Column(defaultValue = "基站数据库未定义")
-    private String name;
-
-    @Column(defaultValue = "基站数据库未定义")
-    private String city;
-
-    @Column(defaultValue = "9999")
-    private float lng;
-
-    @Column(defaultValue = "9999")
-    private float lat;
-
-    @Column(defaultValue = "9999")
-    private float antennaHeight;
-
-    @Column(defaultValue = "9999")
-    private float altitude;
-
-    @Column(defaultValue = "9999")
-    private int indoorOrOutdoor;
-
-    @Column(defaultValue = "9999")
-    private int coverageType;
-
-    @Column(defaultValue = "9999")
-    private int coverageScene;
-
-    @Column(defaultValue = "9999")
-    private float enbCellAzimuth;
-
-    @Column(defaultValue = "9999")
-    private float mechanicalDipAngle;
-
-    @Column(defaultValue = "9999")
-    private float electronicDipAngle;
-
-    @Column(defaultValue = "基站数据库未定义")
-    private String county;
-
-    @Column(defaultValue = "基站数据库未定义")
-    private String manufactoryName;
-
-    @Column(defaultValue = "9999")
-    private int tac;
-
-    @Column(defaultValue = "9999")
-    private int pci;
-
-    @Column(defaultValue = "9999")
-    private int lteEarFcn;
-
-    @Column(defaultValue = "9999")
-    private int enbId;
-
-    @Column(defaultValue = "9999")
-    private int enbCellId;
-
-    public LteBasestationCell(long eci, String name, String city, float lng, float lat, float antennaHeight, float altitude, int indoorOrOutdoor, int coverageType, int coverageScene, float enbCellAzimuth, float mechanicalDipAngle, float electronicDipAngle, String county, String manufactoryName, int tac, int pci, int lteEarFcn) {
-        this.eci = eci;
-        this.name = name;
-        this.city = city;
-        this.lng = lng;
-        this.lat = lat;
-        this.antennaHeight = antennaHeight;
-        this.altitude = altitude;
-        this.indoorOrOutdoor = indoorOrOutdoor;
-        this.coverageType = coverageType;
-        this.coverageScene = coverageScene;
-        this.enbCellAzimuth = enbCellAzimuth;
-        this.mechanicalDipAngle = mechanicalDipAngle;
-        this.electronicDipAngle = electronicDipAngle;
-        this.county = county;
-        this.manufactoryName = manufactoryName;
-        this.tac = tac;
-        this.pci = pci;
-        this.lteEarFcn = lteEarFcn;
-        this.enbId = (int) eci / 256;
-        this.enbCellId = (int) eci % 256;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public LteBasestationCell(){
-
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(eci);
+        dest.writeString(name);
+        dest.writeString(city);
+        dest.writeFloat(lng);
+        dest.writeFloat(lat);
+        dest.writeFloat(antennaHeight);
+        dest.writeFloat(altitude);
+        dest.writeInt(indoorOrOutdoor);
+        dest.writeInt(coverageType);
+        dest.writeInt(coverageScene);
+        dest.writeFloat(enbCellAzimuth);
+        dest.writeFloat(mechanicalDipAngle);
+        dest.writeFloat(electronicDipAngle);
+        dest.writeString(county);
+        dest.writeString(manufactoryName);
+        dest.writeInt(tac);
+        dest.writeInt(pci);
+        dest.writeInt(lteEarFcn);
+        dest.writeInt(enbId);
+        dest.writeInt(enbCellId);
     }
+
+    public static final Creator<LteBasestationCell> CREATOR = new Creator<LteBasestationCell>() {
+        @Override
+        public LteBasestationCell createFromParcel(Parcel source) {
+            LteBasestationCell lteBasestationCell = new LteBasestationCell();
+            lteBasestationCell.eci = source.readLong();
+            lteBasestationCell.name = source.readString();
+            lteBasestationCell.city = source.readString();
+            lteBasestationCell.lng = source.readFloat();
+            lteBasestationCell.lat = source.readFloat();
+            lteBasestationCell.antennaHeight = source.readFloat();
+            lteBasestationCell.altitude = source.readFloat();
+            lteBasestationCell.indoorOrOutdoor = source.readInt();
+            lteBasestationCell.coverageType = source.readInt();
+            lteBasestationCell.coverageScene = source.readInt();
+            lteBasestationCell.enbCellAzimuth = source.readFloat();
+            lteBasestationCell.mechanicalDipAngle = source.readFloat();
+            lteBasestationCell.electronicDipAngle = source.readFloat();
+            lteBasestationCell.county = source.readString();
+            lteBasestationCell.manufactoryName = source.readString();
+            lteBasestationCell.tac = source.readInt();
+            lteBasestationCell.pci = source.readInt();
+            lteBasestationCell.lteEarFcn = source.readInt();
+            lteBasestationCell.enbId = source.readInt();
+            lteBasestationCell.enbCellId = source.readInt();
+            return lteBasestationCell;
+        }
+
+        @Override
+        public LteBasestationCell[] newArray(int size) {
+            return new LteBasestationCell[size];
+        }
+    };
 
 }
