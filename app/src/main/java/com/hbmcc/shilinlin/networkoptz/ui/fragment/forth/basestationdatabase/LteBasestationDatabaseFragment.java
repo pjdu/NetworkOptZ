@@ -92,11 +92,10 @@ public class LteBasestationDatabaseFragment extends SupportFragment {
         lteBasestationDatabaseAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View view, RecyclerView.ViewHolder vh) {
-                extraTransaction()
+                getPreFragment().extraTransaction()
                         .setCustomAnimations(R.anim.v_fragment_enter, 0, 0, R.anim.v_fragment_exit)
                         .startDontHideSelf(LteBasestationcellDetailInfoFragment.newInstance
                                 (lteBasestationDatabaseAdapter.getCell(position)));
-                Toast.makeText(App.getContext(),"clicked",Toast.LENGTH_SHORT).show();
             }
         });
         recyclerviewFragmentLteBasestationDatabase.setAdapter(lteBasestationDatabaseAdapter);

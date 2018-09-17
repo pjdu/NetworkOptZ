@@ -3,6 +3,7 @@ package com.hbmcc.shilinlin.networkoptz.ui.fragment.other;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import me.yokeyword.fragmentation.SupportFragment;
  */
 
 public class LteBasestationcellDetailInfoFragment extends SupportFragment {
-
+    private static final String TAG = "LteBasestationcellDetai";
     private static final String ARG_MSG = "arg_msg";
     private TextView textViewFragmentLtebasestationcelldetailinfoEci;
     private TextView textViewFragmentLtebasestationcelldetailinfoCity;
@@ -47,6 +48,7 @@ public class LteBasestationcellDetailInfoFragment extends SupportFragment {
         args.putParcelable(ARG_MSG, lteBasestationCell);
         LteBasestationcellDetailInfoFragment fragment = new LteBasestationcellDetailInfoFragment();
         fragment.setArguments(args);
+        Log.d(TAG, "newInstance:");
         return fragment;
     }
 
@@ -75,12 +77,14 @@ public class LteBasestationcellDetailInfoFragment extends SupportFragment {
         textViewFragmentLtebasestationcelldetailinfoName = view.findViewById(R.id.textView_fragment_ltebasestationcelldetailinfo_name);
         textViewFragmentLtebasestationcelldetailinfoIndoorOrOutdoor = view.findViewById(R.id
                 .textView_fragment_ltebasestationcelldetailinfo_indoorOrOutdoor);
+        Log.d(TAG, "onCreateView:");
         return view;
     }
 
     @Override
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
+        Log.d(TAG, "onEnterAnimationEnd:");
         LteBasestationCell lteBasestationCell = getArguments().getParcelable(ARG_MSG);
         textViewFragmentLtebasestationcelldetailinfoEci.setText(lteBasestationCell.getEci() + "");
         textViewFragmentLtebasestationcelldetailinfoName.setText(lteBasestationCell.getName()+"");

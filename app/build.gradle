@@ -50,4 +50,6 @@ dependencies {
     //百度地图相关jar包
     implementation files('libs/BaiduLBS_Android.jar')
     implementation files('libs/IndoorscapeAlbumPlugin.jar')
+
+    implementation "com.android.support:cardview-v7:26.1.0"
 }

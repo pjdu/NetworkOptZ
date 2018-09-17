@@ -22,6 +22,7 @@ import com.hbmcc.shilinlin.networkoptz.event.UpdateUeStatusEvent;
 import com.hbmcc.shilinlin.networkoptz.telephony.NetworkStatus;
 import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.LteCellInfo;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
+import com.hbmcc.shilinlin.networkoptz.ui.fragment.other.LteBasestationcellDetailInfoFragment;
 import com.hbmcc.shilinlin.networkoptz.util.NumberFormat;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -156,6 +157,15 @@ public class FirstTabFragment extends BaseMainFragment {
                 }
             }
         });
+//        textViewFragmentFirstTabAltitude.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getTopFragment().extraTransaction()
+//                        .setCustomAnimations(R.anim.v_fragment_enter, 0, 0, R.anim.v_fragment_exit)
+//                        .startDontHideSelf(LteBasestationcellDetailInfoFragment.newInstance
+//                                (new LteBasestationCell()));
+//            }
+//        });
     }
 
     /**

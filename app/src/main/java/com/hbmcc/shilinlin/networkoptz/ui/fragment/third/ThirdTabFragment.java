@@ -5,18 +5,22 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
+import com.hbmcc.shilinlin.networkoptz.database.LteBasestationCell;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.first.FirstTabFragment;
+import com.hbmcc.shilinlin.networkoptz.ui.fragment.other.LteBasestationcellDetailInfoFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import me.yokeyword.eventbusactivityscope.EventBusActivityScope;
 
 public class ThirdTabFragment extends BaseMainFragment {
+
     public static ThirdTabFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -44,6 +48,7 @@ public class ThirdTabFragment extends BaseMainFragment {
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
+
     }
 
     /**
