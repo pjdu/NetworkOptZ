@@ -56,6 +56,7 @@ public class LteBasestationcellDetailInfoFragment extends SupportFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lte_basestationcell_detailinfo, container, false);
+
         textViewFragmentLtebasestationcelldetailinfoEci = view.findViewById(R.id.textView_fragment_ltebasestationcelldetailinfo_eci);
         textViewFragmentLtebasestationcelldetailinfoCity = view.findViewById(R.id.textView_fragment_ltebasestationcelldetailinfo_city);
         textViewFragmentLtebasestationcelldetailinfoLng = view.findViewById(R.id.textView_fragment_ltebasestationcelldetailinfo_lng);
@@ -82,9 +83,8 @@ public class LteBasestationcellDetailInfoFragment extends SupportFragment {
     }
 
     @Override
-    public void onEnterAnimationEnd(Bundle savedInstanceState) {
-        super.onEnterAnimationEnd(savedInstanceState);
-        Log.d(TAG, "onEnterAnimationEnd:");
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         LteBasestationCell lteBasestationCell = getArguments().getParcelable(ARG_MSG);
         textViewFragmentLtebasestationcelldetailinfoEci.setText(lteBasestationCell.getEci() + "");
         textViewFragmentLtebasestationcelldetailinfoName.setText(lteBasestationCell.getName()+"");
@@ -119,4 +119,5 @@ public class LteBasestationcellDetailInfoFragment extends SupportFragment {
             textViewFragmentLtebasestationcelldetailinfoIndoorOrOutdoor.setText("室内");
         }
     }
+
 }
