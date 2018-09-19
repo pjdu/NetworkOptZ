@@ -3,22 +3,21 @@ package com.hbmcc.shilinlin.networkoptz.ui.fragment.other;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hbmcc.shilinlin.networkoptz.R;
+import com.hbmcc.shilinlin.networkoptz.base.BaseBackFragment;
 import com.hbmcc.shilinlin.networkoptz.database.LteBasestationCell;
-
-import me.yokeyword.fragmentation.SupportFragment;
 
 /**
  * Created by shilinlin on 18/9/14.
  */
 
-public class LteBasestationcellDetailInfoFragment extends SupportFragment {
+public class LteBasestationcellDetailInfoFragment extends BaseBackFragment {
     private static final String TAG = "LteBasestationcellDetai";
     private static final String ARG_MSG = "arg_msg";
     private TextView textViewFragmentLtebasestationcelldetailinfoEci;
@@ -41,6 +40,8 @@ public class LteBasestationcellDetailInfoFragment extends SupportFragment {
     private TextView textViewFragmentLtebasestationcelldetailinfoEnbCellId;
     private TextView textViewFragmentLtebasestationcelldetailinfoName;
     private TextView textViewFragmentLtebasestationcelldetailinfoIndoorOrOutdoor;
+    private Toolbar mToolbar;
+    private String mTitle="小区详情";
 
     public static LteBasestationcellDetailInfoFragment newInstance(LteBasestationCell lteBasestationCell) {
 
@@ -48,7 +49,6 @@ public class LteBasestationcellDetailInfoFragment extends SupportFragment {
         args.putParcelable(ARG_MSG, lteBasestationCell);
         LteBasestationcellDetailInfoFragment fragment = new LteBasestationcellDetailInfoFragment();
         fragment.setArguments(args);
-        Log.d(TAG, "newInstance:");
         return fragment;
     }
 
@@ -56,7 +56,7 @@ public class LteBasestationcellDetailInfoFragment extends SupportFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lte_basestationcell_detailinfo, container, false);
-
+        mToolbar = view.findViewById(R.id.toolbar);
         textViewFragmentLtebasestationcelldetailinfoEci = view.findViewById(R.id.textView_fragment_ltebasestationcelldetailinfo_eci);
         textViewFragmentLtebasestationcelldetailinfoCity = view.findViewById(R.id.textView_fragment_ltebasestationcelldetailinfo_city);
         textViewFragmentLtebasestationcelldetailinfoLng = view.findViewById(R.id.textView_fragment_ltebasestationcelldetailinfo_lng);
@@ -78,7 +78,8 @@ public class LteBasestationcellDetailInfoFragment extends SupportFragment {
         textViewFragmentLtebasestationcelldetailinfoName = view.findViewById(R.id.textView_fragment_ltebasestationcelldetailinfo_name);
         textViewFragmentLtebasestationcelldetailinfoIndoorOrOutdoor = view.findViewById(R.id
                 .textView_fragment_ltebasestationcelldetailinfo_indoorOrOutdoor);
-        Log.d(TAG, "onCreateView:");
+        mToolbar.setTitle(mTitle);
+        initToolbarNav(mToolbar);
         return view;
     }
 

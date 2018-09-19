@@ -24,17 +24,21 @@ public class LteBasestationDatabaseAdapter extends RecyclerView.Adapter<LteBases
     @Override
     public void onBindViewHolder(LteBasestationDatabaseAdapter.ViewHolder holder, int position) {
         LteBasestationCell lteBasestationCell = lteBasestationCellList.get(position);
-        holder.textviewRecyclerviewItemLtebasestationcellCity.setText(lteBasestationCell.getCity
-                () + "");
-        holder.textviewRecyclerviewItemLtebasestationcellName.setText(lteBasestationCell.getName
-                () + "");
-        holder.textviewRecyclerviewItemLtebasestationcellEci.setText(lteBasestationCell.getEnbId()
+        holder.textviewRecyclerviewItemLtebasestationcellCity.setText(""+lteBasestationCell
+                .getCity
+                ());
+        holder.textviewRecyclerviewItemLtebasestationcellName.setText(""+lteBasestationCell
+                .getName
+                () );
+        holder.textviewRecyclerviewItemLtebasestationcellEci.setText(""+lteBasestationCell
+                .getEnbId()
                 + "-" + lteBasestationCell.getEnbCellId());
-        holder.textviewRecyclerviewItemLtebasestationcellTac.setText(lteBasestationCell.getTac() + "");
-        holder.textviewRecyclerviewItemLtebasestationcellPci.setText(lteBasestationCell.getPci() +
-                "");
-        holder.textviewRecyclerviewItemLtebasestationcellEarfcn.setText(lteBasestationCell
-                .getLteEarFcn() + "");
+        holder.textviewRecyclerviewItemLtebasestationcellTac.setText(""+lteBasestationCell
+                .getTac());
+        holder.textviewRecyclerviewItemLtebasestationcellPci.setText(""+lteBasestationCell
+                .getPci());
+        holder.textviewRecyclerviewItemLtebasestationcellEarfcn.setText(""+lteBasestationCell
+                .getLteEarFcn() );
     }
 
     @Override

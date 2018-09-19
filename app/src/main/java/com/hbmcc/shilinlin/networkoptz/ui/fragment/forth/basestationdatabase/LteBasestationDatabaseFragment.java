@@ -17,6 +17,8 @@ import com.hbmcc.shilinlin.networkoptz.adapter.LteBasestationDatabaseAdapter;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.database.LteBasestationCell;
 import com.hbmcc.shilinlin.networkoptz.listener.OnItemClickListener;
+import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
+import com.hbmcc.shilinlin.networkoptz.ui.fragment.forth.ForthTabFragment;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.other.LteBasestationcellDetailInfoFragment;
 
 import org.litepal.LitePal;
@@ -93,10 +95,9 @@ public class LteBasestationDatabaseFragment extends SupportFragment {
         lteBasestationDatabaseAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View view, RecyclerView.ViewHolder vh) {
-                ((BasestationDatabaseFragment)getParentFragment()).extraTransaction()
-                        .setCustomAnimations(R.anim.v_fragment_enter, 0, 0, R.anim.v_fragment_exit)
-                        .startDontHideSelf(LteBasestationcellDetailInfoFragment.newInstance
-                                (lteBasestationDatabaseAdapter.getCell(position)));
+                ((BasestationDatabaseFragment)getParentFragment()).extraTransaction().startDontHideSelf((LteBasestationcellDetailInfoFragment
+                        .newInstance
+                                (lteBasestationDatabaseAdapter.getCell(position))));
             }
         });
         recyclerviewFragmentLteBasestationDatabase.setAdapter(lteBasestationDatabaseAdapter);

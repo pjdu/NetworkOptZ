@@ -15,6 +15,8 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MyLocationConfiguration;
@@ -23,6 +25,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.hbmcc.shilinlin.networkoptz.R;
+import com.hbmcc.shilinlin.networkoptz.database.LteBasestationCell;
 import com.hbmcc.shilinlin.networkoptz.event.UpdateUeStatusEvent;
 import com.hbmcc.shilinlin.networkoptz.telephony.LocationStatus;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
@@ -54,6 +57,10 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     private Button btnLocation;
     private CheckBox checkBoxTraffic;
     private CheckBox checkBoxBaiduHeatMap;
+    private CheckBox checkboxFragmentSecondTabDisplayLTECell;
+
+
+
 
     private TextView textViewCurrentPositionLonLat;
     private TextView textViewCurrentPositionDefinition;
@@ -66,6 +73,17 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     private double mCurrentLon = 0.0;
     private float mCurrentAccracy;
     private MyLocationData locData;
+
+    //初始化marker信息
+    // 初始化全局 bitmap 信息，不用时及时 recycle
+    private BitmapDescriptor markerLteTDDOutside = BitmapDescriptorFactory
+            .fromResource(R.drawable.roomout_4g_red);
+    private BitmapDescriptor markerLteTDDIndoor = BitmapDescriptorFactory
+            .fromResource(R.drawable.roomin_4g);
+    private BitmapDescriptor markerLteFDD900Outside = BitmapDescriptorFactory
+            .fromResource(R.drawable.roomout_4g_green);
+    private BitmapDescriptor markerLteFDD1800Outside = BitmapDescriptorFactory
+            .fromResource(R.drawable.roomout_4g_yellow);
 
     public static SecondTabFragment newInstance() {
         Bundle args = new Bundle();
@@ -142,6 +160,8 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         btnLocation = view.findViewById(R.id.btn_fragment_second_tab_location);
         checkBoxTraffic = view.findViewById(R.id.checkBox_fragment_second_tab_traffic);
         checkBoxBaiduHeatMap = view.findViewById(R.id.checkbox_fragment_second_tab_baidu_heat_map);
+        checkboxFragmentSecondTabDisplayLTECell = view.findViewById(R.id
+                .checkbox_fragment_second_tab_LTE_cell);
 
         //获取传感器管理服务
         mSensorManager = (SensorManager) _mActivity.getSystemService(SENSOR_SERVICE);
@@ -193,6 +213,14 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
                 mBaiduMap.setTrafficEnabled(isChecked);
             }
         });
+
+        checkboxFragmentSecondTabDisplayLTECell.setOnCheckedChangeListener(new CheckBox
+                .OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            }
+        });
     }
 
     private void initMap() {
@@ -219,6 +247,28 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
 
         //设置地图各组件的位置
         mBaiduMap.setViewPadding(0, 0, 0, 0);
+
+        mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener(){
+            @Override
+            public void onMapStatusChangeFinish(MapStatus mapStatus) {
+
+            }
+
+            @Override
+            public void onMapStatusChange(MapStatus mapStatus) {
+
+            }
+
+            @Override
+            public void onMapStatusChangeStart(MapStatus mapStatus, int i) {
+
+            }
+
+            @Override
+            public void onMapStatusChangeStart(MapStatus mapStatus) {
+
+            }
+        });
     }
 
     @Override

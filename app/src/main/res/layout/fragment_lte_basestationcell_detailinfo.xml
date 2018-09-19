@@ -2,23 +2,25 @@
 
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/transparent"
-    android:gravity="center"
-    android:orientation="vertical"
-    tools:context=".ui.fragment.other.LteBasestationcellDetailInfoFragment">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/transparent"
+              android:gravity="center"
+              android:orientation="vertical"
+              tools:context=".ui.fragment.other.LteBasestationcellDetailInfoFragment">
 
     <android.support.v7.widget.CardView
         android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:background="@android:color/white">
+        android:layout_height="200dp">
+
+        <include layout="@layout/toolbar"/>
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingTop="?android:attr/actionBarSize">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -32,7 +34,7 @@
                     android:text="eci："
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_eci"
@@ -40,14 +42,14 @@
                     android:layout_height="wrap_content"
                     android:text="1"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_eci"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="小区名："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_eci" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_eci"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_name"
@@ -55,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:text="2"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_name"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_eci" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_eci"/>
 
 
                 <TextView
@@ -63,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="城市："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_name" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_name"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_city"
@@ -71,14 +73,14 @@
                     android:layout_height="wrap_content"
                     android:text="3"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_city"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_name" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_name"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_lng"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="经度："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_city" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_city"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_lng"
@@ -86,14 +88,14 @@
                     android:layout_height="wrap_content"
                     android:text="4"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lng"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_city" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_city"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_lat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="纬度："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lng" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lng"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_lat"
@@ -101,14 +103,14 @@
                     android:layout_height="wrap_content"
                     android:text="5"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lat"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lng" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lng"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_antennaHeight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="天线高度："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lat" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lat"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_antennaHeight"
@@ -116,14 +118,14 @@
                     android:layout_height="wrap_content"
                     android:text="6"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_antennaHeight"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lat" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lat"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_altitude"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="海拔："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_antennaHeight" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_antennaHeight"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_altitude"
@@ -131,14 +133,14 @@
                     android:layout_height="wrap_content"
                     android:text="7"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_altitude"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_antennaHeight" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_antennaHeight"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_indoorOrOutdoor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="室内外："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_altitude" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_altitude"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_indoorOrOutdoor"
@@ -146,14 +148,14 @@
                     android:layout_height="wrap_content"
                     android:text="8"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_indoorOrOutdoor"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_altitude" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_altitude"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_coverageType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="覆盖类别："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_indoorOrOutdoor" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_indoorOrOutdoor"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_coverageType"
@@ -161,14 +163,14 @@
                     android:layout_height="wrap_content"
                     android:text="9"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_coverageType"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_indoorOrOutdoor" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_indoorOrOutdoor"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_coverageScene"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="覆盖场景："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_coverageType" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_coverageType"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_coverageScene"
@@ -176,14 +178,14 @@
                     android:layout_height="wrap_content"
                     android:text="10"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_coverageScene"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_coverageType" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_coverageType"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbCellAzimuth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="方位角："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_coverageScene" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_coverageScene"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_enbCellAzimuth"
@@ -191,14 +193,14 @@
                     android:layout_height="wrap_content"
                     android:text="11"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbCellAzimuth"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_coverageScene" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_coverageScene"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_mechanicalDipAngle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="机械下倾角："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbCellAzimuth" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbCellAzimuth"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_mechanicalDipAngle"
@@ -206,14 +208,14 @@
                     android:layout_height="wrap_content"
                     android:text="12"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_mechanicalDipAngle"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbCellAzimuth" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbCellAzimuth"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_electronicDipAngle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="电子下倾角："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_mechanicalDipAngle" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_mechanicalDipAngle"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_electronicDipAngle"
@@ -221,14 +223,14 @@
                     android:layout_height="wrap_content"
                     android:text="13"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_electronicDipAngle"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_mechanicalDipAngle" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_mechanicalDipAngle"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_county"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="县："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_electronicDipAngle" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_electronicDipAngle"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_county"
@@ -236,14 +238,14 @@
                     android:layout_height="wrap_content"
                     android:text="14"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_county"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_electronicDipAngle" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_electronicDipAngle"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_manufactoryName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="主设备厂家："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_county" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_county"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_manufactoryName"
@@ -251,14 +253,14 @@
                     android:layout_height="wrap_content"
                     android:text="15"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_manufactoryName"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_county" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_county"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_tac"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TAC："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_manufactoryName" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_manufactoryName"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_tac"
@@ -266,14 +268,14 @@
                     android:layout_height="wrap_content"
                     android:text="16"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_tac"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_manufactoryName" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_manufactoryName"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_pci"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="PCI："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_tac" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_tac"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_pci"
@@ -281,14 +283,14 @@
                     android:layout_height="wrap_content"
                     android:text="17"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_pci"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_tac" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_tac"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_lteEarFcn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="LTE频点："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_pci" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_pci"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_lteEarFcn"
@@ -296,14 +298,14 @@
                     android:layout_height="wrap_content"
                     android:text="18"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lteEarFcn"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_pci" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_pci"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="enodeb id："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lteEarFcn" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lteEarFcn"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_enbId"
@@ -311,14 +313,14 @@
                     android:layout_height="wrap_content"
                     android:text="19"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbId"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lteEarFcn" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_lteEarFcn"/>
 
                 <TextView
                     android:id="@+id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbCellId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="cell id："
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbId" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbId"/>
 
                 <TextView
                     android:id="@+id/textView_fragment_ltebasestationcelldetailinfo_enbCellId"
@@ -326,7 +328,7 @@
                     android:layout_height="wrap_content"
                     android:text="20"
                     app:layout_constraintLeft_toRightOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbCellId"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbId" />
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabel_fragment_ltebasestationcelldetailinfo_enbId"/>
 
             </android.support.constraint.ConstraintLayout>
         </android.support.v4.widget.NestedScrollView>
