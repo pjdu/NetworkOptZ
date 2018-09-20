@@ -9,16 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.hbmcc.shilinlin.networkoptz.App;
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.adapter.LteBasestationDatabaseAdapter;
-import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.database.LteBasestationCell;
 import com.hbmcc.shilinlin.networkoptz.listener.OnItemClickListener;
-import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
-import com.hbmcc.shilinlin.networkoptz.ui.fragment.forth.ForthTabFragment;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.other.LteBasestationcellDetailInfoFragment;
 
 import org.litepal.LitePal;

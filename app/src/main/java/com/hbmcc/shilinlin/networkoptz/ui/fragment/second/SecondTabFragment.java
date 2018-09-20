@@ -19,23 +19,26 @@ import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.hbmcc.shilinlin.networkoptz.R;
-import com.hbmcc.shilinlin.networkoptz.database.LteBasestationCell;
-import com.hbmcc.shilinlin.networkoptz.event.UpdateUeStatusEvent;
-import com.hbmcc.shilinlin.networkoptz.telephony.LocationStatus;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
+import com.hbmcc.shilinlin.networkoptz.event.UpdateUeStatusEvent;
+import com.hbmcc.shilinlin.networkoptz.telephony.LocationStatus;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
 import com.hbmcc.shilinlin.networkoptz.util.NumberFormat;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import me.yokeyword.eventbusactivityscope.EventBusActivityScope;
 
@@ -58,12 +61,9 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     private CheckBox checkBoxTraffic;
     private CheckBox checkBoxBaiduHeatMap;
     private CheckBox checkboxFragmentSecondTabDisplayLTECell;
-
-
-
-
     private TextView textViewCurrentPositionLonLat;
     private TextView textViewCurrentPositionDefinition;
+
     private MyLocationConfiguration.LocationMode mCurrentLocationMode;
     private int mMapType;
     private SensorManager mSensorManager;
@@ -73,6 +73,10 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
     private double mCurrentLon = 0.0;
     private float mCurrentAccracy;
     private MyLocationData locData;
+
+    private MarkerOptions markerOptions = new MarkerOptions();
+    private Marker marker;
+    private List<Marker> markerList = new ArrayList<>();
 
     //初始化marker信息
     // 初始化全局 bitmap 信息，不用时及时 recycle
@@ -213,14 +217,6 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
                 mBaiduMap.setTrafficEnabled(isChecked);
             }
         });
-
-        checkboxFragmentSecondTabDisplayLTECell.setOnCheckedChangeListener(new CheckBox
-                .OnCheckedChangeListener(){
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-            }
-        });
     }
 
     private void initMap() {
@@ -248,10 +244,30 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         //设置地图各组件的位置
         mBaiduMap.setViewPadding(0, 0, 0, 0);
 
-        mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener(){
+        mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
             @Override
             public void onMapStatusChangeFinish(MapStatus mapStatus) {
+                final LatLng ll = mapStatus.target;
+                if (checkboxFragmentSecondTabDisplayLTECell.isChecked()) {
+                    clearOverlay();
+                    disPlayMyOverlay(ll);
+                } else {
+                    clearOverlay();
+                }
 
+                checkboxFragmentSecondTabDisplayLTECell.setOnCheckedChangeListener(new CheckBox
+                        .OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) {
+                            clearOverlay();
+                            disPlayMyOverlay(ll);
+                        }
+                        else {
+                            clearOverlay();
+                        }
+                    }
+                });
             }
 
             @Override
@@ -340,5 +356,15 @@ public class SecondTabFragment extends BaseMainFragment implements SensorEventLi
         MapStatus.Builder builder = new MapStatus.Builder();
         builder.target(ll).zoom(18.0f);
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+    }
+
+    /**
+     * 清除所有Overlay
+     *
+     * @param view
+     */
+    public void clearOverlay(View view) {
+        mBaiduMap.clear();
+        markerList.clear();
     }
 }
