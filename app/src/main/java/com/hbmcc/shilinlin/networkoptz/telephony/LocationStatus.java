@@ -26,11 +26,11 @@ public class LocationStatus {
         //基本信息部分
         latitudeBaidu = bdLocation.getLatitude();    //获取纬度信息
         longitudeBaidu = bdLocation.getLongitude();    //获取经度信息
-        LocatonConverter.LatLng latLngBaidu = new LocatonConverter.LatLng(latitudeBaidu,
+        LocatonConverter.MyLatLng myLatLngBaidu = new LocatonConverter.MyLatLng(latitudeBaidu,
                 longitudeBaidu);
-        LocatonConverter.LatLng latLngWgs84 = LocatonConverter.bd09ToWgs84(latLngBaidu);
-        latitudeWgs84 = latLngWgs84.getLatitude();
-        longitudeWgs84 = latLngWgs84.getLongitude();
+        LocatonConverter.MyLatLng myLatLngWgs84 = LocatonConverter.bd09ToWgs84(myLatLngBaidu);
+        latitudeWgs84 = myLatLngWgs84.getLatitude();
+        longitudeWgs84 = myLatLngWgs84.getLongitude();
         radius = bdLocation.getRadius();    //获取定位精度，默认值为0.0f
         altitude = bdLocation.getAltitude();//获取高度
 

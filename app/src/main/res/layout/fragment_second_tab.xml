@@ -19,7 +19,7 @@
         android:text="详细地址:" />
 
     <TextView
-        android:id="@+id/TextViewCurrentMarkerBaseStationName"
+        android:id="@+id/textView_fragment_second_tab_clicked_cell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="当前未点击小区" />

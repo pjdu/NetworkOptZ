@@ -113,10 +113,10 @@ public class LteBasestationcellDetailInfoFragment extends BaseBackFragment {
         textViewFragmentLtebasestationcelldetailinfoLteEarFcn.setText(lteBasestationCell.getLteEarFcn()+"");
         textViewFragmentLtebasestationcelldetailinfoEnbId.setText(lteBasestationCell.getEnbId()+"");
         textViewFragmentLtebasestationcelldetailinfoEnbCellId.setText(lteBasestationCell.getEnbCellId()+"");
-        if(lteBasestationCell.getIndoorOrOutdoor() == 0){
+        if(lteBasestationCell.getIndoorOrOutdoor() == LteBasestationCell.COVERAGE_OUTSIDE){
             textViewFragmentLtebasestationcelldetailinfoIndoorOrOutdoor.setText("室外");
         }
-        else if(lteBasestationCell.getIndoorOrOutdoor() == 1){
+        else if(lteBasestationCell.getIndoorOrOutdoor() == LteBasestationCell.COVERAGE_INDOOR){
             textViewFragmentLtebasestationcelldetailinfoIndoorOrOutdoor.setText("室内");
         }
     }

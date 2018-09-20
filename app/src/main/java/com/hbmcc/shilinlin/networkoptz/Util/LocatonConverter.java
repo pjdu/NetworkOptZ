@@ -1,5 +1,7 @@
 package com.hbmcc.shilinlin.networkoptz.util;
 
+import com.baidu.mapapi.model.LatLng;
+
 /**
  * Created by linlinshi on 2017/12/30.
  */
@@ -70,8 +72,8 @@ public class LocatonConverter {
         return false;
     }
 
-    public static LatLng gcj02Encrypt(double ggLat, double ggLon) {
-        LatLng resPoint = new LatLng();
+    public static MyLatLng gcj02Encrypt(double ggLat, double ggLon) {
+        MyLatLng resPoint = new MyLatLng();
         double mgLat;
         double mgLon;
         if (outOfChina(ggLat, ggLon)) {
@@ -95,18 +97,18 @@ public class LocatonConverter {
         return resPoint;
     }
 
-    public static LatLng gcj02Decrypt(double gjLat, double gjLon) {
-        LatLng gPt = gcj02Encrypt(gjLat, gjLon);
+    public static MyLatLng gcj02Decrypt(double gjLat, double gjLon) {
+        MyLatLng gPt = gcj02Encrypt(gjLat, gjLon);
         double dLon = gPt.longitude - gjLon;
         double dLat = gPt.latitude - gjLat;
-        LatLng pt = new LatLng();
+        MyLatLng pt = new MyLatLng();
         pt.latitude = gjLat - dLat;
         pt.longitude = gjLon - dLon;
         return pt;
     }
 
-    public static LatLng bd09Decrypt(double bdLat, double bdLon) {
-        LatLng gcjPt = new LatLng();
+    public static MyLatLng bd09Decrypt(double bdLat, double bdLon) {
+        MyLatLng gcjPt = new MyLatLng();
         double x = bdLon - 0.0065, y = bdLat - 0.006;
         double z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * Math.PI);
         double theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * Math.PI);
@@ -115,8 +117,8 @@ public class LocatonConverter {
         return gcjPt;
     }
 
-    public static LatLng bd09Encrypt(double ggLat, double ggLon) {
-        LatLng bdPt = new LatLng();
+    public static MyLatLng bd09Encrypt(double ggLat, double ggLon) {
+        MyLatLng bdPt = new MyLatLng();
         double x = ggLon, y = ggLat;
         double z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * Math.PI);
         double theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * Math.PI);
@@ -132,7 +134,7 @@ public class LocatonConverter {
      * <p>
      * ####只在中国大陆的范围的坐标有效，以外直接返回世界标准坐标
      */
-    public static LatLng wgs84ToGcj02(LatLng location) {
+    public static MyLatLng wgs84ToGcj02(MyLatLng location) {
         return gcj02Encrypt(location.latitude, location.longitude);
     }
 
@@ -143,7 +145,7 @@ public class LocatonConverter {
      * <p>
      * ####此接口有1－2米左右的误差，需要精确定位情景慎用
      */
-    public static LatLng gcj02ToWgs84(LatLng location) {
+    public static MyLatLng gcj02ToWgs84(MyLatLng location) {
         return gcj02Decrypt(location.latitude, location.longitude);
     }
 
@@ -152,8 +154,8 @@ public class LocatonConverter {
      * @return 百度地理坐标（BD-09)
      * @brief 世界标准地理坐标(WGS - 84) 转换成 百度地理坐标（BD-09)
      */
-    public static LatLng wgs84ToBd09(LatLng location) {
-        LatLng gcj02Pt = gcj02Encrypt(location.latitude, location.longitude);
+    public static MyLatLng wgs84ToBd09(MyLatLng location) {
+        MyLatLng gcj02Pt = gcj02Encrypt(location.latitude, location.longitude);
         return bd09Encrypt(gcj02Pt.latitude, gcj02Pt.longitude);
     }
 
@@ -162,7 +164,7 @@ public class LocatonConverter {
      * @return 百度地理坐标（BD-09)
      * @brief 中国国测局地理坐标（GCJ-02）<火星坐标> 转换成 百度地理坐标（BD-09)
      */
-    public static LatLng gcj02ToBd09(LatLng location) {
+    public static MyLatLng gcj02ToBd09(MyLatLng location) {
         return bd09Encrypt(location.latitude, location.longitude);
     }
 
@@ -171,7 +173,7 @@ public class LocatonConverter {
      * @return 中国国测局地理坐标（GCJ-02）<火星坐标>
      * @brief 百度地理坐标（BD-09) 转换成 中国国测局地理坐标（GCJ-02）<火星坐标>
      */
-    public static LatLng bd09ToGcj02(LatLng location) {
+    public static MyLatLng bd09ToGcj02(MyLatLng location) {
         return bd09Decrypt(location.latitude, location.longitude);
     }
 
@@ -182,21 +184,21 @@ public class LocatonConverter {
      * <p>
      * ####此接口有1－2米左右的误差，需要精确定位情景慎用
      */
-    public static LatLng bd09ToWgs84(LatLng location) {
-        LatLng gcj02 = bd09ToGcj02(location);
+    public static MyLatLng bd09ToWgs84(MyLatLng location) {
+        MyLatLng gcj02 = bd09ToGcj02(location);
         return gcj02Decrypt(gcj02.latitude, gcj02.longitude);
     }
 
-    public static class LatLng {
+    public static class MyLatLng {
         public double latitude;
         public double longitude;
 
-        public LatLng(double latitude, double longitude) {
+        public MyLatLng(double latitude, double longitude) {
             this.latitude = latitude;
             this.longitude = longitude;
         }
 
-        public LatLng() {
+        public MyLatLng() {
         }
 
         public double getLatitude() {
@@ -214,6 +216,7 @@ public class LocatonConverter {
         public void setLongitude(double longitude) {
             this.longitude = longitude;
         }
+
     }
 
 }
