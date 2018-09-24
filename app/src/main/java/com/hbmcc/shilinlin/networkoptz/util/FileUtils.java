@@ -91,7 +91,6 @@ public class FileUtils {
     }
 
     public static int initialStorage() {
-        Log.d(TAG, "initialStorage: " + FileUtils.getAppPath() + ",appName:" + appName);
         if (!FileUtils.isFileExist(FileUtils.getAppPath())) {
 
             FileUtils.createSDDirs(FileUtils.getAppPath());

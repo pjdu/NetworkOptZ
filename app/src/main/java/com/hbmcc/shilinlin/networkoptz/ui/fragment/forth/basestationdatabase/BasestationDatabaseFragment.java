@@ -48,6 +48,8 @@ public class BasestationDatabaseFragment extends BaseBackFragment {
     private Button btnFragmentBasestionDatabaseImportDatabase;
     ProgressDialog progressDialog;
     AlertDialog.Builder alertDialog;
+    private long startTime; //起始时间
+    private long endTime;//结束时间
 
     public static BasestationDatabaseFragment newInstance(String title) {
 
@@ -120,7 +122,7 @@ public class BasestationDatabaseFragment extends BaseBackFragment {
                                 importLteDatabase();
                             }
                         });
-                alertDialog.setNegativeButton("取消",new DialogInterface.OnClickListener(){
+                alertDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -132,6 +134,7 @@ public class BasestationDatabaseFragment extends BaseBackFragment {
     }
 
     public boolean importLteDatabase() {
+        startTime = System.currentTimeMillis();
         if (FileUtils.isFileExist(FileUtils.getLteInputFile())) {
             newCachedThreadPool.execute(new Runnable() {
                 @Override
@@ -157,7 +160,8 @@ public class BasestationDatabaseFragment extends BaseBackFragment {
                                 return;
                             }
                             i++;
-                            if (i > 1) {
+
+                            if (i > 2) {
                                 lteBasestationCell = new LteBasestationCell();
                                 lteBasestationCell.setEci(Long.parseLong(inStringSplit[0]));
                                 lteBasestationCell.setName(inStringSplit[1]);
@@ -194,7 +198,7 @@ public class BasestationDatabaseFragment extends BaseBackFragment {
                                 lteBasestationCellList.add(lteBasestationCell);
                             }
                         }
-                        if (i == 1) {
+                        if (i == 2) {
                             _mActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -207,12 +211,19 @@ public class BasestationDatabaseFragment extends BaseBackFragment {
                         reader.close();
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Toast.makeText(App.getContext(), "第" + i + "行数据异常，请处理", Toast.LENGTH_LONG)
+                                .show();
                     } finally {
+                        endTime = System.currentTimeMillis();
+                        final long usedTime = (int)((endTime - startTime)/1000);
+                        final int cellNums =i;
                         _mActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 progressDialog.dismiss();//导入完成后，取消进度对话框显示
-                                Toast.makeText(getContext(), "4G基站数据库导入成功", Toast.LENGTH_LONG).show();
+                                Toast.makeText(App.getContext(), "共导入" + cellNums + "行数据，用时" + String.format
+                                        ("%d " +
+                                                "s", usedTime), Toast.LENGTH_LONG).show();
                             }
                         });
                     }

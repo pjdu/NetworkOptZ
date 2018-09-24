@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NetworkStatus {
-    private static final String TAG = "NetworkInfo";
+    private static final String TAG = "NetworkStatus";
     public static final int NETWORK_STATUS_ERROR = 9999;
 
     public String time;
@@ -60,6 +60,7 @@ public class NetworkStatus {
         // 获取基站信息
         //SDK18及之后android系统使用getAllCellInfo方法，并且对基站的类型加以区分
         List<android.telephony.CellInfo> infos = mTelephonyManager.getAllCellInfo();
+//        Log.e(TAG, "NetworkStatus:infosize: "+infos.size());
         if (infos != null && infos.size() != 0) {
             lteNeighbourCellTowers = new ArrayList<>();
             gsmNeighbourCellTowers = new ArrayList<>();
@@ -73,7 +74,21 @@ public class NetworkStatus {
                     tower.mobileCountryCode = cellIdentityLte.getMcc();
                     tower.mobileNetworkCode = cellIdentityLte.getMnc();
                     tower.cellId = cellIdentityLte.getCi();
+
                     tower.signalStrength = ((CellInfoLte) i).getCellSignalStrength().getDbm();
+                    if (tower.signalStrength > 0) {
+                        tower.signalStrength = tower.signalStrength / 4 * -1;
+                    }
+//                    try {
+//                        Class<?> cellSignalStrengthLteClass = ((CellInfoLte) i)
+//                                .getCellSignalStrength().getClass();
+//                        Method methodGetRsrp = cellSignalStrengthLteClass.getDeclaredMethod
+//                                ("getRsrp");
+//                        tower.signalStrength = (int) methodGetRsrp.invoke(((CellInfoLte) i)
+//                                .getCellSignalStrength());
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
                     tower.timingAdvance = ((CellInfoLte) i).getCellSignalStrength().getTimingAdvance();
                     if (Build.VERSION.SDK_INT >= 24) {
                         tower.lteEarFcn = cellIdentityLte.getEarfcn();

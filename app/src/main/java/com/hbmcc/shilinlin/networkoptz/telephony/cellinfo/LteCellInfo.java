@@ -8,4 +8,5 @@ public class LteCellInfo extends CellInfo{
     public int rsrq;
     public int enbId;
     public int enbCellId;
+    public int asu;
 }
