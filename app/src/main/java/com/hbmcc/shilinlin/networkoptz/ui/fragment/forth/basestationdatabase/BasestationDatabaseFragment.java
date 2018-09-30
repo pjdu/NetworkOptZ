@@ -211,12 +211,18 @@ public class BasestationDatabaseFragment extends BaseBackFragment {
                         reader.close();
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(App.getContext(), "第" + i + "行数据异常，请处理", Toast.LENGTH_LONG)
-                                .show();
+                        final int cellNums = i;
+                        _mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(App.getContext(), "第" + cellNums + "行数据异常，请处理", Toast.LENGTH_LONG)
+                                        .show();
+                            }
+                        });
                     } finally {
                         endTime = System.currentTimeMillis();
-                        final long usedTime = (int)((endTime - startTime)/1000);
-                        final int cellNums =i;
+                        final long usedTime = (int) ((endTime - startTime) / 1000);
+                        final int cellNums = i;
                         _mActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
