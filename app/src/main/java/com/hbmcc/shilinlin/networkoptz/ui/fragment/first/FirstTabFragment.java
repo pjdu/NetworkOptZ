@@ -68,7 +68,6 @@ public class FirstTabFragment extends BaseMainFragment {
     private TextView textViewFragmentFirstTabNeighbourCell;
     private RecyclerView recyclerViewFragmentFirstTabRecentRecord;
     private RecyclerView recyclerViewFragmentFirstTabNeighbourCellInfo;
-    private TextView textViewFragmentFirstTabCurrentDateTime;
     private List<NetworkStatus> recentNetworkStatusRecordList;
     private List<LteCellInfo> neighbourCellList;
     private Button btnFragmentFirstTabConvert;
@@ -126,8 +125,6 @@ public class FirstTabFragment extends BaseMainFragment {
         textViewFragmentFirstTabRecentAvgSignalStrength = view.findViewById(R.id.textView_fragment_first_tab_recent_avg_signal_strength);
         textViewFragmentFirstTabNeighbourCell = view.findViewById(R.id
                 .textView_fragment_first_tab_neighbour_cell);
-        textViewFragmentFirstTabCurrentDateTime = view.findViewById(R.id
-                .textView_fragment_first_tab_currentDateTime);
         recyclerViewFragmentFirstTabRecentRecord = view.findViewById(R.id.recyclerView_fragment_first_tab_recent_record);
         recyclerViewFragmentFirstTabNeighbourCellInfo = view.findViewById(R.id.recyclerView_fragment_first_tab_neighbour_cell_info);
     }
@@ -157,15 +154,6 @@ public class FirstTabFragment extends BaseMainFragment {
                 }
             }
         });
-//        textViewFragmentFirstTabAltitude.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getTopFragment().extraTransaction()
-//                        .setCustomAnimations(R.anim.v_fragment_enter, 0, 0, R.anim.v_fragment_exit)
-//                        .startDontHideSelf(LteBasestationcellDetailInfoFragment.newInstance
-//                                (new LteBasestationCell()));
-//            }
-//        });
     }
 
     /**
@@ -248,8 +236,6 @@ public class FirstTabFragment extends BaseMainFragment {
                                             recentNetworkStatusCnt, 1);
                             textViewFragmentFirstTabRecentAvgSignalStrength.setText
                                     ("最近" + recentNetworkStatusCnt + "条记录，平均信号强度" + recentAvgSignalStrength + "dbm");
-                            textViewFragmentFirstTabCurrentDateTime.setText(updateUEStatusEvent.ueStatus
-                                    .networkStatus.time);
                             recentRecordAdapter.notifyDataSetChanged();
                             neighbourCellAdapter.notifyDataSetChanged();
                         }

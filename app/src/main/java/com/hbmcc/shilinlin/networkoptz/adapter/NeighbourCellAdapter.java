@@ -26,7 +26,7 @@ public class NeighbourCellAdapter extends RecyclerView.Adapter<NeighbourCellAdap
         holder.textViewTAC.setText("-");
         holder.textViewPCI.setText(neighbourCell.pci + "");
         holder.textViewRSRP.setText(neighbourCell.signalStrength + "");
-        holder.textViewSINR.setText(neighbourCell.sinr + "");
+        holder.textViewBand.setText("/");
     }
 
     @Override
@@ -47,7 +47,7 @@ public class NeighbourCellAdapter extends RecyclerView.Adapter<NeighbourCellAdap
         TextView textViewPCI;
         TextView textViewRSRP;
         TextView textViewEarfcn;
-        TextView textViewSINR;
+        TextView textViewBand;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -57,8 +57,8 @@ public class NeighbourCellAdapter extends RecyclerView.Adapter<NeighbourCellAdap
             textViewTAC = itemView.findViewById(R.id.textview_recyclerview_item_ltebasestationcell_tac);
             textViewPCI = itemView.findViewById(R.id.textview_recyclerview_item_ltebasestationcell_pci);
             textViewRSRP = itemView.findViewById(R.id.textview_recyclerview_item_neighbourcellinfo_rsrp);
-            textViewSINR = itemView.findViewById(R.id
-                    .textview_recyclerview_item_neighbourcellinfo_sinr);
+            textViewBand = itemView.findViewById(R.id
+                    .textview_recyclerview_item_neighbourcellinfo_band);
         }
     }
 }

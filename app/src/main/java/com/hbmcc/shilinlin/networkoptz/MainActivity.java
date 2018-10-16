@@ -1,11 +1,16 @@
 package com.hbmcc.shilinlin.networkoptz;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.telephony.PhoneStateListener;
+import android.telephony.SignalStrength;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -47,6 +52,9 @@ public class MainActivity extends SupportActivity {
     private DownloadSpeedStatus downloadSpeedStatus;
     private LocationStatus locationStatus;
 
+    MyPhoneStateListener myPhoneStateListener;
+    TelephonyManager mTelephonyManager;
+
     //只有Event中前后两条记录的time不一致，才进行广播
     private String mTime;
 
@@ -85,8 +93,7 @@ public class MainActivity extends SupportActivity {
         if (!permissionList.isEmpty()) {
             String[] permissions = permissionList.toArray(new String[permissionList.size()]);
             ActivityCompat.requestPermissions(MainActivity.this, permissions, 1);
-        }
-        else{
+        } else {
             startWork();
         }
 
@@ -130,7 +137,7 @@ public class MainActivity extends SupportActivity {
         }
     }
 
-    private void startWork(){
+    private void startWork() {
         // 定位初始化
         mLocationClient = new LocationClient(getApplicationContext());
         mLocationClient.registerLocationListener(myListener);
@@ -138,6 +145,14 @@ public class MainActivity extends SupportActivity {
 
         //SD卡初始化
         FileUtils.initialStorage();
+
+        mTelephonyManager = (TelephonyManager) App.getContext().getSystemService(Context
+                .TELEPHONY_SERVICE);
+        if (mTelephonyManager == null) {
+            Toast.makeText(App.getContext(), "获取手机网络存在问题", Toast.LENGTH_SHORT).show();
+        }
+        myPhoneStateListener = new MyPhoneStateListener();
+        mTelephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
     }
 
 
@@ -212,4 +227,20 @@ public class MainActivity extends SupportActivity {
         public void onReceivePoi(BDLocation poiLocation) {
         }
     }
+
+    class MyPhoneStateListener extends PhoneStateListener {
+        @Override
+        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+            super.onSignalStrengthsChanged(signalStrength);
+            try {
+                NetworkStatus.SINR = (int) signalStrength.getClass()
+                        .getMethod
+                                ("getLteRssnr").invoke(signalStrength);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
 }

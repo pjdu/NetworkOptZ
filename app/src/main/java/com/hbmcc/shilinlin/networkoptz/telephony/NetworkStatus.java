@@ -7,6 +7,8 @@ import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
+import android.telephony.PhoneStateListener;
+import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -25,6 +27,10 @@ public class NetworkStatus {
     private static final String TAG = "NetworkStatus";
     public static final int NETWORK_STATUS_ERROR = 9999;
 
+    TelephonyManager mTelephonyManager;
+
+    public static int SINR;
+
     public String time;
     public int networkType;
     public String imei;
@@ -36,12 +42,15 @@ public class NetworkStatus {
     public ArrayList<LteCellInfo> lteNeighbourCellTowers;
     public ArrayList<GsmCellInfo> gsmNeighbourCellTowers;
 
+
     public NetworkStatus() {
-        TelephonyManager mTelephonyManager = (TelephonyManager) App.getContext().getSystemService(Context
+
+        mTelephonyManager = (TelephonyManager) App.getContext().getSystemService(Context
                 .TELEPHONY_SERVICE);
         if (mTelephonyManager == null) {
             Toast.makeText(App.getContext(), "获取手机网络存在问题", Toast.LENGTH_SHORT).show();
         }
+
         SimpleDateFormat sDateFormat = new SimpleDateFormat("HH:mm:ss ");
         time = sDateFormat.format(new java.util.Date());
         networkType = determineNetworkType(App.getContext());
@@ -59,8 +68,8 @@ public class NetworkStatus {
 
         // 获取基站信息
         //SDK18及之后android系统使用getAllCellInfo方法，并且对基站的类型加以区分
+
         List<android.telephony.CellInfo> infos = mTelephonyManager.getAllCellInfo();
-//        Log.e(TAG, "NetworkStatus:infosize: "+infos.size());
         if (infos != null && infos.size() != 0) {
             lteNeighbourCellTowers = new ArrayList<>();
             gsmNeighbourCellTowers = new ArrayList<>();
@@ -104,18 +113,20 @@ public class NetworkStatus {
                     }
                     if (Build.VERSION.SDK_INT >= 26) {
                         tower.rsrq = ((CellInfoLte) i).getCellSignalStrength().getRsrq();
-                        tower.sinr = ((CellInfoLte) i).getCellSignalStrength().getRssnr();
+//                        tower.sinr = ((CellInfoLte) i).getCellSignalStrength().getRssnr();
+                        tower.sinr = SINR;
                     } else {
                         try {
                             Class<?> cellSignalStrengthLteClass = ((CellInfoLte) i)
                                     .getCellSignalStrength().getClass();
                             Method methodGetRsrq = cellSignalStrengthLteClass.getDeclaredMethod
                                     ("getRsrq");
-                            Method methodGetRssnr = cellSignalStrengthLteClass.getDeclaredMethod
-                                    ("getRssnr");
+//                            Method methodGetRssnr = cellSignalStrengthLteClass.getDeclaredMethod
+//                                    ("getRssnr");
                             tower.rsrq = (int) methodGetRsrq.invoke(((CellInfoLte) i)
                                     .getCellSignalStrength());
-                            tower.sinr = (int) methodGetRssnr.invoke(((CellInfoLte) i).getCellSignalStrength());
+//                            tower.sinr = (int) methodGetRssnr.invoke(((CellInfoLte) i).getCellSignalStrength());
+                            tower.sinr = SINR;
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -221,5 +232,6 @@ public class NetworkStatus {
         }
         return CellInfo.TYPE_UNKNOWN;
     }
+
 
 }
