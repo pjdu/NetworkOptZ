@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
