@@ -11,7 +11,6 @@ import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
-import com.hbmcc.shilinlin.networkoptz.ui.fragment.first.FirstTabFragment;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.forth.basestationdatabase.BasestationDatabaseFragment;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -20,6 +19,7 @@ import me.yokeyword.eventbusactivityscope.EventBusActivityScope;
 
 public class ForthTabFragment extends BaseMainFragment {
     private Button btnFragmentForthTabBasestationDatabase;
+    private Button btnFragmentForthTabAbout;
 
 
     public static ForthTabFragment newInstance() {
@@ -44,6 +44,7 @@ public class ForthTabFragment extends BaseMainFragment {
 
         EventBusActivityScope.getDefault(_mActivity).register(this);
         btnFragmentForthTabBasestationDatabase = view.findViewById(R.id.btn_fragment_forth_tab_basestation_database);
+        btnFragmentForthTabAbout = view.findViewById(R.id.btn_fragment_forth_tab_about);
 
     }
 
@@ -55,6 +56,13 @@ public class ForthTabFragment extends BaseMainFragment {
             public void onClick(View v) {
                 ((MainFragment) getParentFragment()).startBrotherFragment
                         (BasestationDatabaseFragment.newInstance("基站数据库"));
+            }
+        });
+        btnFragmentForthTabAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainFragment) getParentFragment()).startBrotherFragment
+                        (AboutFragment.newInstance("关于"));
             }
         });
     }

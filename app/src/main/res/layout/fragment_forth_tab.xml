@@ -10,4 +10,11 @@
         android:id="@+id/btn_fragment_forth_tab_basestation_database"
         android:text="基站数据库"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_fragment_forth_tab_about"
+        android:text="关于"/>
+
+
 </android.support.constraint.ConstraintLayout>
