@@ -1,11 +1,14 @@
 package com.hbmcc.shilinlin.networkoptz.ui.fragment.forth;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseBackFragment;
@@ -18,6 +21,10 @@ public class AboutFragment extends BaseBackFragment {
     private String mTitle;
 
     private Toolbar mToolbar;
+    private ImageView imageviewUpdateurl;
+
+
+
 
     public static AboutFragment newInstance(String title) {
 
@@ -48,6 +55,10 @@ public class AboutFragment extends BaseBackFragment {
 
     private void initView(View view) {
         mToolbar = view.findViewById(R.id.toolbar);
+        imageviewUpdateurl = view.findViewById(R.id.imageview_updateurl);
+
+        mToolbar.setTitle(mTitle);
+        initToolbarNav(mToolbar);
     }
 
     /**
@@ -63,7 +74,16 @@ public class AboutFragment extends BaseBackFragment {
     }
 
     private void initDelayView() {
-
+        imageviewUpdateurl.setOnClickListener(new ImageView.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction("android.intent.action.VIEW");
+                Uri uri = Uri.parse("https://github.com/FFWeather/NetworkOptZ/raw/master/app/release/app-release.apk");
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        });
     }
 
 

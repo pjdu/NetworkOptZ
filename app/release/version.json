@@ -8,7 +8,7 @@ serverFlag: "1",
 //是否强制更新
 lastForce: "1",
 //apk下载地址
-updateurl: "",
+updateurl: "https://github.com/FFWeather/NetworkOptZ/raw/master/app/release/app-release.apk",
 //版本更新的标题
 upgradetitle: "发现新版本",
 //版本的更新的描述

@@ -73,9 +73,10 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/qr_code_updateurl"/>
+                    android:src="@drawable/qr_code_updateurl"
+                    android:id="@+id/imageview_updateurl"/>
             </LinearLayout>
-            >
+
 
         </LinearLayout>
 

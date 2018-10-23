@@ -35,8 +35,8 @@ public class NetworkStatus {
     static public int ratType = determineNetworkType(App.getContext());
 
     public String time;
-    static public LteCellInfo lteServingCellTower;
-    static public GsmCellInfo gsmServingCellTower;
+    public LteCellInfo lteServingCellTower;
+    public GsmCellInfo gsmServingCellTower;
     public ArrayList<LteCellInfo> lteNeighbourCellTowers;
     public ArrayList<GsmCellInfo> gsmNeighbourCellTowers;
 
@@ -133,7 +133,6 @@ public class NetworkStatus {
                         tower.signalStrength = RSRP;
                         tower.sinr = SINR;
                         tower.rsrq = RSRQ;
-                        tower.asu = ASULEVEL;
                         lteServingCellTower = tower;
                     } else {
                         lteNeighbourCellTowers.add(tower);

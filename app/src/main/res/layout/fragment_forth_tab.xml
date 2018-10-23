@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/btn_fragment_forth_tab_basestation_database"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_fragment_forth_tab_basestation_database"
-        android:text="基站数据库"/>
+        android:layout_marginTop="16dp"
+        android:text="基站数据库"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
+        android:id="@+id/btn_fragment_forth_tab_about"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_fragment_forth_tab_about"
-        android:text="关于"/>
+        android:layout_marginTop="8dp"
+        android:text="关于"
+        app:layout_constraintTop_toBottomOf="@id/btn_fragment_forth_tab_basestation_database"/>
+
+
 
 
 </android.support.constraint.ConstraintLayout>
