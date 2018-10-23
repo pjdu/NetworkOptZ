@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LteBand {
-    static final int FDD = 0;
-    static final int TDD = 1;
+    public static final int FDD = 0;
+    public static final int TDD = 1;
 
     int band;
     int duplexMode;
@@ -31,9 +31,9 @@ public class LteBand {
         this.ulFreqMax = ulFreqMax;
     }
 
-    List<LteBand> lteBandList = new ArrayList<>(38);
+    static List<LteBand> lteBandList = new ArrayList<>(38);
 
-    public boolean init() {
+    private static boolean init() {
         lteBandList.add(new LteBand(1, FDD, 0, 599, 18000, 18599, 2110, 2170, 1920, 1980));
         lteBandList.add(new LteBand(2, FDD, 600, 1199, 18600, 19199, 1930, 1990, 1850, 1910));
         lteBandList.add(new LteBand(3, FDD, 1200, 1949, 19200, 19949, 1805, 1880, 1710, 1785));
@@ -75,7 +75,10 @@ public class LteBand {
         return true;
     }
 
-    private LteBand getEarfcnBelong(int earfcn) {
+    private static LteBand getEarfcnBelong(int earfcn) {
+        if(lteBandList.isEmpty()){
+            init();
+        }
         for (LteBand lteBand : lteBandList) {
             if (lteBand.dlEarfcnMin < earfcn && lteBand.dlEarfcnMax > earfcn) {
                 return lteBand;
@@ -84,53 +87,53 @@ public class LteBand {
         return new LteBand(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
-    public int getBand(int earfcn) {
+    public static int getBand(int earfcn) {
         return getEarfcnBelong(earfcn).band;
     }
 
-    public double getDlCenterFreq(int earfcn) {
+    public static double getDlCenterFreq(int earfcn) {
         LteBand lteBand = getEarfcnBelong(earfcn);
         return (earfcn - lteBand.dlEarfcnMin) / 10 + lteBand.dlFreqMin;
     }
 
-    public double getUlCenterFreq(int earfcn) {
+    public static double getUlCenterFreq(int earfcn) {
         LteBand lteBand = getEarfcnBelong(earfcn);
-        return (earfcn - lteBand.ulEarfcnMin) / 10 + lteBand.ulFreqMin;
+        return (earfcn - lteBand.dlEarfcnMin) / 10 + lteBand.ulFreqMin;
     }
 
-    public int getDuplexMode(int earfcn) {
+    public static int getDuplexMode(int earfcn) {
         return getEarfcnBelong(earfcn).duplexMode;
     }
 
-    public int getDlEarfcnMin(int earfcn) {
+    public static int getDlEarfcnMin(int earfcn) {
         return getEarfcnBelong(earfcn).dlEarfcnMin;
     }
 
-    public int getDlEarfcnMax(int earfcn) {
+    public static int getDlEarfcnMax(int earfcn) {
         return getEarfcnBelong(earfcn).dlEarfcnMax;
     }
 
-    public int getUlEarfcnMin(int earfcn) {
+    public static int getUlEarfcnMin(int earfcn) {
         return getEarfcnBelong(earfcn).ulEarfcnMin;
     }
 
-    public int getUlEarfcnMax(int earfcn) {
+    public static int getUlEarfcnMax(int earfcn) {
         return getEarfcnBelong(earfcn).ulEarfcnMax;
     }
 
-    public double getDlFreqMin(int earfcn) {
+    public static double getDlFreqMin(int earfcn) {
         return getEarfcnBelong(earfcn).dlFreqMin;
     }
 
-    public double getDlFreqMax(int earfcn) {
+    public static double getDlFreqMax(int earfcn) {
         return getEarfcnBelong(earfcn).dlFreqMax;
     }
 
-    public double getUlFreqMin(int earfcn) {
+    public static double getUlFreqMin(int earfcn) {
         return getEarfcnBelong(earfcn).ulFreqMin;
     }
 
-    public double getUlFreqMax(int earfcn) {
+    public static double getUlFreqMax(int earfcn) {
         return getEarfcnBelong(earfcn).ulFreqMax;
     }
 

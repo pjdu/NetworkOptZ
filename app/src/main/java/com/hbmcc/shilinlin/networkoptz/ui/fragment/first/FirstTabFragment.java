@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.hbmcc.shilinlin.networkoptz.base.BaseMainFragment;
 import com.hbmcc.shilinlin.networkoptz.database.LteBasestationCell;
 import com.hbmcc.shilinlin.networkoptz.event.TabSelectedEvent;
 import com.hbmcc.shilinlin.networkoptz.event.UpdateUeStatusEvent;
+import com.hbmcc.shilinlin.networkoptz.telephony.LteBand;
 import com.hbmcc.shilinlin.networkoptz.telephony.NetworkStatus;
 import com.hbmcc.shilinlin.networkoptz.telephony.cellinfo.LteCellInfo;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
@@ -223,13 +225,28 @@ public class FirstTabFragment extends BaseMainFragment {
                                     .lteServingCellTower.rsrq + "");
                             textViewFragmentFirstTabSINR.setText(updateUEStatusEvent.ueStatus.networkStatus
                                     .lteServingCellTower.sinr + "");
-                            textViewFragmentFirstTabBand.setText("待开发");
-                            textViewFragmentFirstTabFrequency.setText("待开发");
-                            if(litepalLteBasestationCellList.isEmpty()) {
+                            textViewFragmentFirstTabBand.setText(LteBand.getBand
+                                    (updateUEStatusEvent.ueStatus.networkStatus
+                                            .lteServingCellTower.lteEarFcn)+"");
+                            if (LteBand.getDuplexMode(updateUEStatusEvent.ueStatus.networkStatus
+                                    .lteServingCellTower.lteEarFcn) == LteBand.TDD) {
+                                textViewFragmentFirstTabFrequency.setText(LteBand.getDlCenterFreq(
+                                        updateUEStatusEvent.ueStatus.networkStatus
+                                                .lteServingCellTower.lteEarFcn) + "");
+                            } else if (LteBand.getDuplexMode(updateUEStatusEvent.ueStatus.networkStatus
+                                    .lteServingCellTower.lteEarFcn) == LteBand.FDD) {
+                                textViewFragmentFirstTabFrequency.setText(LteBand.getDlCenterFreq(
+                                        updateUEStatusEvent.ueStatus.networkStatus
+                                                .lteServingCellTower.lteEarFcn) + "/" + LteBand
+                                        .getUlCenterFreq(
+                                                updateUEStatusEvent.ueStatus.networkStatus
+                                                        .lteServingCellTower.lteEarFcn));
+                            }
+                            if (litepalLteBasestationCellList.isEmpty()) {
                                 textViewFragmentFirstTabCellChsName.setText("基站数据库无此小区");
-                            }else {
+                            } else {
                                 textViewFragmentFirstTabCellChsName.setText(litepalLteBasestationCellList.get(0)
-                                        .getName()+"");
+                                        .getName() + "");
                             }
                             recentAvgSignalStrength = NumberFormat.doubleFormat((double) recentSumSignalStrength /
                                     (double)
@@ -248,8 +265,6 @@ public class FirstTabFragment extends BaseMainFragment {
         recentSumSignalStrength = recentSumSignalStrength + updateUEStatusEvent.ueStatus
                 .networkStatus
                 .lteServingCellTower.signalStrength;
-
-
 
 
     }

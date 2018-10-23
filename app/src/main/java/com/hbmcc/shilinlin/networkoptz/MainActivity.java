@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.telephony.CellInfo;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
@@ -25,6 +26,7 @@ import com.hbmcc.shilinlin.networkoptz.telephony.UploadSpeedStatus;
 import com.hbmcc.shilinlin.networkoptz.ui.fragment.MainFragment;
 import com.hbmcc.shilinlin.networkoptz.util.FileUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -152,6 +154,7 @@ public class MainActivity extends SupportActivity {
         }
         myPhoneStateListener = new MyPhoneStateListener();
         mTelephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+
     }
 
 
@@ -231,15 +234,46 @@ public class MainActivity extends SupportActivity {
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             super.onSignalStrengthsChanged(signalStrength);
-            try {
-                NetworkStatus.SINR = (int) signalStrength.getClass()
-                        .getMethod
-                                ("getLteRssnr").invoke(signalStrength);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (NetworkStatus.ratType == com.hbmcc.shilinlin.networkoptz.telephony.cellinfo
+                    .CellInfo.TYPE_LTE) {
+                try {
+                    NetworkStatus.SINR = (int) signalStrength.getClass()
+                            .getMethod
+                                    ("getLteRssnr").invoke(signalStrength);
+                    NetworkStatus.RSRP = (int) signalStrength.getClass()
+                            .getMethod
+                                    ("getLteRsrp").invoke(signalStrength);
+                    NetworkStatus.RSRQ = (int) signalStrength.getClass()
+                            .getMethod
+                                    ("getLteRsrq").invoke(signalStrength);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (NetworkStatus.ratType == com.hbmcc.shilinlin.networkoptz.telephony.cellinfo
+                    .CellInfo.TYPE_GSM) {
+                try {
+                    NetworkStatus.RSRP = (int) signalStrength.getClass()
+                            .getMethod
+                                    ("getGsmDbm").invoke(signalStrength);
+                    NetworkStatus.ASULEVEL = (int) signalStrength.getClass()
+                            .getMethod
+                                    ("getAsuLevel").invoke(signalStrength);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (NetworkStatus.ratType == com.hbmcc.shilinlin.networkoptz.telephony.cellinfo
+                    .CellInfo.TYPE_TDSCDMA) {
+                try {
+                    NetworkStatus.RSRP = (int) signalStrength.getClass()
+                            .getMethod
+                                    ("getTdScdmaDbm").invoke(signalStrength);
+                    NetworkStatus.ASULEVEL = (int) signalStrength.getClass()
+                            .getMethod
+                                    ("getAsuLevel").invoke(signalStrength);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-
         }
     }
-
 }

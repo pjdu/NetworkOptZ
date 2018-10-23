@@ -5,11 +5,13 @@ public class CellInfo {
     public static final int TYPE_CDMA = 1;
     public static final int TYPE_WCDMA = 2;
     public static final int TYPE_LTE = 3;
+    public static final int TYPE_TDSCDMA = 4;
     public static final int TYPE_UNKNOWN = 9;
     public static final String STRING_TYPE_GSM = "GSM";
     public static final String STRING_TYPE_LTE = "LTE";
     public static final String STRING_TYPE_CDMA = "CDMA";
     public static final String STRING_TYPE_WCDMA = "WCDMA";
+    public static final String STRING_TYPE_TDSCDMA = "TDSCDMA";
 
     public String cellType;
     public int cellId;

@@ -7,9 +7,8 @@ import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
-import android.telephony.PhoneStateListener;
-import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,22 +28,24 @@ public class NetworkStatus {
 
     TelephonyManager mTelephonyManager;
 
-    public static int SINR;
+    static public int RSRP;
+    static public int RSRQ;
+    static public int SINR;
+    static public int ASULEVEL;
+    static public int ratType = determineNetworkType(App.getContext());
 
     public String time;
-    public int networkType;
+    static public LteCellInfo lteServingCellTower;
+    static public GsmCellInfo gsmServingCellTower;
+    public ArrayList<LteCellInfo> lteNeighbourCellTowers;
+    public ArrayList<GsmCellInfo> gsmNeighbourCellTowers;
+
     public String imei;
     public String imsi;
     public String androidVersion;
     public String hardwareModel;
-    public LteCellInfo lteServingCellTower;
-    public GsmCellInfo gsmServingCellTower;
-    public ArrayList<LteCellInfo> lteNeighbourCellTowers;
-    public ArrayList<GsmCellInfo> gsmNeighbourCellTowers;
-
 
     public NetworkStatus() {
-
         mTelephonyManager = (TelephonyManager) App.getContext().getSystemService(Context
                 .TELEPHONY_SERVICE);
         if (mTelephonyManager == null) {
@@ -53,7 +54,6 @@ public class NetworkStatus {
 
         SimpleDateFormat sDateFormat = new SimpleDateFormat("HH:mm:ss ");
         time = sDateFormat.format(new java.util.Date());
-        networkType = determineNetworkType(App.getContext());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             imei = mTelephonyManager.getImei();
@@ -61,8 +61,6 @@ public class NetworkStatus {
             imei = mTelephonyManager.getDeviceId();
         }
         imsi = mTelephonyManager.getSubscriberId();
-
-
         androidVersion = Build.VERSION.RELEASE;
         hardwareModel = Build.MODEL;
 
@@ -84,20 +82,6 @@ public class NetworkStatus {
                     tower.mobileNetworkCode = cellIdentityLte.getMnc();
                     tower.cellId = cellIdentityLte.getCi();
 
-                    tower.signalStrength = ((CellInfoLte) i).getCellSignalStrength().getDbm();
-                    if (tower.signalStrength > 0) {
-                        tower.signalStrength = tower.signalStrength / 4 * -1;
-                    }
-//                    try {
-//                        Class<?> cellSignalStrengthLteClass = ((CellInfoLte) i)
-//                                .getCellSignalStrength().getClass();
-//                        Method methodGetRsrp = cellSignalStrengthLteClass.getDeclaredMethod
-//                                ("getRsrp");
-//                        tower.signalStrength = (int) methodGetRsrp.invoke(((CellInfoLte) i)
-//                                .getCellSignalStrength());
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
                     tower.timingAdvance = ((CellInfoLte) i).getCellSignalStrength().getTimingAdvance();
                     if (Build.VERSION.SDK_INT >= 24) {
                         tower.lteEarFcn = cellIdentityLte.getEarfcn();
@@ -111,26 +95,27 @@ public class NetworkStatus {
                             e.printStackTrace();
                         }
                     }
+
+                    tower.signalStrength = ((CellInfoLte) i).getCellSignalStrength().getDbm();
+                    if (tower.signalStrength > 0) {
+                        tower.signalStrength = tower.signalStrength / 4 * -1;
+                    }
+
                     if (Build.VERSION.SDK_INT >= 26) {
                         tower.rsrq = ((CellInfoLte) i).getCellSignalStrength().getRsrq();
-//                        tower.sinr = ((CellInfoLte) i).getCellSignalStrength().getRssnr();
-                        tower.sinr = SINR;
                     } else {
                         try {
                             Class<?> cellSignalStrengthLteClass = ((CellInfoLte) i)
                                     .getCellSignalStrength().getClass();
                             Method methodGetRsrq = cellSignalStrengthLteClass.getDeclaredMethod
                                     ("getRsrq");
-//                            Method methodGetRssnr = cellSignalStrengthLteClass.getDeclaredMethod
-//                                    ("getRssnr");
                             tower.rsrq = (int) methodGetRsrq.invoke(((CellInfoLte) i)
                                     .getCellSignalStrength());
-//                            tower.sinr = (int) methodGetRssnr.invoke(((CellInfoLte) i).getCellSignalStrength());
-                            tower.sinr = SINR;
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
+
                     if (tower.sinr == Integer.MAX_VALUE) {
                         tower.sinr = NetworkStatus.NETWORK_STATUS_ERROR;
                     }
@@ -140,17 +125,22 @@ public class NetworkStatus {
                     if (tower.tac == Integer.MAX_VALUE) {
                         tower.tac = NetworkStatus.NETWORK_STATUS_ERROR;
                     }
+
                     tower.pci = cellIdentityLte.getPci();
                     tower.enbId = (int) Math.floor(tower.cellId / 256);
                     tower.enbCellId = tower.cellId % 256;
                     if (i.isRegistered()) {
+                        tower.signalStrength = RSRP;
+                        tower.sinr = SINR;
+                        tower.rsrq = RSRQ;
+                        tower.asu = ASULEVEL;
                         lteServingCellTower = tower;
                     } else {
                         lteNeighbourCellTowers.add(tower);
                     }
                 } else if (i instanceof CellInfoGsm) {
                     GsmCellInfo tower = new GsmCellInfo();
-                    CellIdentityGsm cellIdentityGsm = ((CellInfoGsm) i).getCellIdentity();//从这个类里面可以取出好多有用的东西
+                    CellIdentityGsm cellIdentityGsm = ((CellInfoGsm) i).getCellIdentity();
                     if (cellIdentityGsm == null) {
                         continue;
                     }
@@ -176,10 +166,12 @@ public class NetworkStatus {
                     Log.i(TAG, "不知道现在是啥基站");
                 }
             }
+        } else {
+            getServerCellInfoOnOlderDevices();
         }
     }
 
-    private int determineNetworkType(Context context) {
+    private static int determineNetworkType(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager == null) {
             return CellInfo.TYPE_UNKNOWN;
@@ -200,25 +192,25 @@ public class NetworkStatus {
             case TelephonyManager.NETWORK_TYPE_GPRS:
                 return CellInfo.TYPE_GSM;
             case TelephonyManager.NETWORK_TYPE_HSDPA:
-                return CellInfo.TYPE_WCDMA;
+                return CellInfo.TYPE_TDSCDMA;
             case TelephonyManager.NETWORK_TYPE_HSPA:
-                return CellInfo.TYPE_WCDMA;
+                return CellInfo.TYPE_TDSCDMA;
             case TelephonyManager.NETWORK_TYPE_HSPAP:
-                return CellInfo.TYPE_WCDMA;
+                return CellInfo.TYPE_TDSCDMA;
             case TelephonyManager.NETWORK_TYPE_HSUPA:
-                return CellInfo.TYPE_WCDMA;
+                return CellInfo.TYPE_TDSCDMA;
             case TelephonyManager.NETWORK_TYPE_TD_SCDMA:
-                return CellInfo.TYPE_WCDMA;
+                return CellInfo.TYPE_TDSCDMA;
             case TelephonyManager.NETWORK_TYPE_EVDO_0:
-                return CellInfo.TYPE_WCDMA;
+                return CellInfo.TYPE_CDMA;
             case TelephonyManager.NETWORK_TYPE_EVDO_A:
-                return CellInfo.TYPE_WCDMA;
+                return CellInfo.TYPE_CDMA;
             case TelephonyManager.NETWORK_TYPE_EVDO_B:
-                return CellInfo.TYPE_WCDMA;
+                return CellInfo.TYPE_CDMA;
             case TelephonyManager.NETWORK_TYPE_IDEN:
                 break;
             case TelephonyManager.NETWORK_TYPE_UMTS:
-                return CellInfo.TYPE_WCDMA;
+                return CellInfo.TYPE_TDSCDMA;
             case TelephonyManager.NETWORK_TYPE_EHRPD:
                 break;
             case TelephonyManager.NETWORK_TYPE_1xRTT:
@@ -231,6 +223,28 @@ public class NetworkStatus {
                 return CellInfo.TYPE_UNKNOWN;
         }
         return CellInfo.TYPE_UNKNOWN;
+    }
+
+    private void getServerCellInfoOnOlderDevices() {
+        GsmCellLocation location = (GsmCellLocation) mTelephonyManager.getCellLocation();
+        if (ratType == CellInfo.TYPE_LTE) {
+            lteServingCellTower.cellId = location.getCid();
+            lteServingCellTower.rsrq = RSRQ;
+            lteServingCellTower.sinr = SINR;
+            lteServingCellTower.signalStrength = RSRP;
+            lteServingCellTower.cellType = CellInfo.STRING_TYPE_LTE;
+            lteServingCellTower.enbCellId = lteServingCellTower.cellId % 256;
+            lteServingCellTower.enbId = lteServingCellTower.cellId / 256;
+            lteServingCellTower.isRegitered = true;
+            lteServingCellTower.tac = location.getLac();
+        }else if(ratType == CellInfo.TYPE_GSM){
+            gsmServingCellTower.gsmCellId = location.getCid();
+            gsmServingCellTower.asu = ASULEVEL;
+            gsmServingCellTower.signalStrength = RSRP;
+            gsmServingCellTower.cellType = CellInfo.STRING_TYPE_GSM;
+            gsmServingCellTower.isRegitered = true;
+            gsmServingCellTower.locationAreaCode = location.getLac();
+        }
     }
 
 

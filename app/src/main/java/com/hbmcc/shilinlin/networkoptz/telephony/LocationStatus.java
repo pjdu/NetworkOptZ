@@ -13,7 +13,7 @@ public class LocationStatus {
             indoorLocationSurpport;
 
     public LocationStatus(BDLocation bdLocation) {
-        bdLocation = bdLocation;
+        this.bdLocation = bdLocation;
 
         //状态部分
         gpsAccuracyStatus = bdLocation.getGpsAccuracyStatus();

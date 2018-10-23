@@ -5,4 +5,5 @@ public class GsmCellInfo extends CellInfo{
     public int bsic;
     public int gsmArFcn;
     public int gsmCellId;
+    public int asu;
 }
