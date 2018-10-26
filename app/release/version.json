@@ -1,18 +1,11 @@
 {
-//app名字
-appname: "优易",
-//服务器版本号
-serverVersion: "18102301",
-//服务器标志
-serverFlag: "1",
-//是否强制更新
-lastForce: "1",
-//apk下载地址
-updateurl: "https://github.com/FFWeather/NetworkOptZ/raw/master/app/release/app-release.apk",
-//版本更新的标题
-upgradetitle: "发现新版本",
-//版本的更新的描述
-upgradeinfo: "1、添加了自动更新功能 2、添加了Band和频率换算功能"
+  "appName": "优易",
+  "serverVersion": "18102601",
+  "serverFlag": "1",
+  "lastForce": "0",
+  "downloadUrl": "https://github.com/FFWeather/NetworkOptZ/raw/master/app/release/app-release.apk",
+  "upgradeTitle": "发现新版本",
+  "upgradeInfo": "1、添加了自动更新功能 2、添加了Band和频率换算功能"
 }
 
 

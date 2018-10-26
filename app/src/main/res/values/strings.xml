@@ -4,7 +4,8 @@
     <string name="baiduMapIdOffice">EPFQCD0zMV4ceS3fgUp4wXYpHF7Oqppt</string>
     <string name="baiduMapIdHome">Q4ZVG0EPmnGobZYGoFNOXOYWpQ7Dtfuj</string>
     <string name="lteBasestationDatabaseTemplate">4G工参(模板).csv</string>
-
+    <string name="autoUpdateJsonUrl">https://raw.githubusercontent.com/FFWeather/NetworkOptZ/master/app/release/version.json</string>
+    <string name="currentVersion">18102301</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

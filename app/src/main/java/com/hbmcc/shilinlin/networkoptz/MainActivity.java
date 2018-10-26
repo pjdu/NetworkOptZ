@@ -1,9 +1,13 @@
 package com.hbmcc.shilinlin.networkoptz;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +22,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.hbmcc.shilinlin.networkoptz.event.UpdateUeStatusEvent;
+import com.hbmcc.shilinlin.networkoptz.service.AutoUpdateService;
 import com.hbmcc.shilinlin.networkoptz.telephony.DownloadSpeedStatus;
 import com.hbmcc.shilinlin.networkoptz.telephony.LocationStatus;
 import com.hbmcc.shilinlin.networkoptz.telephony.NetworkStatus;
@@ -59,22 +64,42 @@ public class MainActivity extends SupportActivity {
     //只有Event中前后两条记录的time不一致，才进行广播
     private String mTime;
 
+    public AutoUpdateService.AutoUpdateBinder autoUpdateBinder;
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            autoUpdateBinder = (AutoUpdateService.AutoUpdateBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mLocationClient.stop();
         newCachedThreadPool.shutdown();
+        unbindService(serviceConnection);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mTime = "";
         if (findFragment(MainFragment.class) == null) {
             loadRootFragment(R.id.framelayout_mainactivity_container, MainFragment.newInstance());
         }
+
+        Intent intent = new Intent(MainActivity.this,AutoUpdateService.class);
+        startService(intent);
+        bindService(intent,serviceConnection,BIND_AUTO_CREATE);
 
         List<String> permissionList = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

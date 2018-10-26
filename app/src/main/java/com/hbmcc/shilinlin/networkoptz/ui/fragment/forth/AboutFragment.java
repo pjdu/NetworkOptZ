@@ -1,17 +1,23 @@
 package com.hbmcc.shilinlin.networkoptz.ui.fragment.forth;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.hbmcc.shilinlin.networkoptz.MainActivity;
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseBackFragment;
+import com.hbmcc.shilinlin.networkoptz.service.AutoUpdateService;
 
 public class AboutFragment extends BaseBackFragment {
 
@@ -22,9 +28,7 @@ public class AboutFragment extends BaseBackFragment {
 
     private Toolbar mToolbar;
     private ImageView imageviewUpdateurl;
-
-
-
+    private TextView textViewFragmentAboutNewVersion;
 
     public static AboutFragment newInstance(String title) {
 
@@ -56,6 +60,8 @@ public class AboutFragment extends BaseBackFragment {
     private void initView(View view) {
         mToolbar = view.findViewById(R.id.toolbar);
         imageviewUpdateurl = view.findViewById(R.id.imageview_updateurl);
+        textViewFragmentAboutNewVersion = view.findViewById(R.id.textView_fragment_about_newVersion);
+
 
         mToolbar.setTitle(mTitle);
         initToolbarNav(mToolbar);
@@ -84,6 +90,8 @@ public class AboutFragment extends BaseBackFragment {
                 startActivity(intent);
             }
         });
+
+
     }
 
 
