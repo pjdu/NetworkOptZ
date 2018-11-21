@@ -22,7 +22,6 @@ import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.listener.DownloadListener;
 import com.hbmcc.shilinlin.networkoptz.util.HttpUtil;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,6 +33,7 @@ import okhttp3.Response;
 
 
 public class AutoUpdateService extends Service {
+    private static final String TAG = "AutoUpdateService";
     AlertDialog.Builder alertDialog;
     private DownloadTask downloadTask;
     AutoUpdateBinder autoUpdateBinder = new AutoUpdateBinder();
@@ -41,35 +41,7 @@ public class AutoUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NewVersion newVersion = autoUpdateBinder.getNewerVersion();
-        if (newVersion != null) {
-            if (Integer.valueOf(newVersion.serverVersion) > Integer.valueOf(App.getContext()
-                    .getString(R.string.currentVersion))) {
-                alertDialog = new AlertDialog.Builder(this);
-                alertDialog.setTitle(newVersion.upgradeTitle)
-                        .setMessage("新版本号：" + newVersion.serverVersion + "，该版本新功能：" + newVersion.upgradeInfo)
-                        .setPositiveButton("更新", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        });
-                if (!newVersion.lastForce.equals("1")) {
-                    alertDialog.setCancelable(true);
-                    alertDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-                }
-                else {
-                    alertDialog.setCancelable(false);
-                }
-                alertDialog.show();
-
-            }
-        }
+        getNewerVersion();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -120,39 +92,45 @@ public class AutoUpdateService extends Service {
         String upgradeInfo;
     }
 
+    public NewVersion getNewerVersion() {
+        final NewVersion newVersion = new NewVersion();
+        HttpUtil.sendOkHttpRequest(App.getContext().getString(R.string.autoUpdateJsonUrl),
+                new okhttp3.Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        try {
+                            String responseData = response.body().string();
+//                                Log.d(TAG, "onResponse: "+ responseData);
+                            JSONObject jsonObject = new JSONObject(responseData);
+                            newVersion.appName = jsonObject.getString("appName");
+                            newVersion.serverVersion = jsonObject.getString("serverVersion");
+                            newVersion.serverFlag = jsonObject.getString("serverFlag");
+                            newVersion.lastForce = jsonObject.getString("lastForce");
+                            newVersion.downloadUrl = jsonObject.getString("downloadUrl");
+                            newVersion.upgradeTitle = jsonObject.getString("upgradeTitle");
+                            newVersion.upgradeInfo = jsonObject.getString("upgradeInfo");
+                            update(newVersion);
+
+                        } catch (
+                                JSONException e)
+
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Toast.makeText(AutoUpdateService.this, "获取最新版本失败，请检查网络连接", Toast
+                                .LENGTH_LONG).show();
+                    }
+                });
+        return newVersion;
+    }
+
     public class AutoUpdateBinder extends Binder {
-        public NewVersion getNewerVersion() {
-            final NewVersion newVersion = new NewVersion();
-            HttpUtil.sendOkHttpRequest(App.getContext().getString(R.string.autoUpdateJsonUrl),
-                    new okhttp3.Callback() {
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            try {
-                                String responseData = response.body().toString();
-                                JSONArray jsonArray = new JSONArray(responseData);
-                                if (jsonArray.length() > 0) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-                                    newVersion.appName = jsonObject.getString("appName");
-                                    newVersion.serverVersion = jsonObject.getString("serverVersion");
-                                    newVersion.serverFlag = jsonObject.getString("serverFlag");
-                                    newVersion.lastForce = jsonObject.getString("lastForce");
-                                    newVersion.downloadUrl = jsonObject.getString("downloadUrl");
-                                    newVersion.upgradeTitle = jsonObject.getString("upgradeTitle");
-                                    newVersion.upgradeInfo = jsonObject.getString("upgradeInfo");
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            Toast.makeText(AutoUpdateService.this, "获取最新版本失败，请检查网络连接", Toast
-                                    .LENGTH_LONG).show();
-                        }
-                    });
-            return newVersion;
-
+        public AutoUpdateService autoUpdateService() {
+            return AutoUpdateService.this;
         }
 
         public boolean startDownloadNewVerion(NewVersion newVersion) {
@@ -252,5 +230,35 @@ public class AutoUpdateService extends Service {
             }
         }
         return builder.build();
+    }
+
+    private void update(NewVersion newVersion) {
+        if (newVersion != null) {
+            if (Integer.valueOf(newVersion.serverVersion) > Integer.valueOf(App.getContext()
+                    .getString(R.string.currentVersion))) {
+                alertDialog = new AlertDialog.Builder(this);
+                alertDialog.setTitle(newVersion.upgradeTitle)
+                        .setMessage("新版本号：" + newVersion.serverVersion + "，该版本新功能：" + newVersion.upgradeInfo)
+                        .setPositiveButton("更新", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                if (!newVersion.lastForce.equals("0")) {
+                    alertDialog.setCancelable(true);
+                    alertDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                } else {
+                    alertDialog.setCancelable(false);
+                }
+//                alertDialog.show();
+
+            }
+        }
     }
 }

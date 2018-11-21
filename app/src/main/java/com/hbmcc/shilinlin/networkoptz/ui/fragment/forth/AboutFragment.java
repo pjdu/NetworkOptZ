@@ -1,11 +1,8 @@
 package com.hbmcc.shilinlin.networkoptz.ui.fragment.forth;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -14,10 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hbmcc.shilinlin.networkoptz.MainActivity;
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseBackFragment;
-import com.hbmcc.shilinlin.networkoptz.service.AutoUpdateService;
 
 public class AboutFragment extends BaseBackFragment {
 
