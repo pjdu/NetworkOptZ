@@ -68,21 +68,24 @@ class CheckUpdateTask extends AsyncTask<Void, Void, String> {
                     .split("\\|");
 
             int versionCode = AppUtils.getVersionCode(mContext);
-//            Log.d(TAG, "parseJson: "+apkCode);
+
             if (apkCode > versionCode) {
                 if (mType == Constants.TYPE_NOTIFICATION) {
                     new NotificationHelper(mContext).showNotification(updateMessage, apkUrl);
                 } else if (mType == Constants.TYPE_DIALOG) {
-
-                    if (apkForceUpdate == 1) {
-                        for (String apkForceUpdateVersion : apkForceUpdateVersions
-                                ) {
-                            if (apkForceUpdateVersion.equals(versionCode + "")) {
-                                showDialog(mContext, updateMessage, apkUrl, true);
-                            }
+                    boolean isForceUpdateVerion = false;
+                    for (String apkForceUpdateVersion : apkForceUpdateVersions
+                            ) {
+                        if (apkForceUpdateVersion.equals(versionCode + "")) {
+                            isForceUpdateVerion = true;
+                            break;
                         }
-                        showDialog(mContext, updateMessage, apkUrl, false);
+                    }
+                    if (apkForceUpdate == 1 && isForceUpdateVerion) {
+                        Log.d(TAG, "force");
+                        showDialog(mContext, updateMessage, apkUrl, true);
                     } else {
+                        Log.d(TAG, "unforce");
                         showDialog(mContext, updateMessage, apkUrl, false);
                     }
                 }

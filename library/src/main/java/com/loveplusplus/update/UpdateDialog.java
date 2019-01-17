@@ -5,6 +5,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
+
+import static com.loveplusplus.update.Constants.TAG;
 
 class UpdateDialog {
 
@@ -27,18 +30,19 @@ class UpdateDialog {
                         })
                         .setCancelable(false)
                         .show();
+            } else {
+                Log.d(TAG, "showforce: ");
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.android_auto_update_dialog_title)
+                        .setMessage(content)
+                        .setPositiveButton(R.string.android_auto_update_dialog_btn_download, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                goToDownload(context, downloadUrl);
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
             }
-        } else {
-            new AlertDialog.Builder(context)
-                    .setTitle(R.string.android_auto_update_dialog_title)
-                    .setMessage(content)
-                    .setPositiveButton(R.string.android_auto_update_dialog_btn_download, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            goToDownload(context, downloadUrl);
-                        }
-                    })
-                    .setCancelable(false)
-                    .show();
         }
     }
 
