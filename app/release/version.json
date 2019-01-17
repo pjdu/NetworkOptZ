@@ -1,8 +1,8 @@
 {
   "appName": "优易",
   "serverVersionCode": "2",
-  "forceUpdateFlag": "0",
-  "forceUpdateVersions": "0|",
+  "forceUpdateFlag": "1",
+  "forceUpdateVersions": "0|1|",
   "downloadUrl": "https://github.com/FFWeather/NetworkOptZ/raw/master/app/release/app-release.apk",
   "upgradeInfo": "1、添加了自动更新功能 2、添加了Band和频率换算功能"
 }
