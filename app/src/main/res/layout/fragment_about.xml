@@ -32,87 +32,46 @@
                 android:text="当前版本：" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/currentVersion" />
-
-        </LinearLayout>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="最新版本：" />
-
-            <TextView
-                android:id="@+id/textView_fragment_about_newVersion"
+                android:id="@+id/textView_fragment_about_currentVersion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center" />
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="QQ群885241876" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <LinearLayout
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:text="最新版本（短按直接打开浏览器下载，长按复制链接）" />
 
+        <ImageView
+            android:id="@+id/imageview_updateurl"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:src="@drawable/qr_code_updateurl" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="最新版本下载" />
-
-                <ImageView
-                    android:id="@+id/imageview_updateurl"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/qr_code_updateurl" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="20dp"
-                android:layout_height="wrap_content" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="QQ群885241876" />
-
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/qr_code_qqgroup" />
-            </LinearLayout>
-
-
-        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="请使用手机自带浏览器扫描" />
 
     </LinearLayout>
 

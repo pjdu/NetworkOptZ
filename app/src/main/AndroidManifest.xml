@@ -38,7 +38,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -47,10 +47,6 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
-        <service
-            android:name=".service.AutoUpdateService"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
 package com.hbmcc.shilinlin.networkoptz.ui.fragment.forth;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,9 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.hbmcc.shilinlin.networkoptz.App;
 import com.hbmcc.shilinlin.networkoptz.R;
 import com.hbmcc.shilinlin.networkoptz.base.BaseBackFragment;
+import com.loveplusplus.update.AppUtils;
+import com.loveplusplus.update.UpdateChecker;
 
 public class AboutFragment extends BaseBackFragment {
 
@@ -23,7 +29,7 @@ public class AboutFragment extends BaseBackFragment {
 
     private Toolbar mToolbar;
     private ImageView imageviewUpdateurl;
-    private TextView textViewFragmentAboutNewVersion;
+    private TextView textViewFragmentAboutCurrentVersion;
 
     public static AboutFragment newInstance(String title) {
 
@@ -55,9 +61,7 @@ public class AboutFragment extends BaseBackFragment {
     private void initView(View view) {
         mToolbar = view.findViewById(R.id.toolbar);
         imageviewUpdateurl = view.findViewById(R.id.imageview_updateurl);
-        textViewFragmentAboutNewVersion = view.findViewById(R.id.textView_fragment_about_newVersion);
-
-
+        textViewFragmentAboutCurrentVersion = view.findViewById(R.id.textView_fragment_about_currentVersion);
         mToolbar.setTitle(mTitle);
         initToolbarNav(mToolbar);
     }
@@ -75,20 +79,34 @@ public class AboutFragment extends BaseBackFragment {
     }
 
     private void initDelayView() {
-        imageviewUpdateurl.setOnClickListener(new ImageView.OnClickListener(){
+        imageviewUpdateurl.setOnClickListener(new ImageView.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setAction("android.intent.action.VIEW");
-                Uri uri = Uri.parse("https://github.com/FFWeather/NetworkOptZ/raw/master/app/release/app-release.apk");
+                Uri uri = Uri.parse(App.getContext().getString(R.string.newerVersionDownloadUrl));
                 intent.setData(uri);
                 startActivity(intent);
             }
         });
 
+        imageviewUpdateurl.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipboardManager cm = (ClipboardManager) _mActivity.getSystemService(_mActivity
+                        .CLIPBOARD_SERVICE);
+                ClipData mClipData = ClipData.newPlainText("Label",App.getContext().getString(R.string.newerVersionDownloadUrl) );
+                cm.setPrimaryClip(mClipData);
+                Toast.makeText(_mActivity,"下载链接已复制",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
+        textViewFragmentAboutCurrentVersion.setText(AppUtils
+                .getVersionName(_mActivity));
+
+        UpdateChecker.checkForDialog(_mActivity,App.getContext().getString(R.string.autoUpdateJsonUrl));
     }
-
 
 
 }
