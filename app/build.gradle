@@ -6,7 +6,7 @@ android {
         applicationId "com.hbmcc.shilinlin.networkoptz"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 1
+        versionCode 0
         versionName "2019011701"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
