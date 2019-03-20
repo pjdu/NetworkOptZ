@@ -6,8 +6,8 @@ android {
         applicationId "com.hbmcc.shilinlin.networkoptz"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 0
-        versionName "2019011701"
+        versionCode 2
+        versionName "2019032001"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
